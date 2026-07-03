@@ -1,4 +1,4 @@
-import { NavLink, Routes, Route } from "react-router-dom";
+import { NavLink, Routes, Route, Navigate } from "react-router-dom";
 import ProviderLogin from "./pages/ProviderLogin";
 import BeneficiaryLogin from "./pages/BeneficiaryLogin";
 import ProviderSignup from "./pages/ProviderSignup";
@@ -8,7 +8,7 @@ import "./Page.css";
 function Page() {
   return (
     <>
-      <ul className="nav nav-underline  gap-4">
+      <ul className="nav nav-underline  gap-4 py-2">
         <li className="nav-item ms-5 me-3">
           <NavLink className="nav-link" to="/provider-login">
             Provider Login
@@ -17,7 +17,7 @@ function Page() {
 
         <li className="nav-item me-3">
           <NavLink className="nav-link" to="/beneficiary-login">
-            Beneficiary Login
+            Client Login
           </NavLink>
         </li>
 
@@ -29,11 +29,12 @@ function Page() {
 
         <li className="nav-item me-3">
           <NavLink className="nav-link" to="/beneficiary-signup">
-            Beneficiary Sign Up
+            Client Sign Up
           </NavLink>
         </li>
       </ul>
       <Routes>
+        <Route path="/" element={<Navigate to="/provider-login" replace />} />
         <Route path="/provider-login" element={<ProviderLogin />} />
         <Route path="/beneficiary-login" element={<BeneficiaryLogin />} />
         <Route path="/provider-signup" element={<ProviderSignup />} />
