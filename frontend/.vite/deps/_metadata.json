@@ -1,0 +1,42 @@
+{
+  "hash": "7109f1dd",
+  "configHash": "93270009",
+  "lockfileHash": "e3b0c442",
+  "browserHash": "abe53574",
+  "optimized": {
+    "react-dom/client": {
+      "src": "../../frontend/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "acbcfcc8",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../frontend/node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "30cf9e09",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../frontend/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "7bc4ca4a",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../frontend/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "5f8b5233",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "react-dom-CrG9rzof": {
+      "file": "react-dom-CrG9rzof.js",
+      "isDynamicEntry": false
+    },
+    "rolldown-runtime-FDOR9p9I": {
+      "file": "rolldown-runtime-FDOR9p9I.js",
+      "isDynamicEntry": false
+    }
+  }
+}

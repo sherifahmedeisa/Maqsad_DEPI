@@ -1,0 +1,24 @@
+ul {
+  border-bottom: 2px solid #ddd;
+}
+.nav-underline .nav-link {
+  color: #64748b;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  font-weight: 400;
+}
+
+.nav-link:hover {
+  color: #1e293b;
+}
+
+.nav-underline .nav-link.active {
+  font-weight: 400;
+  color: #14b8a6 !important;
+  border-bottom-color: #14b8a6;
+}
+
+.nav-link:focus {
+  color: #14b8a6;
+}

@@ -1,0 +1,23 @@
+.footer {
+  background-color: #0f172a;
+}
+.footer-square {
+  background-color: #14b8a6;
+}
+
+.footer-circle {
+  background-color: white;
+}
+
+.footer-link {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: white;
+}
+
+.footer .navbar-brand {
+  color: white;
+}
