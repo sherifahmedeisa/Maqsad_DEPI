@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
@@ -9,6 +10,7 @@ const proposalRoutes = require('./routes/proposals');
 const dashboardRoutes = require('./routes/dashboard');
 const providerRoutes = require('./routes/providers');
 const userRoutes = require('./routes/users');
+const messageRoutes = require('./routes/messages');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -43,9 +45,17 @@ app.use('/api/proposals', proposalRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/providers', providerRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/messages', messageRoutes);
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Maqsad backend is running.' });
+// Serve static files from the React frontend
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Wildcard route to serve React's index.html, excluding API/auth routes
+app.get('*', (req, res) => {
+  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/auth')) {
+    return res.status(404).json({ error: 'API route not found' });
+  }
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.use((err, req, res, next) => {
@@ -53,7 +63,29 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
-initializeDatabase().then(() => {
+initializeDatabase().then(async () => {
+  // Seed default admin user if it does not exist
+  try {
+    const adminEmail = 'admin@maqsad.com';
+    const adminPassword = 'adminpassword123';
+    const bcrypt = require('bcrypt');
+    const existing = await User.findOne({ where: { email: adminEmail } });
+    if (!existing) {
+      const passwordHash = await bcrypt.hash(adminPassword, 10);
+      await User.create({
+        email: adminEmail,
+        passwordHash,
+        fullName: 'Maqsad Administrator',
+        role: 'admin',
+        accountStatus: 'active',
+        emailVerifiedAt: new Date(),
+      });
+      console.log(`Default admin seeded: ${adminEmail} / ${adminPassword}`);
+    }
+  } catch (seedErr) {
+    console.error('Failed to seed default admin:', seedErr.message);
+  }
+
   app.listen(PORT, () => {
     console.log(`Maqsad backend listening on http://localhost:${PORT}`);
   });

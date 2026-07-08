@@ -2,3 +2,4 @@ node_modules/
 .env
 *.sqlite
 *.db
+stitch_maqsad_service_proposal_hub/

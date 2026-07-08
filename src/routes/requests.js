@@ -48,7 +48,7 @@ router.get('/me', ensureAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post('/', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
+router.post('/', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
   try {
     const {
       title,
@@ -142,7 +142,7 @@ router.put('/:id', ensureOwnerOrAdmin(async (req) => {
   }
 });
 
-router.post('/:id/proposals', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
+router.post('/:id/proposals', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
   try {
     const rfp = await RFP.findByPk(req.params.id);
     if (!rfp) {
@@ -197,6 +197,20 @@ router.get('/:id/proposals', ensureAuthenticated, async (req, res, next) => {
       order: [['updatedAt', 'DESC']],
     });
     res.json(proposals);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:id', ensureAuthenticated, ensureRole(['admin']), async (req, res, next) => {
+  try {
+    const rfp = await RFP.findByPk(req.params.id);
+    if (!rfp) {
+      return res.status(404).json({ error: 'RFP not found' });
+    }
+    await Proposal.destroy({ where: { rfpId: rfp.id } });
+    await rfp.destroy();
+    res.json({ message: 'RFP deleted successfully' });
   } catch (error) {
     next(error);
   }

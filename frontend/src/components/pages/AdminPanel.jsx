@@ -1,0 +1,552 @@
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
+
+function AdminPanel() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  const [activeTab, setActiveTab] = useState("users");
+  const [users, setUsers] = useState([]);
+  const [rfps, setRfps] = useState([]);
+  const [proposals, setProposals] = useState([]);
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (user?.role !== "admin") {
+      navigate("/dashboard");
+      return;
+    }
+    fetchData();
+  }, [activeTab]);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      if (activeTab === "users") {
+        const res = await fetch("/api/users");
+        if (!res.ok) throw new Error("Failed to retrieve platform users list");
+        const data = await res.json();
+        setUsers(data);
+      } else if (activeTab === "rfps") {
+        const res = await fetch("/api/requests");
+        if (!res.ok) throw new Error("Failed to retrieve platform services catalog");
+        const data = await res.json();
+        setRfps(data);
+      } else if (activeTab === "proposals") {
+        const res = await fetch("/api/proposals");
+        if (!res.ok) throw new Error("Failed to retrieve platform bookings list");
+        const data = await res.json();
+        setProposals(data);
+      } else {
+        const res = await fetch("/api/dashboard/reports");
+        if (!res.ok) throw new Error("Failed to compile system metrics reports");
+        const data = await res.json();
+        setReport(data);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "An error occurred fetching admin panel data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (userId, newStatus) => {
+    try {
+      const res = await fetch(`/api/users/${userId}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to update account status");
+      }
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, accountStatus: newStatus } : u))
+      );
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteRfp = async (rfpId) => {
+    if (!window.confirm("Are you sure you want to delete this service post? This will also delete any associated booking requests!")) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/requests/${rfpId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to delete service post");
+      }
+      setRfps((prev) => prev.filter((r) => r.id !== rfpId));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteProposal = async (propId) => {
+    if (!window.confirm("Are you sure you want to delete this booking request?")) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/proposals/${propId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to delete booking request");
+      }
+      setProposals((prev) => prev.filter((p) => p.id !== propId));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const filteredUsers = users.filter(
+    (u) =>
+      u.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+      u.email?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredRfps = rfps.filter(
+    (r) =>
+      r.title?.toLowerCase().includes(search.toLowerCase()) ||
+      r.category?.toLowerCase().includes(search.toLowerCase()) ||
+      r.beneficiary?.fullName?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredProposals = proposals.filter(
+    (p) =>
+      p.rfp?.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.provider?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+      p.coverLetter?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-32 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mb-4"></div>
+        <p className="font-body-md text-body-md text-on-surface-variant">Securing administrative stream...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+      
+      {/* Header */}
+      <header className="flex flex-col gap-xs">
+        <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold">
+          Administrator Control Center
+        </h1>
+        <p className="font-body-lg text-on-surface-variant">
+          Platform governance, user accounts, service catalog moderation, and platform insights.
+        </p>
+      </header>
+
+      {error && (
+        <div className="bg-error-container text-on-error-container p-md rounded-lg border border-error/10 font-body-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Tabs Switcher */}
+      <div className="flex flex-wrap bg-surface-container-low p-1 rounded-xl border border-outline-variant align-self-start gap-1">
+        <button
+          onClick={() => { setActiveTab("users"); setSearch(""); }}
+          className={`px-lg py-2 rounded-lg font-label-md text-label-md transition-all ${
+            activeTab === "users" ? "bg-primary text-white shadow-sm" : "text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          Users
+        </button>
+        <button
+          onClick={() => { setActiveTab("rfps"); setSearch(""); }}
+          className={`px-lg py-2 rounded-lg font-label-md text-label-md transition-all ${
+            activeTab === "rfps" ? "bg-primary text-white shadow-sm" : "text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          Services Moderation ({rfps.length || 0})
+        </button>
+        <button
+          onClick={() => { setActiveTab("proposals"); setSearch(""); }}
+          className={`px-lg py-2 rounded-lg font-label-md text-label-md transition-all ${
+            activeTab === "proposals" ? "bg-primary text-white shadow-sm" : "text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          Bookings Moderation ({proposals.length || 0})
+        </button>
+        <button
+          onClick={() => { setActiveTab("reports"); setSearch(""); }}
+          className={`px-lg py-2 rounded-lg font-label-md text-label-md transition-all ${
+            activeTab === "reports" ? "bg-primary text-white shadow-sm" : "text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          Platform Analytics
+        </button>
+      </div>
+
+      {/* 1. User Management View */}
+      {activeTab === "users" && (
+        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col gap-md">
+          <div className="px-lg py-md border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center bg-surface-bright gap-md">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface">Active Platform Profiles</h3>
+            <div className="relative w-full sm:w-64">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+              <input
+                type="text"
+                className="pl-9 pr-4 py-1.5 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm focus:outline-none focus:border-secondary w-full transition-shadow"
+                placeholder="Search name or email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-container-low border-b border-outline-variant text-on-surface font-label-md text-label-md">
+                  <th className="p-md pl-lg">User Details</th>
+                  <th className="p-md">Registered Email</th>
+                  <th className="p-md">System Role</th>
+                  <th className="p-md">Account Status</th>
+                  <th className="p-md pr-lg text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface-variant">
+                {filteredUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="p-lg text-center text-on-surface-variant">
+                      No matching user accounts discovered on the platform.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredUsers.map((u) => (
+                    <tr key={u.id} className="hover:bg-surface-container-low/20 transition-colors">
+                      <td className="p-md pl-lg">
+                        <div className="font-semibold text-on-surface text-body-md">{u.fullName}</div>
+                        <div className="text-xs">ID: {u.id.substring(0, 8)}...</div>
+                      </td>
+                      <td className="p-md">{u.email}</td>
+                      <td className="p-md">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          u.role === "admin" ? "bg-primary text-white" :
+                          u.role === "provider" ? "bg-secondary-container text-on-secondary-container" : "bg-primary-container text-on-primary-container"
+                        }`}>
+                          {u.role.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-md">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          u.accountStatus === "active" ? "bg-secondary-container text-on-secondary-container" :
+                          u.accountStatus === "suspended" ? "bg-error-container text-on-error-container" : "bg-surface-variant text-on-surface"
+                        }`}>
+                          {u.accountStatus.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-md pr-lg text-right">
+                        {u.role !== "admin" && (
+                          <div className="inline-flex gap-1.5 justify-end">
+                            <button
+                              onClick={() => handleStatusChange(u.id, "active")}
+                              className="px-2.5 py-1 bg-secondary-container text-on-secondary-container hover:opacity-90 rounded font-label-sm text-xs transition-opacity"
+                            >
+                              Activate
+                            </button>
+                            <button
+                              onClick={() => handleStatusChange(u.id, "pending")}
+                              className="px-2.5 py-1 bg-surface-variant text-on-surface hover:opacity-90 rounded font-label-sm text-xs transition-opacity"
+                            >
+                              Flag
+                            </button>
+                            <button
+                              onClick={() => handleStatusChange(u.id, "suspended")}
+                              className="px-2.5 py-1 bg-error-container text-on-error-container hover:opacity-90 rounded font-label-sm text-xs transition-opacity"
+                            >
+                              Suspend
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* 2. Services Moderation Tab */}
+      {activeTab === "rfps" && (
+        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col gap-md">
+          <div className="px-lg py-md border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center bg-surface-bright gap-md">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface">Moderate Services Catalog</h3>
+            <div className="relative w-full sm:w-64">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+              <input
+                type="text"
+                className="pl-9 pr-4 py-1.5 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm focus:outline-none focus:border-secondary w-full transition-shadow"
+                placeholder="Search title, category, provider..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-container-low border-b border-outline-variant text-on-surface font-label-md text-label-md">
+                  <th className="p-md pl-lg">Service details</th>
+                  <th className="p-md">Category</th>
+                  <th className="p-md">Provider</th>
+                  <th className="p-md">Rate Budget</th>
+                  <th className="p-md pr-lg text-right">Moderation</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface-variant">
+                {filteredRfps.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="p-lg text-center text-on-surface-variant">
+                      No services found matching filters.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRfps.map((rfp) => (
+                    <tr key={rfp.id} className="hover:bg-surface-container-low/20 transition-colors">
+                      <td className="p-md pl-lg">
+                        <Link to={`/rfp/${rfp.id}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
+                          {rfp.title}
+                        </Link>
+                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{rfp.description}</div>
+                      </td>
+                      <td className="p-md">
+                        <span className="font-label-sm text-label-sm text-secondary bg-secondary-container px-2 py-0.5 rounded border border-secondary-fixed">
+                          {rfp.category}
+                        </span>
+                      </td>
+                      <td className="p-md font-semibold text-on-surface">
+                        {rfp.beneficiary?.fullName || "Verified Provider"}
+                      </td>
+                      <td className="p-md font-bold text-primary">
+                        ${Number(rfp.budgetMin).toLocaleString()} - ${Number(rfp.budgetMax).toLocaleString()}
+                      </td>
+                      <td className="p-md pr-lg text-right">
+                        <button
+                          onClick={() => handleDeleteRfp(rfp.id)}
+                          className="px-3 py-1.5 bg-error-container hover:bg-error text-on-error-container hover:text-white rounded font-label-md text-body-sm transition-all"
+                        >
+                          Delete Offer
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* 3. Bookings Moderation Tab */}
+      {activeTab === "proposals" && (
+        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col gap-md">
+          <div className="px-lg py-md border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center bg-surface-bright gap-md">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface">Moderate Custom Bookings</h3>
+            <div className="relative w-full sm:w-64">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+              <input
+                type="text"
+                className="pl-9 pr-4 py-1.5 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm focus:outline-none focus:border-secondary w-full transition-shadow"
+                placeholder="Search service, client, notes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-container-low border-b border-outline-variant text-on-surface font-label-md text-label-md">
+                  <th className="p-md pl-lg">Service Requested</th>
+                  <th className="p-md">Booking Client</th>
+                  <th className="p-md">Budget Offer</th>
+                  <th className="p-md">Status</th>
+                  <th className="p-md pr-lg text-right">Moderation</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface-variant">
+                {filteredProposals.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="p-lg text-center text-on-surface-variant">
+                      No custom bookings found matching filters.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredProposals.map((prop) => (
+                    <tr key={prop.id} className="hover:bg-surface-container-low/20 transition-colors">
+                      <td className="p-md pl-lg">
+                        <Link to={`/rfp/${prop.rfpId}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
+                          {prop.rfp?.title || "Deleted Service"}
+                        </Link>
+                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{prop.proposalDetails}</div>
+                      </td>
+                      <td className="p-md font-semibold text-on-surface">
+                        {prop.provider?.fullName || "Enterprise Client"}
+                      </td>
+                      <td className="p-md font-bold text-primary">
+                        ${Number(prop.bidAmount).toLocaleString()}
+                      </td>
+                      <td className="p-md">
+                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                          prop.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
+                          prop.status === "rejected" ? "bg-error-container text-on-error-container" :
+                          prop.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
+                        }`}>
+                          {prop.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-md pr-lg text-right">
+                        <button
+                          onClick={() => handleDeleteProposal(prop.id)}
+                          className="px-3 py-1.5 bg-error-container hover:bg-error text-on-error-container hover:text-white rounded font-label-md text-body-sm transition-all"
+                        >
+                          Delete Booking
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* 4. Reports and Metrics View */}
+      {activeTab === "reports" && report && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          
+          {/* User Breakdown */}
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
+            <h5 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs">
+              <span className="material-symbols-outlined text-secondary">group</span> Accounts Analytics
+            </h5>
+            <div className="flex flex-col gap-2 font-body-sm text-body-sm">
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Total Accounts:</span>
+                <strong className="text-on-surface font-semibold">{report.users.total}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Service Providers:</span>
+                <strong className="text-on-surface font-semibold">{report.users.byRole.provider}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Enterprise Clients:</span>
+                <strong className="text-on-surface font-semibold">{report.users.byRole.beneficiary}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">System Admins:</span>
+                <strong className="text-on-surface font-semibold">{report.users.byRole.admin}</strong>
+              </div>
+              <div className="flex justify-between pt-2">
+                <span className="text-on-surface-variant">Suspended Profiles:</span>
+                <strong className="text-error font-semibold">{report.users.byStatus.suspended}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* RFP Stats */}
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
+            <h5 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs">
+              <span className="material-symbols-outlined text-secondary">assignment</span> Service Offerings
+            </h5>
+            <div className="flex flex-col gap-2 font-body-sm text-body-sm">
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Total Offerings:</span>
+                <strong className="text-on-surface font-semibold">{report.rfps.total}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Active Open Services:</span>
+                <strong className="text-secondary font-semibold">{report.rfps.byStatus.open}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Draft Offers:</span>
+                <strong className="text-on-surface font-semibold">{report.rfps.byStatus.draft}</strong>
+              </div>
+              <div className="flex justify-between pt-2">
+                <span className="text-on-surface-variant">Closed Services:</span>
+                <strong className="text-on-surface-variant font-semibold">{report.rfps.byStatus.closed}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Proposals Stats */}
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
+            <h5 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs">
+              <span className="material-symbols-outlined text-secondary">rate_review</span> Booking Statistics
+            </h5>
+            <div className="flex flex-col gap-2 font-body-sm text-body-sm">
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Total Bookings Requested:</span>
+                <strong className="text-on-surface font-semibold">{report.proposals.total}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Approved Bookings:</span>
+                <strong className="text-secondary font-semibold">{report.proposals.byStatus.accepted}</strong>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/40 pb-2">
+                <span className="text-on-surface-variant">Shortlisted Requests:</span>
+                <strong className="text-on-surface font-semibold">{report.proposals.byStatus.shortlisted}</strong>
+              </div>
+              <div className="flex justify-between pt-2">
+                <span className="text-on-surface-variant">Rejected Bookings:</span>
+                <strong className="text-error font-semibold">{report.proposals.byStatus.rejected}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Messaging activity stream */}
+          <div className="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
+            <h5 className="font-headline-sm text-headline-sm text-on-surface">Platform Communication Stream</h5>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
+              <div className="p-md bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/40">
+                <div>
+                  <span className="text-on-surface-variant text-xs block">Negotiation Threads</span>
+                  <strong className="font-headline-md text-on-surface font-bold">{report.messaging.totalThreads}</strong>
+                </div>
+                <span className="material-symbols-outlined text-secondary text-3xl">forum</span>
+              </div>
+              <div className="p-md bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/40">
+                <div>
+                  <span className="text-on-surface-variant text-xs block">Messages Exchanged</span>
+                  <strong className="font-headline-md text-on-surface font-bold">{report.messaging.totalMessages}</strong>
+                </div>
+                <span className="material-symbols-outlined text-secondary text-3xl">mail</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AdminPanel;

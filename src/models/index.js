@@ -1,5 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const path = require('path');
 const UserModel = require('./user');
 const BeneficiaryProfileModel = require('./beneficiaryProfile');
 const ProviderProfileModel = require('./provider');
@@ -13,10 +12,19 @@ const NotificationModel = require('./notification');
 const ProfileViewModel = require('./profileView');
 const MatchingScoreModel = require('./matchingScore');
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: path.join(__dirname, '..', 'database.sqlite'),
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required to run this application.');
+}
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
   logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 const User = UserModel(sequelize, DataTypes);
@@ -76,20 +84,15 @@ MessageThread.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 MatchingScore.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 
 const initializeDatabase = async () => {
-  await sequelize.query('PRAGMA foreign_keys = OFF');
+  const syncOptions = { alter: true };
+  if (process.env.DB_FORCE_SYNC === 'true') {
+    syncOptions.force = true;
+  }
   try {
-    const syncOptions = { alter: true };
-    if (process.env.DB_FORCE_SYNC === 'true') {
-      syncOptions.force = true;
-    }
-    try {
-      await sequelize.sync(syncOptions);
-    } catch (syncError) {
-      console.warn('Schema alter failed, retrying with force sync:', syncError.message);
-      await sequelize.sync({ force: true });
-    }
-  } finally {
-    await sequelize.query('PRAGMA foreign_keys = ON');
+    await sequelize.sync(syncOptions);
+  } catch (syncError) {
+    console.warn('Schema alter failed, retrying with force sync:', syncError.message);
+    await sequelize.sync({ force: true });
   }
 };
 
