@@ -1,0 +1,525 @@
+.submit-proposal-page {
+  background-color: #f8fafc;
+  min-height: calc(100vh - 80px);
+  padding: 20px;
+}
+
+.sp-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Breadcrumb */
+.sp-breadcrumb {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sp-breadcrumb .separator {
+  color: #cbd5e1;
+}
+
+/* Top Bar */
+.sp-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.sp-rfp-info {
+  flex: 1;
+}
+
+.sp-rfp-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 6px 0;
+}
+
+.sp-rfp-id {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.sp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sp-btn-icon {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a202c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-btn-icon:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Content Wrapper */
+.sp-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+/* Card */
+.sp-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.sp-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 16px 0;
+}
+
+.sp-section-description {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+}
+
+/* Details Grid */
+.sp-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.sp-detail-item h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 12px 0;
+}
+
+.sp-detail-item p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.sp-detail-item ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.sp-detail-item li {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Requirements */
+.sp-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sp-req-group {
+  background-color: #f8fafc;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.sp-req-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a202c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.sp-req-group p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Form */
+.sp-form-group {
+  margin-bottom: 20px;
+}
+
+.sp-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.sp-required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+.sp-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1a202c;
+  resize: vertical;
+}
+
+.sp-textarea::placeholder {
+  color: #cbd5e1;
+}
+
+.sp-textarea:focus {
+  outline: none;
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.sp-char-count {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* Form Row */
+.sp-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Input */
+.sp-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sp-currency {
+  position: absolute;
+  left: 12px;
+  color: #64748b;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.sp-input {
+  width: 100%;
+  padding: 10px 12px 10px 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1a202c;
+}
+
+.sp-input::placeholder {
+  color: #cbd5e1;
+}
+
+.sp-input:focus {
+  outline: none;
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Upload Box */
+.sp-upload-box {
+  position: relative;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-upload-box:hover {
+  border-color: #0f766e;
+  background-color: #f0fdfc;
+}
+
+.sp-file-input {
+  display: none;
+}
+
+.sp-upload-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a202c;
+  cursor: pointer;
+  display: block;
+}
+
+.sp-upload-label small {
+  display: block;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.sp-upload-success {
+  color: #16a34a;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+/* Info Box */
+.sp-info-box {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #1e40af;
+  margin-bottom: 20px;
+}
+
+.sp-info-icon {
+  flex-shrink: 0;
+}
+
+.sp-info-box strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sp-info-box p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Checkbox */
+.sp-checkbox-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 12px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+}
+
+.sp-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.sp-checkbox-label {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+/* Form Actions */
+.sp-form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sp-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-btn-draft {
+  background-color: white;
+  color: #1a202c;
+  border: 1px solid #e2e8f0;
+  flex: 0.5;
+}
+
+.sp-btn-draft:hover {
+  background-color: #f1f5f9;
+}
+
+.sp-btn-submit {
+  background-color: #1a202c;
+  color: white;
+  flex: 1;
+}
+
+.sp-btn-submit:hover:not(:disabled) {
+  background-color: #0f172a;
+}
+
+.sp-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Sidebar */
+.sp-sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.sp-key-details-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sp-key-details-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 16px 0;
+}
+
+.sp-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+}
+
+.sp-detail:last-of-type {
+  border-bottom: none;
+}
+
+.sp-detail-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.sp-detail-value {
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.sp-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #fef3c7;
+  color: #92400e;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sp-btn-ready {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background-color: #1a202c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-btn-ready:hover {
+  background-color: #0f172a;
+}
+
+.sp-sidebar-note {
+  font-size: 12px;
+  color: #64748b;
+  margin: 12px 0 0 0;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sp-content-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-sidebar {
+    position: static;
+  }
+
+  .sp-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .submit-proposal-page {
+    padding: 12px;
+  }
+
+  .sp-top-bar {
+    flex-direction: column;
+  }
+
+  .sp-actions {
+    width: 100%;
+  }
+
+  .sp-btn-icon {
+    flex: 1;
+  }
+
+  .sp-rfp-title {
+    font-size: 22px;
+  }
+
+  .sp-card {
+    padding: 16px;
+  }
+
+  .sp-form-actions {
+    flex-direction: column;
+  }
+
+  .sp-btn-draft,
+  .sp-btn-submit {
+    flex: 1;
+    width: 100%;
+  }
+}

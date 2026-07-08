@@ -1,0 +1,89 @@
+.login-card {
+  width: 100%;
+  max-width: 550px;
+  padding: 35px;
+  background-color: #f8fafc;
+}
+
+.portal-badge {
+  display: inline-block;
+  /* background: #e7f8f7; */
+  color: #14b8a6;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.form-control {
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.btn-info {
+  background: #14b8a6;
+  border: none;
+}
+.s {
+  color: #14b8a6;
+}
+.s:hover {
+  color: #0e887a;
+}
+.btn-info:hover {
+  background: #0ea897;
+}
+.picon {
+  color: #14b8a6;
+  font-size: 22px;
+}
+.cicon {
+  color: rgb(72, 71, 71);
+  font-size: 22px;
+}
+.p {
+  border-radius: 20px;
+  width: fit-content;
+  background-color: #e1f3f3;
+}
+.c {
+  border-radius: 20px;
+  width: fit-content;
+  background-color: #e4e9e9;
+}
+.password-toggle-btn {
+  position: absolute;
+  right: 15px;
+  top: 73%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  outline: none;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}
+.password-toggle-btn span {
+  font-size: 18px;
+}
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 73%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  pointer-events: none;
+}
+.position-relative {
+  position: relative;
+}
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(20, 184, 166, 0.15);
+  border-radius: 40%;
+}
