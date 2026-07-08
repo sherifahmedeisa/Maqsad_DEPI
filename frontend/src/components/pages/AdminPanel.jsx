@@ -405,13 +405,13 @@ function AdminPanel() {
                         <Link to={`/rfp/${prop.rfpId}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
                           {prop.rfp?.title || "Deleted Service"}
                         </Link>
-                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{prop.proposalDetails}</div>
+                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{prop.coverLetter}</div>
                       </td>
                       <td className="p-md font-semibold text-on-surface">
                         {prop.provider?.fullName || "Enterprise Client"}
                       </td>
                       <td className="p-md font-bold text-primary">
-                        ${Number(prop.bidAmount).toLocaleString()}
+                        ${Number(prop.proposedBudget).toLocaleString()}
                       </td>
                       <td className="p-md">
                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
