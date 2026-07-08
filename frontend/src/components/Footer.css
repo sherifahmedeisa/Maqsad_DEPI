@@ -3,9 +3,18 @@
 }
 .footer-square {
   background-color: #14b8a6;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40%;
 }
 
 .footer-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   background-color: white;
 }
 

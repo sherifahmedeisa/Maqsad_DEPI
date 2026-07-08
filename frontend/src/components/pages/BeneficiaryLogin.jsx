@@ -1,5 +1,6 @@
-import "../LoginForm.css";
-import illustration2 from "../../assets/illustration2.png";
+import { Link } from "react-router-dom";
+import "../Form.css";
+import BeneficiaryLeftSide from "./BeneficiaryLeftSide";
 import "./BeneficiaryLogin.css";
 import { useState } from "react";
 function BeneficiaryLogin() {
@@ -8,58 +9,7 @@ function BeneficiaryLogin() {
   return (
     <div className="container-fluid  ">
       <div className="row h-100 ">
-        <div className="col-lg-6 left-sideb d-flex flex-column justify-content-between d-none d-lg-flex p-5">
-          <div className="d-flex align-items-center">
-            {/* <div className="square footer-square me-2">
-              <div className="circle footer-circle"></div>
-            </div>
-
-            <h4 className="text-white fw-bold m-0">Maqsad</h4> */}
-          </div>
-
-          <div>
-            <p className="text-white  display-6 fw-bold">
-              Find expert service providers
-              <br />
-              for your enterprise
-            </p>
-
-            <p className="text-secondary fs-4 mt-3">
-              Post requirements, receive tailored proposals, and engage vetted
-              professionals — all in one place.
-            </p>
-
-            <div className="mt-4">
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span className="material-symbols-outlined picon">
-                    apartment
-                  </span>
-                </div>
-                <span text-white fs-5>
-                  Tailored to enterprise procurement
-                </span>
-              </div>
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span class="material-symbols-outlined picon">schedule</span>
-                </div>
-                <span text-white fs-5>
-                  Fast, structured proposal flow
-                </span>
-              </div>
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span class="material-symbols-outlined picon">check</span>
-                </div>
-                <span text-white fs-5>
-                  100% verified enterprise partners
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <BeneficiaryLeftSide />
         <div
           className="col-lg-6 d-flex align-items-center justify-content-center"
           style={{ backgroundColor: "#f8fafc" }}
@@ -148,16 +98,18 @@ function BeneficiaryLogin() {
                 <hr className="flex-grow-1" />
               </div>
 
-              <button
+              <Link
+                to="/beneficiary-signup"
+                style={{ textDecoration: "none" }}
                 type="button"
                 className="btn btn-light border w-100 py-3 rounded-pill fw-semibold"
               >
                 Create a Client Account
-              </button>
+              </Link>
             </form>
             <p className="text-center mt-4">
               Are you a service provider?
-              <a href="#" className="text-decoration-none ms-1 s">
+              <a href="/provider-login" className="text-decoration-none ms-1 s">
                 Sign in as provider
               </a>
             </p>

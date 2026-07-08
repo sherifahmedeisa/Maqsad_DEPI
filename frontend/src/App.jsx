@@ -1,16 +1,7 @@
-import { useState } from "react";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
-import Page from "./components/Page";
+import AppRoutes from "./AppRoutes";
 
 function App() {
-  return (
-    <>
-      <Nav />
-      <Page />
-      <Footer />
-    </>
-  );
+  return <AppRoutes />;
 }
 
 export default App;

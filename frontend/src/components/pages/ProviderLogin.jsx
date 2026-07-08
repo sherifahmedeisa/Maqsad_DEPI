@@ -1,5 +1,7 @@
-import "../LoginForm.css";
-import illustration1 from "../../assets/illustration1.png";
+import { Link } from "react-router-dom";
+
+import "../Form.css";
+import ProviderLeftSide from "./ProviderLeftSide";
 import "./ProviderLogin.css";
 import { useState } from "react";
 
@@ -9,58 +11,7 @@ function ProviderLogin() {
   return (
     <div className="container-fluid  ">
       <div className="row h-100 ">
-        <div className="col-lg-6 left-side d-flex flex-column justify-content-between d-none d-lg-flex p-5">
-          <div className="d-flex align-items-center">
-            {/* <div className="square footer-square me-2">
-              <div className="circle footer-circle"></div>
-            </div>
-
-            <h4 className="text-white fw-bold m-0">Maqsad</h4> */}
-          </div>
-
-          <div>
-            <p className="text-white  display-6 fw-bold">
-              Join 10,000+ verified
-              <br />
-              service providers
-            </p>
-
-            <p className="text-secondary fs-4 mt-3">
-              Connect with enterprise clients, manage projects, and grow your
-              business on one unified platform.
-            </p>
-
-            <div className="mt-4">
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span className="material-symbols-outlined picon">
-                    shield
-                  </span>
-                </div>
-                <span text-white fs-5>
-                  Verified business credentials
-                </span>
-              </div>
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span class="material-symbols-outlined picon">language</span>
-                </div>
-                <span text-white fs-5>
-                  Performance-based visibility
-                </span>
-              </div>
-              <div className="feature d-flex align-items-center mb-3 ">
-                <div className="icon-circle d-flex align-items-center justify-content-center me-3">
-                  <span class="material-symbols-outlined picon">star</span>
-                </div>
-                <span text-white fs-5>
-                  Access to global enterprise clients
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <ProviderLeftSide />
         <div
           className="col-lg-6 d-flex align-items-center justify-content-center"
           style={{ backgroundColor: "#f8fafc" }}
@@ -91,7 +42,6 @@ function ProviderLogin() {
                   placeholder="Enter your email"
                 />
               </div>
-
               <div className="mb-3 position-relative">
                 <label className="form-label fw-semibold">
                   Password <span className="text-info">*</span>
@@ -114,7 +64,6 @@ function ProviderLogin() {
                   </span>
                 </button>
               </div>
-
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <div className="form-check">
                   <input
@@ -132,28 +81,29 @@ function ProviderLogin() {
                   Forgot password?
                 </a>
               </div>
-
               <button className="btn btn-info w-100 text-white fw-semibold py-3 rounded-pill">
                 Sign In to Provider Portal →
               </button>
-
               <div className="d-flex align-items-center my-4">
                 <hr className="flex-grow-1" />
                 <span className="mx-3 text-secondary">New to Maqsad?</span>
                 <hr className="flex-grow-1" />
               </div>
-
-              <button
+              <Link
+                to="/provider-signup"
                 type="button"
                 className="btn btn-light border w-100 py-3 rounded-pill fw-semibold"
               >
                 Create a Provider Account
-              </button>
+              </Link>
             </form>
 
             <p className="text-center mt-4">
               Looking to hire services?
-              <a href="#" className="text-decoration-none ms-1 s">
+              <a
+                href="/beneficiary-login"
+                className="text-decoration-none ms-1 s"
+              >
                 Sign in as a client
               </a>
             </p>

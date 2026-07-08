@@ -7,8 +7,8 @@ function Footer() {
           className="navbar-brand d-flex align-items-center fw-bold text-white mb-0"
           href="#"
         >
-          <div className="square footer-square me-2">
-            <div className="circle footer-circle"></div>
+          <div className=" footer-square me-2">
+            <div className=" footer-circle"></div>
           </div>
           <span>Maqsad</span>
         </a>

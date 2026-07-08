@@ -3,6 +3,7 @@ import ProviderLogin from "./pages/ProviderLogin";
 import BeneficiaryLogin from "./pages/BeneficiaryLogin";
 import ProviderSignup from "./pages/ProviderSignup";
 import BeneficiarySignup from "./pages/BeneficiarySignup";
+import BeneficiaryDashboard from "./pages/BeneficiaryDashboard";
 import "./Page.css";
 
 function Page() {
@@ -33,13 +34,6 @@ function Page() {
           </NavLink>
         </li>
       </ul>
-      <Routes>
-        <Route path="/" element={<Navigate to="/provider-login" replace />} />
-        <Route path="/provider-login" element={<ProviderLogin />} />
-        <Route path="/beneficiary-login" element={<BeneficiaryLogin />} />
-        <Route path="/provider-signup" element={<ProviderSignup />} />
-        <Route path="/beneficiary-signup" element={<BeneficiarySignup />} />
-      </Routes>
     </>
   );
 }
