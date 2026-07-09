@@ -66,8 +66,8 @@ function App() {
     );
   }
 
-  // Beneficiary (Client) gets sidebar layout (no top nav, no shared footer)
-  const showSidebar = user?.role === "beneficiary";
+  // Provider gets sidebar layout (no top nav, no shared footer)
+  const showSidebar = user?.role === "provider";
 
   return (
     <div className={`${showSidebar ? "" : "flex flex-col min-h-screen"} bg-background`}>
@@ -107,10 +107,10 @@ function App() {
           <Route path="/chat" element={<PrivateRoute><ChatPortal /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
-          {/* Client Sidebar Routes */}
-          <Route path="/proposal-history" element={<RoleRoute allowedRoles={["beneficiary"]}><ProposalHistory /></RoleRoute>} />
-          <Route path="/contract-manager" element={<RoleRoute allowedRoles={["beneficiary"]}><ContractManager /></RoleRoute>} />
-          <Route path="/analytics" element={<RoleRoute allowedRoles={["beneficiary"]}><Analytics /></RoleRoute>} />
+          {/* Provider Sidebar Routes */}
+          <Route path="/proposal-history" element={<RoleRoute allowedRoles={["provider"]}><ProposalHistory /></RoleRoute>} />
+          <Route path="/contract-manager" element={<RoleRoute allowedRoles={["provider"]}><ContractManager /></RoleRoute>} />
+          <Route path="/analytics" element={<RoleRoute allowedRoles={["provider"]}><Analytics /></RoleRoute>} />
           <Route path="/faq" element={<PrivateRoute><Faq /></PrivateRoute>} />
 
           {/* Admin Routes */}

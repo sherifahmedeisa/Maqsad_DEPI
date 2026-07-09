@@ -15,8 +15,8 @@ function Nav() {
   const notifRef = useRef(null);
   const userMenuRef = useRef(null);
 
-  // If beneficiary is logged in, don't render top nav (they use sidebar)
-  if (user && user.role === "beneficiary") return null;
+  // If provider is logged in, don't render top nav (they use sidebar)
+  if (user && user.role === "provider") return null;
 
   const handleLogout = async () => {
     try {
@@ -71,15 +71,9 @@ function Nav() {
                 <NavLink className={navLinkClass} to="/dashboard">
                   {t("nav.dashboard")}
                 </NavLink>
-                {user.role === "provider" ? (
-                  <NavLink className={navLinkClass} to="/browse-requests">
-                    {isRTL ? "تصفح الطلبات" : "Browse Requests"}
-                  </NavLink>
-                ) : (
-                  <NavLink className={navLinkClass} to="/browse-services">
-                    {t("nav.browseServices")}
-                  </NavLink>
-                )}
+                <NavLink className={navLinkClass} to="/browse-services">
+                  {t("nav.browseServices")}
+                </NavLink>
                 <NavLink className={navLinkClass} to="/chat">
                   {t("nav.messages")}
                 </NavLink>

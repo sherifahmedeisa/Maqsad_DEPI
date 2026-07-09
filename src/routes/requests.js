@@ -40,6 +40,20 @@ router.get('/me', ensureAuthenticated, async (req, res, next) => {
   try {
     const rfps = await RFP.findAll({
       where: { beneficiaryId: req.user.id },
+      include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }],
+      order: [['createdAt', 'DESC']],
+    });
+    res.json(rfps);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/received', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
+  try {
+    const rfps = await RFP.findAll({
+      where: { providerId: req.user.id },
+      include: [{ model: User, as: 'beneficiary', attributes: ['id', 'email', 'fullName'] }],
       order: [['createdAt', 'DESC']],
     });
     res.json(rfps);
@@ -51,6 +65,7 @@ router.get('/me', ensureAuthenticated, async (req, res, next) => {
 router.post('/', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
   try {
     const {
+      providerId,
       title,
       description,
       category,
@@ -65,6 +80,7 @@ router.post('/', ensureAuthenticated, ensureRole(['beneficiary']), async (req, r
 
     const rfp = await RFP.create({
       beneficiaryId: req.user.id,
+      providerId,
       title,
       description,
       category,
@@ -88,7 +104,12 @@ router.get('/:id', async (req, res, next) => {
     const rfp = await RFP.findByPk(req.params.id, {
       include: [
         { model: User, as: 'beneficiary', attributes: ['id', 'email', 'fullName'] },
-        { model: Proposal, as: 'proposals' },
+        { model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] },
+        {
+          model: Proposal,
+          as: 'proposals',
+          include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }],
+        },
       ],
     });
     if (!rfp) {

@@ -73,13 +73,10 @@ function BrowseServiceCatalog() {
   }, []);
 
   const getProviderCount = (categoryTitle) => {
-    const filteredRfps = rfps.filter(
-      (r) => r.category?.toLowerCase() === categoryTitle.toLowerCase()
+    const matched = providers.filter(
+      (p) => p.serviceTags && p.serviceTags.some((t) => t.toLowerCase().includes(categoryTitle.toLowerCase()))
     );
-    // Find unique provider IDs (stored in beneficiaryId due to role inversion)
-    const uniqueProviderIds = new Set(filteredRfps.map((r) => r.beneficiaryId));
-    const size = uniqueProviderIds.size;
-    return t("browseCatalog.providerCount", { count: size });
+    return t("browseCatalog.providerCount", { count: matched.length });
   };
 
   const getFeaturedProviders = () => {

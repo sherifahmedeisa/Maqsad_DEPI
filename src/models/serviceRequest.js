@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
+    providerId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

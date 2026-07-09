@@ -92,7 +92,7 @@ function Dashboard() {
           setMyProposals(propData);
         }
       } else if (user.role === "provider") {
-        const feedRes = await fetch("/api/dashboard/feed");
+        const feedRes = await fetch("/api/requests/received");
         if (feedRes.ok) {
           const feedData = await feedRes.json();
           setFeed(feedData);
@@ -160,11 +160,7 @@ function Dashboard() {
   // ============================================================
   if (user.role === "beneficiary") {
     return (
-      <div className="flex min-h-screen bg-background w-full">
-        <ProviderSidebar />
-
-        <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
-          <div className="max-w-container-max w-full mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl flex-grow">
+      <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
         {showSuccessToast && (
           <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
             <div className="flex gap-md items-start">
@@ -442,9 +438,7 @@ function Dashboard() {
               </div>
             </section>
           </div>
-          </div>
-          </div>
-        </main>
+        </div>
       </div>
     );
   }
@@ -454,7 +448,11 @@ function Dashboard() {
   // ============================================================
   if (user.role === "provider") {
     return (
-      <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+      <div className="flex min-h-screen bg-background w-full">
+        <ProviderSidebar />
+
+        <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
+          <div className="max-w-container-max w-full mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl flex-grow">
             {showSuccessToast && (
               <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
                 <div className="flex gap-md items-start">
@@ -652,11 +650,13 @@ function Dashboard() {
                     </div>
                   ))
                 )}
-              </div>
+            </div>
           </div>
         </div>
-    );
-  }
+      </main>
+    </div>
+  );
+}
 
   // ============================================================
   // ADMIN DASHBOARD — kept as-is per user decision

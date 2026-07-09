@@ -46,12 +46,12 @@ function ProviderSidebar() {
           <div className="flex items-center gap-sm mt-md p-sm bg-surface-container-low rounded-lg border border-outline-variant">
             <div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant overflow-hidden">
               <span className="font-label-md text-label-md text-on-surface font-bold uppercase">
-                {user?.fullName?.charAt(0) || (isRTL ? "ع" : "C")}
+                {user?.fullName?.charAt(0) || (isRTL ? "م" : "P")}
               </span>
             </div>
             <div>
               <div className="font-label-md text-label-md text-on-surface font-semibold">
-                {user?.fullName || t("nav.client")}
+                {user?.fullName || t("sidebar.provider")}
               </div>
               <div className="font-label-sm text-label-sm text-secondary flex items-center mt-xs">
                 <span
@@ -60,7 +60,7 @@ function ProviderSidebar() {
                 >
                   verified
                 </span>
-                {isRTL ? "عميل موثّق" : "Verified Client"}
+                {t("sidebar.verifiedProvider")}
               </div>
             </div>
           </div>
@@ -68,11 +68,11 @@ function ProviderSidebar() {
 
         {/* Post New Service CTA */}
         <NavLink
-          to="/rfp/new"
+          to="/profile"
           className="w-full bg-primary hover:bg-on-surface text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center transition-colors mb-md text-decoration-none"
         >
-          <span className={`material-symbols-outlined text-[18px] ${isRTL ? 'ml-sm' : 'mr-sm'}`}>add</span>
-          {isRTL ? "طلب خدمة جديد (RFP)" : "Post New RFP"}
+          <span className={`material-symbols-outlined text-[18px] ${isRTL ? 'ml-sm' : 'mr-sm'}`}>edit</span>
+          {isRTL ? "تحديث الخدمات" : "Update Profile & Services"}
         </NavLink>
 
         {/* Navigation Items */}
@@ -144,7 +144,7 @@ function ProviderSidebar() {
           </span>
           <Link to="/profile" className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant text-decoration-none">
             <span className="font-label-sm text-label-sm text-on-surface font-bold uppercase">
-              {user?.fullName?.charAt(0) || (isRTL ? "ع" : "C")}
+              {user?.fullName?.charAt(0) || (isRTL ? "م" : "P")}
             </span>
           </Link>
         </div>
@@ -184,10 +184,10 @@ function ProviderSidebar() {
               isActive ? "text-secondary" : "text-on-surface-variant hover:text-primary"
             }`
           }
-          to="/rfp/new"
+          to="/profile"
         >
-          <span className="material-symbols-outlined text-[24px] mb-1">add_box</span>
-          <span className="font-label-sm text-label-sm text-[10px]">{isRTL ? "طلب خدمة" : "Post RFP"}</span>
+          <span className="material-symbols-outlined text-[24px] mb-1">edit</span>
+          <span className="font-label-sm text-label-sm text-[10px]">{isRTL ? "الملف الشخصي" : "My Profile"}</span>
         </NavLink>
         <NavLink
           className={({ isActive }) =>

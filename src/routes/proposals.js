@@ -52,7 +52,9 @@ router.get('/:id', ensureAuthenticated, async (req, res, next) => {
     if (!proposal) {
       return res.status(404).json({ error: 'Proposal not found' });
     }
-    if (req.user.role === 'provider' && proposal.providerId !== req.user.id) {
+    const isClientOwner = req.user.role === 'beneficiary' && proposal.rfp.beneficiaryId === req.user.id;
+    const isProviderOwner = req.user.role === 'provider' && proposal.providerId === req.user.id;
+    if (!isClientOwner && !isProviderOwner) {
       return res.status(403).json({ error: 'Forbidden' });
     }
     res.json(proposal);
@@ -147,8 +149,13 @@ router.get('/rfp/:rfpId', ensureAuthenticated, async (req, res, next) => {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
+    const where = { rfpId: rfp.id };
+    if (req.user.role === 'provider') {
+      where.providerId = req.user.id;
+    }
+
     const proposals = await Proposal.findAll({
-      where: { rfpId: rfp.id },
+      where,
       include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }],
     });
     res.json(proposals);

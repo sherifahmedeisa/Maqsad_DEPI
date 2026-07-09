@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
@@ -23,12 +23,14 @@ function RfpForm() {
   const { user } = useAuth();
   const { id } = useParams(); // Exists if we are editing
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t, i18n } = useTranslation();
   const isEdit = !!id;
 
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
+  const [providerId, setProviderId] = useState(searchParams.get("providerId") || "");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Software Development");
@@ -36,6 +38,11 @@ function RfpForm() {
   const [budgetMax, setBudgetMax] = useState("");
   const [estimatedDays, setEstimatedDays] = useState("30");
   const [status, setStatus] = useState("open");
+
+  const [certifications, setCertifications] = useState("");
+  const [experience, setExperience] = useState("");
+  const [securityClearance, setSecurityClearance] = useState("");
+  const [locationVal, setLocationVal] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
@@ -66,12 +73,26 @@ function RfpForm() {
       setCategory(rfp.category || "Software Development");
       setBudgetMin(rfp.budgetMin);
       setBudgetMax(rfp.budgetMax);
+      setProviderId(rfp.providerId || "");
       if (rfp.deadline) {
         const diffTime = Math.abs(new Date(rfp.deadline) - new Date(rfp.createdAt || Date.now()));
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         setEstimatedDays(String(diffDays || 30));
       }
       setStatus(rfp.status);
+
+      let tagsObj = {};
+      if (rfp.tags) {
+        try {
+          tagsObj = typeof rfp.tags === "string" ? JSON.parse(rfp.tags) : rfp.tags;
+        } catch (e) {
+          tagsObj = {};
+        }
+      }
+      setCertifications(tagsObj.certifications || "");
+      setExperience(tagsObj.experience || "");
+      setSecurityClearance(tagsObj.securityClearance || "");
+      setLocationVal(tagsObj.location || "");
     } catch (err) {
       console.error(err);
       setError(err.message || t("rfpForm.errors.submissionError"));
@@ -128,6 +149,7 @@ function RfpForm() {
       targetDate.setDate(targetDate.getDate() + Number(estimatedDays));
 
       const payload = {
+        providerId: providerId || null,
         title,
         description,
         category,
@@ -135,6 +157,12 @@ function RfpForm() {
         budgetMax: Number(budgetMax),
         deadline: targetDate.toISOString(),
         status,
+        tags: {
+          certifications,
+          experience,
+          securityClearance,
+          location: locationVal,
+        },
       };
 
       const url = isEdit ? `/api/requests/${id}` : "/api/requests";
@@ -383,6 +411,63 @@ function RfpForm() {
                     </div>
                   </div>
                 )}
+                <div className="border-t border-outline-variant pt-lg mt-md">
+                  <h3 className="font-label-md text-label-md text-secondary font-bold uppercase mb-md">
+                    {isRTL ? "متطلبات العميل (اختياري)" : "Client Requirements (Optional)"}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
+                    <div>
+                      <label className="block font-label-md text-label-md text-on-background mb-xs">
+                        {isRTL ? "الشهادات المطلوبة" : "Required Certifications"}
+                      </label>
+                      <input
+                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors"
+                        type="text"
+                        placeholder={isRTL ? "مثال: AWS Advanced Tier" : "e.g. AWS Advanced Tier"}
+                        value={certifications}
+                        onChange={(e) => setCertifications(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-label-md text-label-md text-on-background mb-xs">
+                        {isRTL ? "الخبرة المطلوبة" : "Required Experience"}
+                      </label>
+                      <input
+                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors"
+                        type="text"
+                        placeholder={isRTL ? "مثال: حد أدنى 3 سنوات" : "e.g. Minimum 3 years"}
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-md mt-md">
+                    <div>
+                      <label className="block font-label-md text-label-md text-on-background mb-xs">
+                        {isRTL ? "التصاريح الأمنية" : "Security Clearances"}
+                      </label>
+                      <input
+                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors"
+                        type="text"
+                        placeholder={isRTL ? "مثال: ISO 27001 compliance" : "e.g. ISO 27001 compliance"}
+                        value={securityClearance}
+                        onChange={(e) => setSecurityClearance(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-label-md text-label-md text-on-background mb-xs">
+                        {isRTL ? "النطاق الجغرافي" : "Preferred Location"}
+                      </label>
+                      <input
+                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors"
+                        type="text"
+                        placeholder={isRTL ? "مثال: الشرق الأوسط أو عن بعد" : "e.g. NA or EU timezones"}
+                        value={locationVal}
+                        onChange={(e) => setLocationVal(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

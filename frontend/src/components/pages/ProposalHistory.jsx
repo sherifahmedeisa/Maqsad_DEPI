@@ -8,7 +8,7 @@ import Footer from "../Footer";
 function ProposalHistory() {
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
-  const [proposals, setProposals] = useState([]);
+  const [rfps, setRfps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -16,47 +16,28 @@ function ProposalHistory() {
   const isRTL = i18n.language.startsWith('ar');
 
   useEffect(() => {
-    fetchReceivedProposals();
+    fetchReceivedRequests();
   }, []);
 
-  const fetchReceivedProposals = async () => {
+  const fetchReceivedRequests = async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/proposals/received");
-      if (!res.ok) throw new Error("Failed to load received bookings history");
+      const res = await fetch("/api/requests/received");
+      if (!res.ok) throw new Error("Failed to load incoming requests");
       const data = await res.json();
-      setProposals(data);
+      setRfps(data);
     } catch (err) {
       console.error(err);
-      setError(err.message || "An error occurred retrieving proposals.");
+      setError(err.message || "An error occurred retrieving incoming requests.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateStatus = async (proposalId, newStatus) => {
-    try {
-      const res = await fetch(`/api/proposals/${proposalId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to update status");
-      }
-      // Refresh list
-      fetchReceivedProposals();
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
-  };
-
-  const filteredProposals = proposals.filter((p) => {
+  const filteredRfps = rfps.filter((r) => {
     if (filterStatus === "all") return true;
-    return p.status === filterStatus;
+    return r.status === filterStatus;
   });
 
   return (
@@ -72,16 +53,15 @@ function ProposalHistory() {
           <div className="flex justify-between items-center border-b border-outline-variant pb-md">
             <div>
               <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold leading-tight">
-                {t("proposalHistory.title")}
+                {isRTL ? "طلبات العروض الواردة" : "Incoming RFPs"}
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
-                {t("proposalHistory.subtitle")}
+                {isRTL ? "راجع طلبات تقديم العروض التي أرسلها العملاء إليك مباشرة" : "Review project requests sent directly to you by clients"}
               </p>
             </div>
             <button
-              onClick={fetchReceivedProposals}
+              onClick={fetchReceivedRequests}
               className="p-2 border border-outline-variant hover:bg-surface-container-low rounded-lg transition-colors flex items-center justify-center bg-white"
-              aria-label={t("proposalHistory.refreshList")}
             >
               <span className="material-symbols-outlined text-[20px] text-on-surface-variant">refresh</span>
             </button>
@@ -89,7 +69,7 @@ function ProposalHistory() {
 
           {/* Filters Bar */}
           <div className="flex gap-xs bg-surface-container-lowest p-sm border border-outline-variant rounded-xl w-fit">
-            {["all", "submitted", "shortlisted", "accepted", "rejected"].map((status) => (
+            {["all", "open", "closed"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
@@ -99,7 +79,7 @@ function ProposalHistory() {
                     : "bg-transparent text-on-surface-variant hover:bg-surface-container-low"
                 }`}
               >
-                {t(`proposalHistory.filters.${status}`)}
+                {status === "all" ? (isRTL ? "الكل" : "All") : (status === "open" ? (isRTL ? "نشط" : "Open") : (isRTL ? "مغلق" : "Closed"))}
               </button>
             ))}
           </div>
@@ -107,21 +87,19 @@ function ProposalHistory() {
           {loading ? (
             <div className="flex-grow flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-secondary mb-3"></div>
-              <p className="text-on-surface-variant text-sm">{t("proposalHistory.loading")}</p>
+              <p className="text-on-surface-variant text-sm">{isRTL ? "جاري تحميل طلبات العروض..." : "Loading incoming RFPs..."}</p>
             </div>
           ) : error ? (
             <div className="bg-error-container text-on-error-container p-lg rounded-xl border border-error/25">
-              <h4 className="font-label-md text-label-md font-bold mb-xs">{t("proposalHistory.syncFailed")}</h4>
+              <h4 className="font-label-md text-label-md font-bold mb-xs">{isRTL ? "فشل التزامن" : "Sync Failed"}</h4>
               <p className="font-body-sm text-body-sm">{error}</p>
             </div>
-          ) : filteredProposals.length === 0 ? (
+          ) : filteredRfps.length === 0 ? (
             <div className="bg-white border border-outline-variant rounded-xl p-2xl text-center flex flex-col items-center justify-center shadow-sm">
               <span className="material-symbols-outlined text-on-surface-variant text-5xl mb-md">inbox</span>
-              <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">{t("proposalHistory.empty.title")}</h3>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">{isRTL ? "لا توجد طلبات واردة" : "No Incoming RFPs"}</h3>
               <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-xs">
-                {filterStatus === "all"
-                  ? t("proposalHistory.empty.descAll")
-                  : t("proposalHistory.empty.descStatus", { status: t(`proposalHistory.filters.${filterStatus}`) })}
+                {isRTL ? "ستظهر طلبات تقديم العروض الموجهة إليك هنا بمجرد إرسالها من قبل العملاء." : "RFPs directed to you by clients will appear here once submitted."}
               </p>
             </div>
           ) : (
@@ -130,105 +108,57 @@ function ProposalHistory() {
                 <table className={`w-full border-collapse ${isRTL ? 'text-right' : 'text-left'}`}>
                   <thead>
                     <tr className="bg-surface-container-low border-b border-outline-variant">
-                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{t("proposalHistory.table.client")}</th>
-                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{t("proposalHistory.table.listing")}</th>
-                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{t("proposalHistory.table.offerDetails")}</th>
-                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{t("proposalHistory.table.receivedDate")}</th>
-                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{t("proposalHistory.table.status")}</th>
-                      <th className={`p-md font-label-sm text-label-sm text-on-surface-variant font-bold ${isRTL ? 'text-left' : 'text-right'}`}>{t("proposalHistory.table.actions")}</th>
+                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{isRTL ? "العميل" : "Client"}</th>
+                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{isRTL ? "عنوان المشروع" : "Project Title"}</th>
+                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{isRTL ? "نطاق الميزانية" : "Budget Range"}</th>
+                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{isRTL ? "تاريخ الاستلام" : "Received Date"}</th>
+                      <th className="p-md font-label-sm text-label-sm text-on-surface-variant font-bold">{isRTL ? "الحالة" : "Status"}</th>
+                      <th className={`p-md font-label-sm text-label-sm text-on-surface-variant font-bold ${isRTL ? 'text-left' : 'text-right'}`}>{isRTL ? "الإجراء" : "Action"}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredProposals.map((prop) => (
-                      <tr key={prop.id} className="border-b border-outline-variant hover:bg-[#f8fafc]/50 transition-colors">
+                    {filteredRfps.map((rfp) => (
+                      <tr key={rfp.id} className="border-b border-outline-variant hover:bg-[#f8fafc]/50 transition-colors">
                         <td className="p-md">
                           <div className="flex items-center gap-md">
                             <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">
-                              {prop.provider?.fullName?.charAt(0) || "C"}
+                              {rfp.beneficiary?.fullName?.charAt(0) || "C"}
                             </div>
                             <div>
                               <div className="font-label-md text-label-md text-on-surface font-semibold">
-                                {prop.provider?.fullName || t("proposalHistory.defaults.clientUser")}
+                                {rfp.beneficiary?.fullName || "B2B Client"}
                               </div>
-                              <div className="text-xs text-on-surface-variant">{prop.provider?.email}</div>
+                              <div className="text-xs text-on-surface-variant">{rfp.beneficiary?.email}</div>
                             </div>
                           </div>
                         </td>
                         <td className="p-md">
-                          <Link to={`/rfp/${prop.rfpId}`} className="text-secondary hover:underline font-semibold font-label-md">
-                            {prop.rfp?.title || t("proposalHistory.defaults.customOffer")}
+                          <Link to={`/rfp/${rfp.id}`} className="text-secondary hover:underline font-semibold font-label-md">
+                            {rfp.title}
                           </Link>
                         </td>
                         <td className="p-md">
                           <div className="font-label-md text-label-md font-bold text-primary">
-                            ${Number(prop.proposedBudget || 0).toLocaleString()}
+                            ${Number(rfp.budgetMin || 0).toLocaleString()} - ${Number(rfp.budgetMax || 0).toLocaleString()}
                           </div>
-                          <div className="text-xs text-on-surface-variant">{t("proposalHistory.defaults.requiredScope")}</div>
                         </td>
                         <td className="p-md font-body-sm text-body-sm text-on-surface-variant">
-                          {new Date(prop.createdAt).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', { month: "short", day: "numeric", year: "numeric" })}
+                          {new Date(rfp.createdAt).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', { month: "short", day: "numeric", year: "numeric" })}
                         </td>
                         <td className="p-md">
                           <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs capitalize ${
-                            prop.status === "accepted" ? "bg-[#e8f5e9] text-[#2e7d32]" :
-                            prop.status === "rejected" ? "bg-[#ffebee] text-[#c62828]" :
-                            prop.status === "shortlisted" ? "bg-[#e8f0fe] text-[#1565c0]" : "bg-[#f5f5f5] text-[#616161]"
+                            rfp.status === "open" ? "bg-emerald-50 text-emerald-800" : "bg-error-container text-on-error-container"
                           }`}>
-                            {t(`proposalHistory.filters.${prop.status}`, prop.status)}
+                            {rfp.status === "open" ? (isRTL ? "نشط" : "Open") : (isRTL ? "مغلق" : "Closed")}
                           </span>
                         </td>
                         <td className={`p-md ${isRTL ? 'text-left' : 'text-right'}`}>
-                          <div className={`flex gap-xs ${isRTL ? 'justify-start' : 'justify-end'}`}>
-                            <Link
-                              to="/chat"
-                              className="p-1.5 border border-[#cbd5e1] rounded-lg text-slate-700 hover:bg-slate-100 transition-colors flex items-center justify-center text-decoration-none"
-                              title={t("proposalHistory.actions.chat")}
-                            >
-                              <span className="material-symbols-outlined text-[18px]">chat</span>
-                            </Link>
-
-                            {prop.status === "submitted" && (
-                              <>
-                                <button
-                                  onClick={() => handleUpdateStatus(prop.id, "shortlisted")}
-                                  className="px-2.5 py-1.5 bg-[#e8f0fe] text-[#1565c0] rounded-lg font-label-sm text-xs font-bold border-0 hover:bg-[#d2e3fc] transition-colors"
-                                >
-                                  {t("proposalHistory.actions.shortlist")}
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateStatus(prop.id, "accepted")}
-                                  className="px-2.5 py-1.5 bg-[#e8f5e9] text-[#2e7d32] rounded-lg font-label-sm text-xs font-bold border-0 hover:bg-[#c8e6c9] transition-colors"
-                                >
-                                  {t("proposalHistory.actions.accept")}
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateStatus(prop.id, "rejected")}
-                                  className="p-1.5 border border-[#ffebee] bg-[#ffebee] text-[#c62828] rounded-lg hover:bg-[#ffcdd2] transition-colors flex items-center justify-center"
-                                  title={t("proposalHistory.actions.reject")}
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">close</span>
-                                </button>
-                              </>
-                            )}
-
-                            {prop.status === "shortlisted" && (
-                              <>
-                                <button
-                                  onClick={() => handleUpdateStatus(prop.id, "accepted")}
-                                  className="px-2.5 py-1.5 bg-[#e8f5e9] text-[#2e7d32] rounded-lg font-label-sm text-xs font-bold border-0 hover:bg-[#c8e6c9] transition-colors"
-                                >
-                                  {t("proposalHistory.actions.accept")}
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateStatus(prop.id, "rejected")}
-                                  className="p-1.5 border border-[#ffebee] bg-[#ffebee] text-[#c62828] rounded-lg hover:bg-[#ffcdd2] transition-colors flex items-center justify-center"
-                                  title={t("proposalHistory.actions.reject")}
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">close</span>
-                                </button>
-                              </>
-                            )}
-                          </div>
+                          <Link
+                            to={`/rfp/${rfp.id}`}
+                            className="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-sm text-xs font-bold border-0 hover:bg-on-surface transition-colors text-decoration-none text-white inline-block"
+                          >
+                            {isRTL ? "مراجعة وتقديم عرض" : "Review & Respond"}
+                          </Link>
                         </td>
                       </tr>
                     ))}

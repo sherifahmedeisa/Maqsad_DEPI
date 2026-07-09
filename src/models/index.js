@@ -56,6 +56,9 @@ ProviderProfile.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 User.hasMany(RFP, { foreignKey: 'beneficiaryId', as: 'rfps' });
 RFP.belongsTo(User, { foreignKey: 'beneficiaryId', as: 'beneficiary' });
 
+User.hasMany(RFP, { foreignKey: 'providerId', as: 'receivedRequests' });
+RFP.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
+
 User.hasMany(Proposal, { foreignKey: 'providerId', as: 'proposals' });
 Proposal.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 

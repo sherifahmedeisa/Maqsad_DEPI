@@ -28,6 +28,7 @@ router.get('/summary', ensureAuthenticated, async (req, res, next) => {
         include: [{ model: RFP, as: 'rfp', required: true }],
       });
     } else if (user.role === 'provider') {
+      summary.metrics.receivedRequests = await RFP.count({ where: { providerId: user.id } });
       summary.metrics.totalProposals = await Proposal.count({ where: { providerId: user.id } });
       summary.metrics.submittedProposals = await Proposal.count({
         where: { providerId: user.id, status: 'submitted' },
