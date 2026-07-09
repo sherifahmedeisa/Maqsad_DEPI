@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) => {
       where[Op.or] = [
         { title: { [Op.like]: `%${req.query.search}%` } },
         { description: { [Op.like]: `%${req.query.search}%` } },
+        { tags: { [Op.like]: `%${req.query.search}%` } },
       ];
     }
     
@@ -135,6 +136,20 @@ router.delete('/:id', ensureOwnerOrAdmin(async (req) => {
     
     await service.destroy();
     res.json({ message: 'Service deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const service = await Service.findByPk(req.params.id, {
+      include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }]
+    });
+    if (!service) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+    res.json(service);
   } catch (error) {
     next(error);
   }

@@ -3,38 +3,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
-const serviceCategories = [
-  {
-    icon: "code",
-    key: "software",
-    title: "Software Development",
-  },
-  {
-    icon: "cloud",
-    key: "infrastructure",
-    title: "IT Infrastructure",
-  },
-  {
-    icon: "campaign",
-    key: "marketing",
-    title: "Marketing & Design",
-  },
-  {
-    icon: "gavel",
-    key: "legal",
-    title: "Legal & Auditing",
-  },
-  {
-    icon: "account_balance",
-    key: "financial",
-    title: "Financial Services",
-  },
-  {
-    icon: "engineering",
-    key: "general",
-    title: "General Services",
-  },
-];
 
 function BrowseServiceCatalog() {
   const { user } = useAuth();
@@ -42,6 +10,7 @@ function BrowseServiceCatalog() {
   const [providers, setProviders] = useState([]);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const isRTL = i18n.language.startsWith('ar');
 
@@ -49,9 +18,14 @@ function BrowseServiceCatalog() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        let url = "/api/services";
+        if (searchQuery) {
+          url += `?search=${encodeURIComponent(searchQuery)}`;
+        }
+        
         const [providersRes, servicesRes] = await Promise.all([
           fetch("/api/providers"),
-          fetch("/api/services")
+          fetch(url)
         ]);
 
         if (providersRes.ok) {
@@ -69,22 +43,13 @@ function BrowseServiceCatalog() {
       }
     };
 
-    fetchData();
-  }, []);
+    const debounceTimer = setTimeout(() => {
+      fetchData();
+    }, 300);
 
-  const getProviderCount = (categoryTitle) => {
-    const matched = providers.filter(
-      (p) => p.serviceTags && p.serviceTags.some((t) => t.toLowerCase().includes(categoryTitle.toLowerCase()))
-    );
-    return t("browseCatalog.providerCount", { count: matched.length });
-  };
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
 
-  const getFeaturedServices = () => {
-    if (services && services.length > 0) {
-      return services.slice(0, 8);
-    }
-    return [];
-  };
 
   return (
     <div className="flex-grow w-full">
@@ -106,24 +71,16 @@ function BrowseServiceCatalog() {
             </span>
             <input
               className={`w-full ${isRTL ? 'pr-12 pl-6' : 'pl-12 pr-6'} py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all shadow-sm`}
-              placeholder={t("browseCatalog.searchPlaceholder")}
+              placeholder={t("browseCatalog.searchPlaceholder", "Search services by title or tag...")}
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
       </div>
 
-      {/* Service Categories Grid */}
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
-        <div className="mb-xl">
-          <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">
-            {t("browseCatalog.categories.title")}
-          </h2>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {t("browseCatalog.categories.subtitle")}
-          </p>
-        </div>
-
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary mb-2"></div>
@@ -131,32 +88,6 @@ function BrowseServiceCatalog() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg mb-2xl">
-              {serviceCategories.map((cat) => (
-                <Link
-                  key={cat.key}
-                  to={`/browse-requests?category=${encodeURIComponent(cat.title)}`}
-                  className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg hover:shadow-md hover:border-secondary transition-all cursor-pointer group text-decoration-none"
-                >
-                  <div className="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center mb-md text-secondary group-hover:bg-secondary-container transition-colors">
-                    <span className="material-symbols-outlined text-[28px]">{cat.icon}</span>
-                  </div>
-                  <h3 className="font-headline-sm text-headline-sm text-on-surface mb-xs group-hover:text-primary transition-colors">
-                    {t(`browseCatalog.categories.${cat.key}`, cat.title)}
-                  </h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-md">
-                    {t(`browseCatalog.categories.${cat.key}Desc`, cat.description)}
-                  </p>
-                  <span className="font-label-sm text-label-sm text-secondary flex items-center gap-xs">
-                    {getProviderCount(cat.title)}
-                    <span className={`material-symbols-outlined text-sm transition-transform ${isRTL ? 'group-hover:-translate-x-1 rotate-180' : 'group-hover:translate-x-1'}`}>
-                      arrow_forward
-                    </span>
-                  </span>
-                </Link>
-              ))}
-            </div>
-
             {/* Featured Providers Section */}
             <div className="mb-xl">
               <div className="flex justify-between items-center mb-lg">
@@ -171,17 +102,18 @@ function BrowseServiceCatalog() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
-                {getFeaturedServices().length === 0 ? (
+                {services && services.length === 0 ? (
                   <div className="col-span-full py-8 text-center text-on-surface-variant font-body-md bg-surface-container-low rounded-xl border border-outline-variant/60">
                     {isRTL ? "لا توجد خدمات متاحة حالياً" : "No services available at the moment."}
                   </div>
                 ) : (
-                  getFeaturedServices().map((service) => (
-                    <div
+                  services.map((service) => (
+                    <Link
                       key={service.id}
-                      className="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col hover:shadow-md hover:border-secondary transition-all cursor-pointer h-full"
+                      to={`/service/${service.id}`}
+                      className="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col hover:shadow-md hover:border-secondary transition-all cursor-pointer h-full text-decoration-none"
                     >
-                      <h4 className="font-label-lg text-label-lg text-on-surface font-semibold line-clamp-2 mb-xs">
+                      <h4 className="font-label-lg text-label-lg text-on-surface font-semibold line-clamp-2 mb-xs group-hover:text-primary transition-colors">
                         {service.title}
                       </h4>
                       <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-md flex-grow">
@@ -207,7 +139,7 @@ function BrowseServiceCatalog() {
                           {service.price ? `$${service.price}` : (isRTL ? "سعر متغير" : "Variable")}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   ))
                 )}
               </div>

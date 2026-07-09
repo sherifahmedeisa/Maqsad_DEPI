@@ -21,6 +21,7 @@ import BrowseServiceCatalog from "./components/pages/BrowseServiceCatalog";
 import LandingPage from "./components/pages/LandingPage";
 import Profile from "./components/pages/Profile";
 import ProviderServices from "./components/pages/ProviderServices";
+import ServiceDetails from "./components/pages/ServiceDetails";
 
 // Protected Route Guard
 function PrivateRoute({ children }) {
@@ -99,6 +100,7 @@ function App() {
           {/* Browse pages — accessible to all logged-in users */}
           <Route path="/browse-requests" element={<PrivateRoute><BrowseRequests /></PrivateRoute>} />
           <Route path="/browse-services" element={<BrowseServiceCatalog />} />
+          <Route path="/service/:id" element={<ServiceDetails />} />
 
           {/* Authenticated Routes */}
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
