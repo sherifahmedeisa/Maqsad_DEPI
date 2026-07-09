@@ -18,29 +18,6 @@ function LandingPage() {
     { icon: "school", name: t("landing.categories.training"), color: "#e11d48" },
   ];
 
-  const testimonials = [
-    {
-      quote: isRTL ? "انتقلنا من البحث عن مزودي خدمات لمدة 6 أسابيع إلى حجز تدقيق أمني خلال 3 أيام فقط. المحادثة المباشرة مع مقدمي الخدمات وفّرت علينا أسابيع من المراسلات." : "We went from a 6-week provider search to booking a security audit in just 3 days. Direct messaging saved us weeks of email threads.",
-      name: isRTL ? "ليلى حسان" : "Laila Hassan",
-      role: isRTL ? "رئيسة قسم المشتريات التقنية" : "Head of IT Procurement",
-      company: isRTL ? "مجموعة ثروة" : "Tharwa Group",
-      initials: isRTL ? "لح" : "LH",
-    },
-    {
-      quote: isRTL ? "كشركة استشارية صغيرة، كانت الظهور والوصول للعملاء أكبر تحدٍّ لنا. خلال شهرين على مقصد، حصلنا على ثلاثة عقود مؤسسية بقيمة تجاوزت 80 ألف دولار." : "As a boutique consultancy, visibility was our biggest challenge. Within two months on Maqsad, we secured three enterprise contracts worth over $80k.",
-      name: isRTL ? "عمر فريد" : "Omar Farid",
-      role: isRTL ? "الشريك الإداري" : "Managing Partner",
-      company: isRTL ? "شركاء النيل للاستراتيجية" : "Nile Strategy Partners",
-      initials: isRTL ? "عف" : "OF",
-    },
-    {
-      quote: isRTL ? "سير العمل للعروض سلس وواضح — بدون قوالب معقدة أو مصطلحات غامضة. فريقنا يستمتع فعلاً باستخدام المنصة، وهذا يقول الكثير." : "The proposal workflow is frictionless—no convoluted templates or vague terminology. Our team actually enjoys using the platform, which says a lot.",
-      name: isRTL ? "سارة الخوري" : "Sarah Al-Khoury",
-      role: isRTL ? "مديرة العمليات" : "Operations Director",
-      company: isRTL ? "حلول الطب التقني - الشرق الأوسط" : "MedTech Solutions ME",
-      initials: isRTL ? "سخ" : "SA",
-    },
-  ];
 
   const faqs = [
     {
@@ -264,49 +241,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* ─── SOCIAL PROOF / TESTIMONIALS ─── */}
-      <section className="py-2xl md:py-[80px] px-margin-mobile md:px-lg" style={{ background: "#f8fafb" }}>
-        <div className="max-w-container-max mx-auto">
-          <div className="text-center mb-2xl">
-            <span className="text-[13px] font-semibold text-emerald-600 uppercase tracking-widest">{t("landing.testimonials.subtitle")}</span>
-            <h2 className="text-[32px] md:text-[40px] text-slate-900 font-extrabold mt-2 tracking-tight">
-              {t("landing.testimonials.title")}
-            </h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-            {testimonials.map((testimonial, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-lg border border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between shadow-sm hover:shadow-md"
-              >
-                <div>
-                  <div className={`flex gap-0.5 mb-md ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                    {[...Array(5)].map((_, j) => (
-                      <span key={j} className="material-symbols-outlined text-amber-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                    ))}
-                  </div>
-                  <p className="text-[15px] text-slate-600 leading-relaxed mb-lg">
-                    "{testimonial.quote}"
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 pt-md border-t border-slate-100">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold text-white flex-shrink-0 uppercase"
-                    style={{ background: ["#2563eb", "#7c3aed", "#059669"][i] }}
-                  >
-                    {testimonial.initials}
-                  </div>
-                  <div className={isRTL ? 'text-right' : 'text-left'}>
-                    <div className="text-[14px] font-bold text-slate-800">{testimonial.name}</div>
-                    <div className="text-[12px] text-slate-400">{testimonial.role}, {testimonial.company}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ─── FOR CLIENTS + FOR PROVIDERS ─── */}
       <section className="py-2xl md:py-[80px] px-margin-mobile md:px-lg bg-white">
