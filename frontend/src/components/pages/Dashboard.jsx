@@ -316,11 +316,11 @@ function Dashboard() {
             <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
               <div className="flex justify-between items-center border-b border-outline-variant pb-md">
                 <h2 className="font-headline-md text-headline-md text-on-surface">
-                  {t("dashboard.client.bookedRequests")}
+                  {t("dashboard.client.bookedRequests", "My Requests")}
                 </h2>
               </div>
 
-              {filteredProposals.length === 0 ? (
+              {filteredRfps.length === 0 ? (
                 <div className="py-12 text-center flex flex-col items-center">
                   <span className="material-symbols-outlined text-on-surface-variant text-4xl mb-2">
                     assignment
@@ -340,42 +340,39 @@ function Dashboard() {
                 </div>
               ) : (
                 <div className="flex flex-col">
-                  {filteredProposals.map((prop) => (
+                  {filteredRfps.map((rfp) => (
                     <div
-                      key={prop.id}
+                      key={rfp.id}
                       className="py-md border-b border-outline-variant last:border-b-0 flex flex-col sm:flex-row sm:items-center justify-between gap-md group"
                     >
                       <div className="flex flex-col gap-xs">
                         <Link
-                          to={`/rfp/${prop.rfpId}`}
+                          to={`/rfp/${rfp.id}`}
                           className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors cursor-pointer text-decoration-none"
                         >
-                          {prop.rfp?.title}
+                          {rfp.title}
                         </Link>
                         <p className="font-body-sm text-body-sm text-on-surface-variant">
-                          {t("dashboard.client.bookedOn", { date: new Date(prop.createdAt).toLocaleDateString() })}{" "}
-                          <strong>{prop.rfp?.beneficiary?.fullName || "Verified Provider"}</strong>
+                          {t("dashboard.client.bookedOn", { date: new Date(rfp.createdAt).toLocaleDateString() })}{" "}
+                          <strong>{rfp.provider?.fullName || "B2B Marketplace"}</strong>
                         </p>
-                        <span className="text-xs text-on-surface-variant">
-                          {t("dashboard.client.offered", { amount: Number(prop.bidAmount).toLocaleString() })}
-                        </span>
                       </div>
                       <div className="flex items-center gap-md self-start sm:self-auto">
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full font-label-sm text-label-sm ${
-                            prop.status === "accepted"
+                            rfp.status === "completed" || rfp.status === "closed"
                               ? "bg-secondary-container text-on-secondary-container"
-                              : prop.status === "rejected"
-                              ? "bg-error-container text-on-error-container"
+                              : rfp.status === "draft"
+                              ? "bg-surface-variant text-on-surface-variant"
                               : "bg-primary-container text-on-primary-container"
                           }`}
                         >
-                          {t(prop.status.toUpperCase(), prop.status.toUpperCase())}
+                          {t(rfp.status.toUpperCase(), rfp.status.toUpperCase())}
                         </span>
                         <button
                           aria-label="More options"
-                          className="text-on-surface-variant hover:text-primary transition-colors"
-                          onClick={() => navigate(`/rfp/${prop.rfpId}`)}
+                          className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer bg-transparent border-none"
+                          onClick={() => navigate(`/rfp/${rfp.id}`)}
                         >
                           <span className="material-symbols-outlined">more_vert</span>
                         </button>
