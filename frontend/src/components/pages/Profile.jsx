@@ -131,13 +131,20 @@ function Profile() {
 
   const mainContent = (
     <div className={`profile-wrapper ${isRTL ? "rtl" : "ltr"}`} dir={isRTL ? "rtl" : "ltr"}>
-      <div className="profile-header">
-        <h1 className={`font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold ${isRTL ? "text-right" : "text-left"}`}>
-          {t("profile.title")}
-        </h1>
-        <p className={`font-body-md text-body-md text-on-surface-variant ${isRTL ? "text-right" : "text-left"}`}>
-          {t("profile.subtitle")}
-        </p>
+      <div className={`profile-header flex items-center gap-md ${isRTL ? "text-right" : "text-left"} mb-lg`}>
+        {!isProvider && (
+          <button onClick={() => window.history.back()} className="mt-1 p-2 border border-outline-variant rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors flex items-center justify-center shrink-0">
+            <span className={`material-symbols-outlined text-[20px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span>
+          </button>
+        )}
+        <div>
+          <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold">
+            {t("profile.title")}
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            {t("profile.subtitle")}
+          </p>
+        </div>
       </div>
 
       {error && (

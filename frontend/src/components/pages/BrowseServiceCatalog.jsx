@@ -90,8 +90,11 @@ function BrowseServiceCatalog() {
     <div className="flex-grow w-full">
       {/* Hero Search Section */}
       <div className="bg-primary-container py-2xl px-margin-mobile md:px-lg">
-        <div className="max-w-container-max mx-auto text-center">
-          <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-primary-container mb-md">
+        <div className="max-w-container-max mx-auto text-center relative">
+          <button onClick={() => window.history.back()} className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-0 p-2 border border-outline-variant/30 rounded-full text-on-primary-container hover:bg-on-primary-container/10 transition-colors flex items-center justify-center`}>
+            <span className={`material-symbols-outlined text-[20px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span>
+          </button>
+          <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-primary-container mb-md pt-2">
             {t("browseCatalog.title")}
           </h1>
           <p className="font-body-lg text-body-lg text-on-primary-container/80 mb-xl max-w-2xl mx-auto">

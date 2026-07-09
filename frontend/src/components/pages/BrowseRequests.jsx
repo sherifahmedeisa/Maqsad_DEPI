@@ -85,15 +85,19 @@ function BrowseRequests() {
 
   return (
     <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
-        <div>
-          <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface mb-xs">
-            {isRTL ? "تصفح الخدمات B2B" : "Browse B2B Services"}
-          </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {isRTL ? "ابحث عن مقدمي الخدمات المحترفين وأرسل طلب عروضك" : "Search professional service providers and send targeted RFP requests"}
-          </p>
+        <div className="flex items-start gap-3">
+          <button onClick={() => window.history.back()} className="mt-1 p-2 border border-outline-variant rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors flex items-center justify-center shrink-0">
+            <span className={`material-symbols-outlined text-[20px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span>
+          </button>
+          <div>
+            <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface mb-xs">
+              {isRTL ? "تصفح الخدمات B2B" : "Browse B2B Services"}
+            </h1>
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              {isRTL ? "ابحث عن مقدمي الخدمات المحترفين وأرسل طلب عروضك" : "Search professional service providers and send targeted RFP requests"}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-sm">
           <div className="relative">

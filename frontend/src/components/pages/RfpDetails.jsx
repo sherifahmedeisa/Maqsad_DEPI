@@ -202,6 +202,11 @@ function RfpDetails() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-md border-b border-outline-variant pb-md">
           <div className="flex flex-col gap-xs">
             <div className="flex items-center gap-xs font-body-sm text-body-sm text-on-surface-variant">
+              <button onClick={() => navigate(-1)} className="hover:text-primary transition-colors text-decoration-none text-on-surface-variant flex items-center gap-1 bg-transparent border-none cursor-pointer p-0">
+                <span className={`material-symbols-outlined text-[16px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span>
+                {isRTL ? "رجوع" : "Back"}
+              </button>
+              <span className="text-outline-variant">|</span>
               <Link to="/dashboard" className="hover:text-primary transition-colors text-decoration-none text-on-surface-variant">
                 {isRTL ? "الرئيسية" : "Dashboard"}
               </Link>
