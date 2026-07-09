@@ -21,16 +21,16 @@ router.get('/summary', ensureAuthenticated, async (req, res, next) => {
     };
 
     if (user.role === 'beneficiary') {
-      summary.metrics.totalProposals = await Proposal.count({ where: { providerId: user.id } });
-      summary.metrics.submittedProposals = await Proposal.count({
-        where: { providerId: user.id, status: 'submitted' },
-      });
-    } else if (user.role === 'provider') {
       summary.metrics.totalRFPs = await RFP.count({ where: { beneficiaryId: user.id } });
       summary.metrics.openRFPs = await RFP.count({ where: { beneficiaryId: user.id, status: 'open' } });
       summary.metrics.proposalsReceived = await Proposal.count({
         where: { '$rfp.beneficiaryId$': user.id },
         include: [{ model: RFP, as: 'rfp', required: true }],
+      });
+    } else if (user.role === 'provider') {
+      summary.metrics.totalProposals = await Proposal.count({ where: { providerId: user.id } });
+      summary.metrics.submittedProposals = await Proposal.count({
+        where: { providerId: user.id, status: 'submitted' },
       });
     } else {
       summary.metrics.totalUsers = await User.count();
@@ -50,7 +50,7 @@ router.get('/summary', ensureAuthenticated, async (req, res, next) => {
 
 router.get('/feed', ensureAuthenticated, async (req, res, next) => {
   try {
-    if (req.user.role !== 'beneficiary') {
+    if (req.user.role !== 'provider') {
       return res.status(403).json({ error: 'Forbidden' });
     }
     const rfps = await RFP.findAll({

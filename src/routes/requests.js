@@ -48,7 +48,7 @@ router.get('/me', ensureAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post('/', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
+router.post('/', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
   try {
     const {
       title,
@@ -142,7 +142,7 @@ router.put('/:id', ensureOwnerOrAdmin(async (req) => {
   }
 });
 
-router.post('/:id/proposals', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
+router.post('/:id/proposals', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
   try {
     const rfp = await RFP.findByPk(req.params.id);
     if (!rfp) {

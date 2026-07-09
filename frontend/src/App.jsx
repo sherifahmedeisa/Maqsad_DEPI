@@ -66,15 +66,15 @@ function App() {
     );
   }
 
-  // Provider gets sidebar layout (no top nav, no shared footer)
-  const isProvider = user?.role === "provider";
+  // Beneficiary (Client) gets sidebar layout (no top nav, no shared footer)
+  const showSidebar = user?.role === "beneficiary";
 
   return (
-    <div className={`${isProvider ? "" : "flex flex-col min-h-screen"} bg-background`}>
-      {/* Top Nav — only for non-providers */}
+    <div className={`${showSidebar ? "" : "flex flex-col min-h-screen"} bg-background`}>
+      {/* Top Nav — only for non-sidebar users */}
       <Nav />
 
-      <main className={isProvider ? "" : "flex-grow"}>
+      <main className={showSidebar ? "" : "flex-grow"}>
         <Routes>
           {/* Public Landing Page */}
           <Route
@@ -102,15 +102,15 @@ function App() {
           {/* Authenticated Routes */}
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/rfp/:id" element={<PrivateRoute><RfpDetails /></PrivateRoute>} />
-          <Route path="/rfp/new" element={<RoleRoute allowedRoles={["provider"]}><RfpForm /></RoleRoute>} />
-          <Route path="/rfp/edit/:id" element={<RoleRoute allowedRoles={["provider"]}><RfpForm /></RoleRoute>} />
+          <Route path="/rfp/new" element={<RoleRoute allowedRoles={["beneficiary"]}><RfpForm /></RoleRoute>} />
+          <Route path="/rfp/edit/:id" element={<RoleRoute allowedRoles={["beneficiary"]}><RfpForm /></RoleRoute>} />
           <Route path="/chat" element={<PrivateRoute><ChatPortal /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
-          {/* Provider Sidebar Routes */}
-          <Route path="/proposal-history" element={<RoleRoute allowedRoles={["provider"]}><ProposalHistory /></RoleRoute>} />
-          <Route path="/contract-manager" element={<RoleRoute allowedRoles={["provider"]}><ContractManager /></RoleRoute>} />
-          <Route path="/analytics" element={<RoleRoute allowedRoles={["provider"]}><Analytics /></RoleRoute>} />
+          {/* Client Sidebar Routes */}
+          <Route path="/proposal-history" element={<RoleRoute allowedRoles={["beneficiary"]}><ProposalHistory /></RoleRoute>} />
+          <Route path="/contract-manager" element={<RoleRoute allowedRoles={["beneficiary"]}><ContractManager /></RoleRoute>} />
+          <Route path="/analytics" element={<RoleRoute allowedRoles={["beneficiary"]}><Analytics /></RoleRoute>} />
           <Route path="/faq" element={<PrivateRoute><Faq /></PrivateRoute>} />
 
           {/* Admin Routes */}
@@ -121,8 +121,8 @@ function App() {
         </Routes>
       </main>
 
-      {/* Footer — only for non-providers (provider has its own footer in Dashboard) */}
-      {!isProvider && <Footer />}
+      {/* Footer — only for top-nav users (sidebar user has its own footer in Dashboard) */}
+      {!showSidebar && <Footer />}
     </div>
   );
 }

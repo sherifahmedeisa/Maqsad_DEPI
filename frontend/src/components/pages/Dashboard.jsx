@@ -81,6 +81,17 @@ function Dashboard() {
       setSummary(summaryData);
 
       if (user.role === "beneficiary") {
+        const rfpsRes = await fetch("/api/requests/me");
+        if (rfpsRes.ok) {
+          const rfpsData = await rfpsRes.json();
+          setMyRfps(rfpsData);
+        }
+        const propRes = await fetch("/api/proposals/received");
+        if (propRes.ok) {
+          const propData = await propRes.json();
+          setMyProposals(propData);
+        }
+      } else if (user.role === "provider") {
         const feedRes = await fetch("/api/dashboard/feed");
         if (feedRes.ok) {
           const feedData = await feedRes.json();
@@ -90,12 +101,6 @@ function Dashboard() {
         if (propRes.ok) {
           const propData = await propRes.json();
           setMyProposals(propData);
-        }
-      } else if (user.role === "provider") {
-        const rfpsRes = await fetch("/api/requests/me");
-        if (rfpsRes.ok) {
-          const rfpsData = await rfpsRes.json();
-          setMyRfps(rfpsData);
         }
       }
     } catch (err) {
@@ -155,7 +160,11 @@ function Dashboard() {
   // ============================================================
   if (user.role === "beneficiary") {
     return (
-      <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+      <div className="flex min-h-screen bg-background w-full">
+        <ProviderSidebar />
+
+        <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
+          <div className="max-w-container-max w-full mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl flex-grow">
         {showSuccessToast && (
           <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
             <div className="flex gap-md items-start">
@@ -433,7 +442,9 @@ function Dashboard() {
               </div>
             </section>
           </div>
-        </div>
+          </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -443,11 +454,7 @@ function Dashboard() {
   // ============================================================
   if (user.role === "provider") {
     return (
-      <div className="flex min-h-screen bg-background">
-        <ProviderSidebar />
-
-        <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
-          <div className="max-w-container-max mx-auto px-margin-mobile md:px-lg py-lg space-y-xl flex-grow">
+      <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
             {showSuccessToast && (
               <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
                 <div className="flex gap-md items-start">
@@ -646,25 +653,8 @@ function Dashboard() {
                   ))
                 )}
               </div>
-            </div>
           </div>
-
-          {/* Provider Footer */}
-          <footer className="bg-surface-container-low border-t border-outline-variant mt-xl w-full">
-            <div className="flex flex-col md:flex-row justify-between items-center px-lg py-md max-w-container-max mx-auto w-full gap-md">
-              <div className="font-headline-sm text-headline-sm text-primary">{t("footer.maqsad")}</div>
-              <div className="font-label-sm text-label-sm text-on-surface-variant text-center">
-                {t("dashboard.provider.rights", { year: new Date().getFullYear() })}
-              </div>
-              <div className="flex flex-wrap justify-center gap-md">
-                <a className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-opacity duration-200 text-decoration-none" href="#">{t("footer.terms")}</a>
-                <a className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-opacity duration-200 text-decoration-none" href="#">{t("footer.privacy")}</a>
-                <a className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-opacity duration-200 text-decoration-none" href="#">{t("footer.support")}</a>
-              </div>
-            </div>
-          </footer>
-        </main>
-      </div>
+        </div>
     );
   }
 

@@ -3,7 +3,7 @@ const { Proposal, RFP, User } = require('../models');
 const { ensureAuthenticated, ensureRole } = require('../middleware/auth');
 const router = express.Router();
 
-router.get('/mine', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
+router.get('/mine', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
   try {
     const proposals = await Proposal.findAll({
       where: { providerId: req.user.id },
@@ -18,7 +18,7 @@ router.get('/mine', ensureAuthenticated, ensureRole(['beneficiary']), async (req
   }
 });
 
-router.get('/received', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
+router.get('/received', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
   try {
     const proposals = await Proposal.findAll({
       include: [
@@ -52,7 +52,7 @@ router.get('/:id', ensureAuthenticated, async (req, res, next) => {
     if (!proposal) {
       return res.status(404).json({ error: 'Proposal not found' });
     }
-    if (req.user.role === 'beneficiary' && proposal.providerId !== req.user.id) {
+    if (req.user.role === 'provider' && proposal.providerId !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden' });
     }
     res.json(proposal);
@@ -61,7 +61,7 @@ router.get('/:id', ensureAuthenticated, async (req, res, next) => {
   }
 });
 
-router.put('/:id', ensureAuthenticated, ensureRole(['beneficiary']), async (req, res, next) => {
+router.put('/:id', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
   try {
     const proposal = await Proposal.findByPk(req.params.id);
     if (!proposal) {
@@ -112,20 +112,20 @@ router.patch('/:id/status', ensureAuthenticated, async (req, res, next) => {
       return res.status(400).json({ error: 'Invalid proposal status' });
     }
 
-    if (req.user.role === 'beneficiary' && proposal.providerId !== req.user.id) {
+    if (req.user.role === 'provider' && proposal.providerId !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
-    if (req.user.role === 'provider' && proposal.rfp.beneficiaryId !== req.user.id) {
+    if (req.user.role === 'beneficiary' && proposal.rfp.beneficiaryId !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
-    if (req.user.role === 'provider' && ['shortlisted', 'accepted', 'rejected'].includes(status)) {
+    if (req.user.role === 'beneficiary' && ['shortlisted', 'accepted', 'rejected'].includes(status)) {
       await proposal.update({ status });
       return res.json(proposal);
     }
 
-    if (req.user.role === 'beneficiary' && status === 'withdrawn') {
+    if (req.user.role === 'provider' && status === 'withdrawn') {
       await proposal.update({ status });
       return res.json(proposal);
     }

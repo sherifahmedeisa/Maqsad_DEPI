@@ -44,13 +44,13 @@ function RfpDetails() {
       const rfpData = await rfpRes.json();
       setRfp(rfpData);
 
-      if (user.role === "provider" && rfpData.beneficiaryId === user.id) {
+      if (user.role === "beneficiary" && rfpData.beneficiaryId === user.id) {
         const propRes = await fetch(`/api/requests/${id}/proposals`);
         if (propRes.ok) {
           const propData = await propRes.json();
           setProposals(propData);
         }
-      } else if (user.role === "beneficiary") {
+      } else if (user.role === "provider") {
         const propRes = await fetch("/api/proposals/mine");
         if (propRes.ok) {
           const propData = await propRes.json();
@@ -166,8 +166,8 @@ function RfpDetails() {
     );
   }
 
-  const existingProposal = user.role === "beneficiary" && proposals.length > 0 ? proposals[0] : null;
-  const isOwner = user.role === "provider" && rfp.beneficiaryId === user.id;
+  const existingProposal = user.role === "provider" && proposals.length > 0 ? proposals[0] : null;
+  const isOwner = user.role === "beneficiary" && rfp.beneficiaryId === user.id;
 
   return (
     <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
@@ -357,8 +357,8 @@ function RfpDetails() {
             </div>
           </div>
 
-          {/* Sticky Booking Card (Client Mode) */}
-          {user.role === "beneficiary" && (
+          {/* Sticky Booking Card (Provider Mode) */}
+          {user.role === "provider" && (
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm sticky top-6 flex flex-col gap-md">
               {existingProposal ? (
                 <div className="flex flex-col gap-md">
