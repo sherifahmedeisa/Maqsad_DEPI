@@ -4,14 +4,6 @@
     {
       "src": "package.json",
       "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist",
-        "buildCommand": "npm run build"
-      }
     }
   ],
   "routes": [
@@ -24,15 +16,8 @@
       "dest": "src/app.js"
     },
     {
-      "src": "^/assets/(.*)",
-      "dest": "/frontend/dist/assets/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "frontend/dist/index.html"
+      "dest": "src/app.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

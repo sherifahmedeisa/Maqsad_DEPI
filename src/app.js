@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
+const path = require('path');
 const { initializeDatabase, User } = require('./models');
 const authRoutes = require('./routes/auth');
 const requestRoutes = require('./routes/requests');
@@ -16,6 +17,10 @@ const PORT = process.env.PORT || 4000;
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from frontend build
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
 
 app.use(
   session({
@@ -48,8 +53,14 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/providers', providerRoutes);
 app.use('/api/users', userRoutes);
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Maqsad backend is running.' });
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  const indexPath = path.join(frontendDist, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(404).json({ message: 'Maqsad backend is running. Frontend not available.' });
+    }
+  });
 });
 
 app.use((err, req, res, next) => {
