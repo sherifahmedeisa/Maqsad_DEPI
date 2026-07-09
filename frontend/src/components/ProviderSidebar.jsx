@@ -81,6 +81,10 @@ function ProviderSidebar() {
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md text-label-md">{t("sidebar.overview")}</span>
           </NavLink>
+          <NavLink className={sideNavLink} to="/provider-services">
+            <span className="material-symbols-outlined">design_services</span>
+            <span className="font-label-md text-label-md">{isRTL ? "خدماتي" : "My Services"}</span>
+          </NavLink>
           <NavLink className={sideNavLink} to="/chat">
             <span className="material-symbols-outlined">chat</span>
             <span className="font-label-md text-label-md">{t("sidebar.messages")}</span>
@@ -177,6 +181,17 @@ function ProviderSidebar() {
               <span className="font-label-sm text-label-sm text-[10px]">{t("sidebar.overview")}</span>
             </>
           )}
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center w-full h-full ${
+              isActive ? "text-secondary" : "text-on-surface-variant hover:text-primary"
+            }`
+          }
+          to="/provider-services"
+        >
+          <span className="material-symbols-outlined text-[24px] mb-1">design_services</span>
+          <span className="font-label-sm text-label-sm text-[10px]">{isRTL ? "خدماتي" : "Services"}</span>
         </NavLink>
         <NavLink
           className={({ isActive }) =>

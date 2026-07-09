@@ -20,6 +20,7 @@ import BrowseRequests from "./components/pages/BrowseRequests";
 import BrowseServiceCatalog from "./components/pages/BrowseServiceCatalog";
 import LandingPage from "./components/pages/LandingPage";
 import Profile from "./components/pages/Profile";
+import ProviderServices from "./components/pages/ProviderServices";
 
 // Protected Route Guard
 function PrivateRoute({ children }) {
@@ -111,6 +112,7 @@ function App() {
           <Route path="/proposal-history" element={<RoleRoute allowedRoles={["provider"]}><ProposalHistory /></RoleRoute>} />
           <Route path="/contract-manager" element={<RoleRoute allowedRoles={["provider"]}><ContractManager /></RoleRoute>} />
           <Route path="/analytics" element={<RoleRoute allowedRoles={["provider"]}><Analytics /></RoleRoute>} />
+          <Route path="/provider-services" element={<RoleRoute allowedRoles={["provider"]}><ProviderServices /></RoleRoute>} />
           <Route path="/faq" element={<PrivateRoute><Faq /></PrivateRoute>} />
 
           {/* Admin Routes */}

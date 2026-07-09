@@ -40,7 +40,7 @@ function BrowseServiceCatalog() {
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const [providers, setProviders] = useState([]);
-  const [rfps, setRfps] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const isRTL = i18n.language.startsWith('ar');
@@ -49,18 +49,18 @@ function BrowseServiceCatalog() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [providersRes, rfpsRes] = await Promise.all([
+        const [providersRes, servicesRes] = await Promise.all([
           fetch("/api/providers"),
-          fetch("/api/requests")
+          fetch("/api/services")
         ]);
 
         if (providersRes.ok) {
           const providersData = await providersRes.json();
           setProviders(providersData);
         }
-        if (rfpsRes.ok) {
-          const rfpsData = await rfpsRes.json();
-          setRfps(rfpsData);
+        if (servicesRes.ok) {
+          const servicesData = await servicesRes.json();
+          setServices(servicesData);
         }
       } catch (err) {
         console.error("Error loading service catalog data:", err);
@@ -79,21 +79,10 @@ function BrowseServiceCatalog() {
     return t("browseCatalog.providerCount", { count: matched.length });
   };
 
-  const getFeaturedProviders = () => {
-    if (providers && providers.length > 0) {
-      return providers.slice(0, 4).map((p) => {
-        const tags = Array.isArray(p.serviceTags) ? p.serviceTags : [];
-        const specialty = tags.length > 0 ? tags[0] : "General Services";
-        return {
-          id: p.id,
-          name: p.companyName || p.user?.fullName || t("browseCatalog.featured.verified"),
-          specialty: specialty,
-          rating: p.avgRating && p.avgRating > 0 ? p.avgRating.toFixed(1) : "5.0",
-          jobs: p.totalProposals || 0,
-        };
-      });
+  const getFeaturedServices = () => {
+    if (services && services.length > 0) {
+      return services.slice(0, 8);
     }
-
     return [];
   };
 
@@ -170,57 +159,49 @@ function BrowseServiceCatalog() {
               <div className="flex justify-between items-center mb-lg">
                 <div>
                   <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">
-                    {t("browseCatalog.featured.title")}
+                    {isRTL ? "خدمات مميزة" : "Featured Services"}
                   </h2>
                   <p className="font-body-md text-body-md text-on-surface-variant">
-                    {t("browseCatalog.featured.subtitle")}
+                    {isRTL ? "تصفح أحدث الخدمات المضافة بواسطة مقدمي الخدمات" : "Browse the latest services posted by our providers"}
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
-                {getFeaturedProviders().length === 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+                {getFeaturedServices().length === 0 ? (
                   <div className="col-span-full py-8 text-center text-on-surface-variant font-body-md bg-surface-container-low rounded-xl border border-outline-variant/60">
-                    {t("browseCatalog.featured.noProviders")}
+                    {isRTL ? "لا توجد خدمات متاحة حالياً" : "No services available at the moment."}
                   </div>
                 ) : (
-                  getFeaturedProviders().map((provider, index) => (
+                  getFeaturedServices().map((service) => (
                     <div
-                      key={provider.id || index}
-                      className="bg-surface-container-lowest border border-outline-variant rounded-xl p-md hover:shadow-md transition-shadow cursor-pointer"
+                      key={service.id}
+                      className="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col hover:shadow-md hover:border-secondary transition-all cursor-pointer h-full"
                     >
-                      <div className="flex items-center gap-md mb-md">
-                        <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant">
-                          <span className="font-label-md text-label-md text-on-surface font-bold">
-                            {provider.name.charAt(0)}
+                      <h4 className="font-label-lg text-label-lg text-on-surface font-semibold line-clamp-2 mb-xs">
+                        {service.title}
+                      </h4>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-md flex-grow">
+                        {service.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-sm mb-md">
+                        <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant">
+                          <span className="font-label-sm text-label-sm text-on-surface font-bold uppercase">
+                            {service.provider?.fullName?.charAt(0) || "P"}
                           </span>
                         </div>
-                        <div>
-                          <h4 className="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[150px]">
-                            {provider.name}
-                          </h4>
-                          <div className="flex items-center text-secondary gap-xs">
-                            <span
-                              className="material-symbols-outlined text-sm"
-                              style={{ fontVariationSettings: "'FILL' 1" }}
-                            >
-                              star
-                            </span>
-                            <span className="font-label-sm text-label-sm">
-                              {provider.rating} ({provider.jobs} {t("browseCatalog.featured.jobs")})
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="font-label-sm text-label-sm text-on-surface-variant">
-                          {t(`browseCatalog.categories.${provider.specialty.toLowerCase().replace(/ & /g, '').replace(/ /g, '')}`, provider.specialty)}
+                        <span className="font-label-sm text-label-sm text-on-surface-variant truncate">
+                          {service.provider?.fullName || "Verified Provider"}
                         </span>
-                        <span
-                          className="material-symbols-outlined text-[14px] text-secondary"
-                          style={{ fontVariationSettings: "'FILL' 1" }}
-                        >
-                          verified
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-outline-variant pt-sm">
+                        <span className="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                          {service.category}
+                        </span>
+                        <span className="font-label-md text-label-md text-primary font-bold">
+                          {service.price ? `$${service.price}` : (isRTL ? "سعر متغير" : "Variable")}
                         </span>
                       </div>
                     </div>

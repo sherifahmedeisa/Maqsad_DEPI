@@ -12,6 +12,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const providerRoutes = require('./routes/providers');
 const userRoutes = require('./routes/users');
 const messageRoutes = require('./routes/messages');
+const serviceRoutes = require('./routes/services');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -70,6 +71,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/providers', providerRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/services', serviceRoutes);
 
 // Serve static files from the React frontend
 app.use(express.static(path.join(__dirname, '../frontend/dist')));

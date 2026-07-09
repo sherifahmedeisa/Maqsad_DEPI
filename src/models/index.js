@@ -11,6 +11,7 @@ const MessageModel = require('./message');
 const NotificationModel = require('./notification');
 const ProfileViewModel = require('./profileView');
 const MatchingScoreModel = require('./matchingScore');
+const ServiceModel = require('./service');
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is required to run this application.');
@@ -40,6 +41,10 @@ const Message = MessageModel(sequelize, DataTypes);
 const Notification = NotificationModel(sequelize, DataTypes);
 const ProfileView = ProfileViewModel(sequelize, DataTypes);
 const MatchingScore = MatchingScoreModel(sequelize, DataTypes);
+const Service = ServiceModel(sequelize, DataTypes);
+
+User.hasMany(Service, { foreignKey: 'providerId', as: 'services' });
+Service.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 
 User.hasMany(EmailVerification, { foreignKey: 'userId', as: 'emailVerifications' });
 EmailVerification.belongsTo(User, { foreignKey: 'userId', as: 'user' });
@@ -112,7 +117,8 @@ const initializeDatabase = async () => {
     Message,
     Notification,
     ProfileView,
-    MatchingScore
+    MatchingScore,
+    Service
   ];
 
   try {
@@ -143,5 +149,6 @@ module.exports = {
   Notification,
   ProfileView,
   MatchingScore,
+  Service,
   initializeDatabase,
 };
