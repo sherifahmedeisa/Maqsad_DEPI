@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "clientSignup": {
+      "errorEmailInUse": "This email is already registered. Try signing in instead."
+    },
+    "providerSignup": {
+      "errorEmailInUse": "This email is already registered. Try signing in instead."
+    }
+  }
+}

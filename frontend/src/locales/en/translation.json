@@ -165,7 +165,8 @@
       "heroTitle": "Accelerate your enterprise<br />B2B procurement",
       "heroSubtitle": "Browse services, establish custom timelines and budgets, and negotiate contracts directly with top providers.",
       "heroFeature1": "Browse verified professional catalogs",
-      "heroFeature2": "Consolidated contract and milestones dashboard"
+      "heroFeature2": "Consolidated contract and milestones dashboard",
+      "errorEmailInUse": "This email is already registered. Try signing in instead."
     },
     "providerSignup": {
       "title": "Create Provider Account",
@@ -190,7 +191,8 @@
       "heroTitle": "Grow your B2B services<br />business with Maqsad",
       "heroSubtitle": "List your services, set your prices, and let enterprise clients come to you. Direct connections, no bidding wars.",
       "heroFeature1": "Reach verified enterprise clients",
-      "heroFeature2": "Keep 100% control of your pricing"
+      "heroFeature2": "Keep 100% control of your pricing",
+      "errorEmailInUse": "This email is already registered. Try signing in instead."
     }
   },
   "dashboard": {
@@ -259,7 +261,10 @@
       "welcome": "Welcome to Administrator Portal",
       "desc": "Manage system directories, flag accounts, toggle user suspensions, and compile database activity report diagnostics.",
       "openCenter": "Open Governance Center"
-    }
+    },
+    "signupSuccessTitle": "Welcome to Maqsad!",
+    "signupSuccessDesc": "Your account has been successfully created. Let's explore B2B opportunities!",
+    "dismiss": "Dismiss"
   },
   "rfpForm": {
     "loadingFetch": "Fetching RFP metadata details...",

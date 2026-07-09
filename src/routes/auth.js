@@ -43,7 +43,8 @@ router.post('/register', async (req, res, next) => {
       emailVerifiedAt: new Date(),
     });
 
-    req.session.userId = user.id;
+    // Set JWT cookie instead of session
+    req.app.locals.signAndSetToken(res, user.id);
     res.status(201).json({ user: safeUser(user) });
   } catch (error) {
     next(error);
@@ -73,7 +74,8 @@ router.post('/login', async (req, res, next) => {
       return res.status(403).json({ error: 'Account is not active' });
     }
 
-    req.session.userId = user.id;
+    // Set JWT cookie instead of session
+    req.app.locals.signAndSetToken(res, user.id);
     res.json({ user: safeUser(user) });
   } catch (error) {
     next(error);
@@ -81,12 +83,8 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.post('/logout', ensureAuthenticated, (req, res, next) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.json({ message: 'Logged out successfully' });
-  });
+  req.app.locals.clearToken(res);
+  res.json({ message: 'Logged out successfully' });
 });
 
 router.get('/status', (req, res) => {

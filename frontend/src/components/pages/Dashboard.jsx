@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import ProviderSidebar from "../ProviderSidebar";
@@ -8,6 +8,7 @@ import Footer from "../Footer";
 function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const [summary, setSummary] = useState(null);
   const [myRfps, setMyRfps] = useState([]);
@@ -17,6 +18,7 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeWorkflowStep, setActiveWorkflowStep] = useState(0);
+  const [showSuccessToast, setShowSuccessToast] = useState(location.state?.justRegistered || false);
 
   const isRTL = i18n.language.startsWith('ar');
 
@@ -154,6 +156,25 @@ function Dashboard() {
   if (user.role === "beneficiary") {
     return (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+        {showSuccessToast && (
+          <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
+            <div className="flex gap-md items-start">
+              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 text-emerald-600">
+                <span className="material-symbols-outlined text-[24px]">verified_user</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-1">{t("dashboard.signupSuccessTitle")}</h3>
+                <p className="font-body-md text-emerald-600 text-sm">{t("dashboard.signupSuccessDesc")}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowSuccessToast(false)} 
+              className="text-emerald-500 hover:text-emerald-700 transition-colors border-0 bg-transparent cursor-pointer font-bold shrink-0 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        )}
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
           <div>
@@ -427,6 +448,25 @@ function Dashboard() {
 
         <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-lg py-lg space-y-xl flex-grow">
+            {showSuccessToast && (
+              <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className="flex gap-md items-start">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 text-emerald-600">
+                    <span className="material-symbols-outlined text-[24px]">verified_user</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">{t("dashboard.signupSuccessTitle")}</h3>
+                    <p className="font-body-md text-emerald-600 text-sm">{t("dashboard.signupSuccessDesc")}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowSuccessToast(false)} 
+                  className="text-emerald-500 hover:text-emerald-700 transition-colors border-0 bg-transparent cursor-pointer font-bold shrink-0 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+            )}
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
               <div>

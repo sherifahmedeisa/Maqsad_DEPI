@@ -15,6 +15,7 @@ function ProviderSignup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [emailInUse, setEmailInUse] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const isRTL = i18n.language.startsWith("ar");
@@ -23,6 +24,7 @@ function ProviderSignup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setEmailInUse(false);
 
     if (!fullName || !email || !password || !confirmPassword) {
       setError(t("auth.providerSignup.errorMissing"));
@@ -42,10 +44,16 @@ function ProviderSignup() {
     setLoading(true);
     try {
       await register(email, password, fullName, "provider");
-      navigate("/dashboard");
+      navigate("/dashboard", { state: { justRegistered: true } });
     } catch (err) {
       console.error(err);
-      setError(err.message || t("auth.providerSignup.errorFailed"));
+      const msg = err.message || "";
+      if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("email already") || msg.toLowerCase().includes("in use")) {
+        setEmailInUse(true);
+        setError(t("auth.providerSignup.errorEmailInUse"));
+      } else {
+        setError(msg || t("auth.providerSignup.errorFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -118,8 +126,16 @@ function ProviderSignup() {
           </div>
 
           {error && (
-            <div className="bg-error-container text-on-error-container p-md rounded-lg border border-error/10 font-body-sm">
-              {error}
+            <div className={`p-md rounded-xl border font-body-sm flex gap-3 items-start ${emailInUse ? 'bg-red-50 border-red-200 text-red-800' : 'bg-error-container text-on-error-container border-error/10'}`}>
+              <span className="material-symbols-outlined text-[20px] mt-0.5 shrink-0" style={{ color: emailInUse ? '#b91c1c' : 'inherit' }}>error</span>
+              <div className="flex flex-col gap-1">
+                <span>{error}</span>
+                {emailInUse && (
+                  <Link to="/login" className="text-red-700 hover:text-red-900 font-semibold underline text-decoration-none">
+                    {t("auth.providerSignup.signIn")} →
+                  </Link>
+                )}
+              </div>
             </div>
           )}
 
@@ -142,17 +158,23 @@ function ProviderSignup() {
 
             {/* Email */}
             <div className="flex flex-col gap-xs">
-              <label className={`font-semibold text-sm text-[#0b1c30] ${isRTL ? 'text-right' : 'text-left'}`} htmlFor="email-input">
+              <label className={`font-semibold text-sm ${emailInUse ? 'text-red-600' : 'text-[#0b1c30]'} ${isRTL ? 'text-right' : 'text-left'}`} htmlFor="email-input">
                 {t("auth.providerSignup.emailLabel")} <span className="text-error">*</span>
               </label>
               <input
                 id="email-input"
                 type="email"
-                className="w-full px-4 py-3 bg-white border border-[#cbd5e1] rounded-xl focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6] outline-none transition-colors font-body-md text-body-md text-on-surface"
+                className={`w-full px-4 py-3 bg-white border rounded-xl outline-none transition-colors font-body-md text-body-md text-on-surface ${emailInUse ? 'border-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-300 bg-red-50' : 'border-[#cbd5e1] focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6]'}`}
                 placeholder={t("auth.providerSignup.emailPlaceholder")}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); if (emailInUse) { setEmailInUse(false); setError(""); } }}
               />
+              {emailInUse && (
+                <p className="text-red-500 text-xs mt-0.5 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px]">info</span>
+                  {t("auth.providerSignup.errorEmailInUse")}
+                </p>
+              )}
             </div>
 
             {/* Password */}

@@ -13,7 +13,9 @@ export function AuthProvider({ children }) {
 
   const checkAuth = async () => {
     try {
-      const res = await fetch("/auth/status");
+      const res = await fetch("/auth/status", {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated) {
@@ -39,6 +41,7 @@ export function AuthProvider({ children }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {
@@ -58,6 +61,7 @@ export function AuthProvider({ children }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, fullName, role }),
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {
@@ -73,7 +77,10 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/auth/logout", { method: "POST" });
+      const res = await fetch("/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       if (res.ok) {
         setUser(null);
       } else {
