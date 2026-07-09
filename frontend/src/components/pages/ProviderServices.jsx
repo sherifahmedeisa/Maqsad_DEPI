@@ -331,8 +331,10 @@ function ProviderServices() {
               </div>
             ))}
           </div>
-        )}
+          )}
+        </div>
       </div>
+    </div>
     </div>
   );
 }

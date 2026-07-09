@@ -54,10 +54,7 @@ function ChatPortal() {
     }
     return loaderContent;
   }
-        <p className="font-body-md text-body-md text-on-surface-variant">{t("chatPortal.loading")}</p>
-      </div>
-    );
-  }
+
 
   if (error) {
     const errorContent = (
