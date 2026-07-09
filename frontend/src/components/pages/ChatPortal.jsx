@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import ChatWindow from "../ChatWindow";
+import ProviderSidebar from "../ProviderSidebar";
 
 function ChatPortal() {
   const { user } = useAuth();
@@ -12,6 +13,7 @@ function ChatPortal() {
   const [error, setError] = useState("");
 
   const isRTL = i18n.language.startsWith('ar');
+  const isProvider = user?.role === "provider";
 
   useEffect(() => {
     fetchThreads();
@@ -34,16 +36,31 @@ function ChatPortal() {
   };
 
   if (loading) {
-    return (
+    const loaderContent = (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-32 flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mb-4"></div>
+        <p className="font-body-md text-body-md text-on-surface-variant">{t("chatPortal.loading")}</p>
+      </div>
+    );
+    if (isProvider) {
+      return (
+        <div className="flex bg-[#f8fafc] min-h-screen w-full">
+          <ProviderSidebar />
+          <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
+            {loaderContent}
+          </div>
+        </div>
+      );
+    }
+    return loaderContent;
+  }
         <p className="font-body-md text-body-md text-on-surface-variant">{t("chatPortal.loading")}</p>
       </div>
     );
   }
 
   if (error) {
-    return (
+    const errorContent = (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
         <div className="bg-error-container text-on-error-container p-lg rounded-xl border border-error/20">
           <h4 className="font-headline-sm text-headline-sm font-semibold mb-2">{t("chatPortal.error.title")}</h4>
@@ -54,10 +71,31 @@ function ChatPortal() {
         </div>
       </div>
     );
+    if (isProvider) {
+      return (
+        <div className="flex bg-[#f8fafc] min-h-screen w-full">
+          <ProviderSidebar />
+          <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
+            {errorContent}
+          </div>
+        </div>
+      );
+    }
+    return errorContent;
   }
 
-  return (
+  const mainContent = (
     <div className={`flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl ${isRTL ? "rtl" : "ltr"}`} dir={isRTL ? "rtl" : "ltr"}>
+      <header className="mb-lg flex items-center justify-between">
+        <div>
+          <h1 className="font-headline-xl text-headline-xl text-on-surface mb-xs">
+            {t("chatPortal.title")}
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            {t("chatPortal.subtitle")}
+          </p>
+        </div>
+      </header>
       <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row" style={{ height: "calc(100vh - 160px)", minHeight: "450px" }}>
         
         {/* Left Side: Threads List */}
@@ -152,6 +190,19 @@ function ChatPortal() {
       </div>
     </div>
   );
+
+  if (isProvider) {
+    return (
+      <div className="flex bg-[#f8fafc] min-h-screen w-full">
+        <ProviderSidebar />
+        <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
+          {mainContent}
+        </div>
+      </div>
+    );
+  }
+
+  return mainContent;
 }
 
 export default ChatPortal;

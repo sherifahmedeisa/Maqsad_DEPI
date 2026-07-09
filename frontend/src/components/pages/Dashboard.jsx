@@ -448,10 +448,10 @@ function Dashboard() {
   // ============================================================
   if (user.role === "provider") {
     return (
-      <div className="flex min-h-screen bg-background w-full">
+      <div className="flex bg-[#f8fafc] min-h-screen w-full">
         <ProviderSidebar />
 
-        <main className={`flex-1 ${isRTL ? 'md:mr-64' : 'md:ml-64'} bg-background min-h-screen flex flex-col`}>
+        <main className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
           <div className="max-w-container-max w-full mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl flex-grow">
             {showSuccessToast && (
               <div className={`p-lg rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-md justify-between shadow-sm animate-fade-in ${isRTL ? 'text-right' : 'text-left'}`}>

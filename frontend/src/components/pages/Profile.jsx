@@ -494,9 +494,9 @@ function Profile() {
 
   if (isProvider) {
     return (
-      <div className="flex bg-[#f8fafc] min-h-screen">
+      <div className="flex bg-[#f8fafc] min-h-screen w-full">
         <ProviderSidebar />
-        <div className="flex-grow flex flex-col min-h-screen overflow-hidden pl-0 lg:pl-0">
+        <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
           <main className="flex-grow p-lg md:p-xl max-w-container-max w-full mx-auto flex flex-col gap-lg mb-20">
             {mainContent}
           </main>

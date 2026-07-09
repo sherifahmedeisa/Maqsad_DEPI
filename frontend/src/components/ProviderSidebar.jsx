@@ -1,12 +1,31 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
 import logo from "../assets/maqsad-logo.png";
 
 function ProviderSidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    return localStorage.getItem('sidebarCollapsed') === 'true';
+  });
+
+  useEffect(() => {
+    if (isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+    }
+  }, [isCollapsed]);
+
+  const toggleSidebar = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    localStorage.setItem('sidebarCollapsed', String(newState));
+  };
 
   const handleLogout = async () => {
     try {
@@ -33,102 +52,126 @@ function ProviderSidebar() {
 
   return (
     <>
+      <style>{`
+        :root {
+          --sidebar-width: ${isCollapsed ? '5rem' : '16rem'};
+        }
+        @media (min-width: 768px) {
+          .provider-main-content {
+            margin-left: ${isRTL ? '0' : 'var(--sidebar-width)'};
+            margin-right: ${isRTL ? 'var(--sidebar-width)' : '0'};
+            transition: margin 300ms ease;
+          }
+        }
+      `}</style>
+
       {/* Desktop Sidebar */}
-      <nav className={`hidden md:flex flex-col h-screen w-64 fixed top-0 bg-surface border-outline-variant p-md space-y-sm z-50 ${isRTL ? 'right-0 border-l' : 'left-0 border-r'}`}>
+      <nav className={`hidden md:flex flex-col h-screen fixed top-0 bg-surface border-outline-variant py-md px-sm space-y-sm z-50 transition-all duration-300 ${isCollapsed ? 'w-20 items-center' : 'w-64'} ${isRTL ? 'right-0 border-l' : 'left-0 border-r'}`}>
+        
+        {/* Toggle Button */}
+        <button 
+          onClick={toggleSidebar} 
+          className={`absolute top-6 ${isRTL ? '-left-3' : '-right-3'} bg-surface border border-outline-variant rounded-full w-6 h-6 flex items-center justify-center z-50 hover:bg-surface-container-high text-on-surface-variant shadow-sm`}
+        >
+          <span className="material-symbols-outlined text-[16px]">
+            {isCollapsed ? (isRTL ? 'chevron_left' : 'chevron_right') : (isRTL ? 'chevron_right' : 'chevron_left')}
+          </span>
+        </button>
+
         {/* Brand + Profile */}
-        <div className="mb-lg">
-          <div className="flex items-center gap-xs mb-xs">
-            <img src={logo} alt={t("sidebar.maqsad")} className="h-8 w-auto" />
-            <h1 className="font-headline-sm text-headline-sm font-extrabold text-primary m-0">
-              {t("sidebar.maqsad")}
-            </h1>
+        <div className={`mb-lg w-full flex flex-col ${isCollapsed ? 'items-center' : ''}`}>
+          <div className={`flex items-center gap-xs mb-xs ${isCollapsed ? 'justify-center' : ''}`}>
+            <img src={logo} alt={t("sidebar.maqsad")} className="h-8 w-auto shrink-0" />
+            {!isCollapsed && (
+              <h1 className="font-headline-sm text-headline-sm font-extrabold text-primary m-0 whitespace-nowrap overflow-hidden">
+                {t("sidebar.maqsad")}
+              </h1>
+            )}
           </div>
-          <div className="flex items-center gap-sm mt-md p-sm bg-surface-container-low rounded-lg border border-outline-variant">
-            <div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant overflow-hidden">
+          <div className={`flex items-center gap-sm mt-md p-sm bg-surface-container-low rounded-lg border border-outline-variant w-full ${isCollapsed ? 'justify-center p-2' : ''}`}>
+            <div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant overflow-hidden shrink-0">
               <span className="font-label-md text-label-md text-on-surface font-bold uppercase">
                 {user?.fullName?.charAt(0) || (isRTL ? "م" : "P")}
               </span>
             </div>
-            <div>
-              <div className="font-label-md text-label-md text-on-surface font-semibold">
-                {user?.fullName || t("sidebar.provider")}
+            {!isCollapsed && (
+              <div className="overflow-hidden">
+                <div className="font-label-md text-label-md text-on-surface font-semibold truncate">
+                  {user?.fullName || t("sidebar.provider")}
+                </div>
+                <div className="font-label-sm text-label-sm text-secondary flex items-center mt-xs whitespace-nowrap">
+                  <span
+                    className={`material-symbols-outlined text-[14px] ${isRTL ? 'ml-[2px]' : 'mr-[2px]'}`}
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    verified
+                  </span>
+                  {t("sidebar.verifiedProvider")}
+                </div>
               </div>
-              <div className="font-label-sm text-label-sm text-secondary flex items-center mt-xs">
-                <span
-                  className={`material-symbols-outlined text-[14px] ${isRTL ? 'ml-[2px]' : 'mr-[2px]'}`}
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  verified
-                </span>
-                {t("sidebar.verifiedProvider")}
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Post New Service CTA */}
         <NavLink
           to="/profile"
-          className="w-full bg-primary hover:bg-on-surface text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center transition-colors mb-md text-decoration-none"
+          className={`w-full bg-primary hover:bg-on-surface text-on-primary font-label-md text-label-md rounded-lg flex items-center transition-colors mb-md text-decoration-none ${isCollapsed ? 'py-sm justify-center' : 'py-sm px-md justify-center'}`}
+          title={isCollapsed ? (isRTL ? "تحديث الخدمات" : "Update Profile & Services") : undefined}
         >
-          <span className={`material-symbols-outlined text-[18px] ${isRTL ? 'ml-sm' : 'mr-sm'}`}>edit</span>
-          {isRTL ? "تحديث الخدمات" : "Update Profile & Services"}
+          <span className={`material-symbols-outlined text-[18px] ${!isCollapsed ? (isRTL ? 'ml-sm' : 'mr-sm') : ''}`}>edit</span>
+          {!isCollapsed && <span>{isRTL ? "تحديث الخدمات" : "Update Profile & Services"}</span>}
         </NavLink>
 
         {/* Navigation Items */}
-        <div className="flex-grow space-y-xs overflow-y-auto">
-          <NavLink className={sideNavLink} to="/dashboard">
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-label-md text-label-md">{t("sidebar.overview")}</span>
+        <div className="flex-grow space-y-xs overflow-y-auto w-full">
+          <NavLink className={sideNavLink} to="/dashboard" title={isCollapsed ? t("sidebar.overview") : undefined}>
+            <span className="material-symbols-outlined shrink-0">dashboard</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.overview")}</span>}
           </NavLink>
-          <NavLink className={sideNavLink} to="/provider-services">
-            <span className="material-symbols-outlined">design_services</span>
-            <span className="font-label-md text-label-md">{isRTL ? "خدماتي" : "My Services"}</span>
+          <NavLink className={sideNavLink} to="/provider-services" title={isCollapsed ? (isRTL ? "خدماتي" : "My Services") : undefined}>
+            <span className="material-symbols-outlined shrink-0">design_services</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{isRTL ? "خدماتي" : "My Services"}</span>}
           </NavLink>
-          <NavLink className={sideNavLink} to="/chat">
-            <span className="material-symbols-outlined">chat</span>
-            <span className="font-label-md text-label-md">{t("sidebar.messages")}</span>
+          <NavLink className={sideNavLink} to="/chat" title={isCollapsed ? t("sidebar.messages") : undefined}>
+            <span className="material-symbols-outlined shrink-0">chat</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.messages")}</span>}
           </NavLink>
-          <NavLink className={sideNavLink} to="/proposal-history">
-            <span className="material-symbols-outlined">description</span>
-            <span className="font-label-md text-label-md">{t("sidebar.proposalHistory")}</span>
+          <NavLink className={sideNavLink} to="/proposal-history" title={isCollapsed ? t("sidebar.proposalHistory") : undefined}>
+            <span className="material-symbols-outlined shrink-0">description</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.proposalHistory")}</span>}
           </NavLink>
-          <NavLink className={sideNavLink} to="/contract-manager">
-            <span className="material-symbols-outlined">handshake</span>
-            <span className="font-label-md text-label-md">{t("sidebar.contractManager")}</span>
-          </NavLink>
-          <NavLink className={sideNavLink} to="/analytics">
-            <span className="material-symbols-outlined">insights</span>
-            <span className="font-label-md text-label-md">{t("sidebar.analytics")}</span>
-          </NavLink>
-          <NavLink className={sideNavLink} to="/profile">
-            <span className="material-symbols-outlined">person</span>
-            <span className="font-label-md text-label-md">{t("sidebar.profile")}</span>
+          <NavLink className={sideNavLink} to="/profile" title={isCollapsed ? t("sidebar.profile") : undefined}>
+            <span className="material-symbols-outlined shrink-0">person</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.profile")}</span>}
           </NavLink>
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-auto space-y-xs pt-md border-t border-outline-variant">
+        <div className="mt-auto space-y-xs pt-md border-t border-outline-variant w-full">
           <button
             onClick={toggleLanguage}
-            className={`w-full flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer ${isRTL ? 'text-right' : 'text-left'}`}
+            className={`w-full flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer ${isCollapsed ? 'justify-center' : (isRTL ? 'text-right' : 'text-left')}`}
+            title={isCollapsed ? (isRTL ? t("sidebar.english") : t("sidebar.arabic")) : undefined}
           >
-            <span className="material-symbols-outlined">language</span>
-            <span className="font-label-md text-label-md">{isRTL ? t("sidebar.english") : t("sidebar.arabic")}</span>
+            <span className="material-symbols-outlined shrink-0">language</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{isRTL ? t("sidebar.english") : t("sidebar.arabic")}</span>}
           </button>
           <NavLink
             className={sideNavLink}
             to="/faq"
+            title={isCollapsed ? t("sidebar.helpCenter") : undefined}
           >
-            <span className="material-symbols-outlined">help</span>
-            <span className="font-label-md text-label-md">{t("sidebar.helpCenter")}</span>
+            <span className="material-symbols-outlined shrink-0">help</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.helpCenter")}</span>}
           </NavLink>
           <button
-            className={`w-full flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer ${isRTL ? 'text-right' : 'text-left'}`}
+            className={`w-full flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer ${isCollapsed ? 'justify-center' : (isRTL ? 'text-right' : 'text-left')}`}
             onClick={handleLogout}
+            title={isCollapsed ? t("sidebar.logout") : undefined}
           >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-label-md text-label-md">{t("sidebar.logout")}</span>
+            <span className="material-symbols-outlined shrink-0">logout</span>
+            {!isCollapsed && <span className="font-label-md text-label-md whitespace-nowrap">{t("sidebar.logout")}</span>}
           </button>
         </div>
       </nav>

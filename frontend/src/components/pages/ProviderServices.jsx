@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import ProviderSidebar from "../ProviderSidebar";
 
 function ProviderServices() {
   const { user } = useAuth();
@@ -112,7 +113,10 @@ function ProviderServices() {
   };
 
   return (
-    <div className="flex-grow bg-surface-container-lowest p-margin-mobile md:p-xl">
+    <div className="flex bg-[#f8fafc] min-h-screen w-full">
+      <ProviderSidebar />
+      <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
+        <div className="flex-grow bg-surface-container-lowest p-margin-mobile md:p-xl">
       <div className="max-w-container-max mx-auto">
         <div className="flex justify-between items-center mb-xl">
           <div>

@@ -41,12 +41,12 @@ function ProposalHistory() {
   });
 
   return (
-    <div className="flex bg-[#f8fafc] min-h-screen">
+    <div className="flex bg-[#f8fafc] min-h-screen w-full">
       {/* Sidebar Navigation */}
       <ProviderSidebar />
 
       {/* Main Content Area */}
-      <div className="flex-grow flex flex-col min-h-screen overflow-hidden pl-0 lg:pl-0">
+      <div className="flex-grow flex flex-col min-h-screen overflow-hidden provider-main-content w-full">
         <main className="flex-grow p-lg md:p-xl max-w-container-max w-full mx-auto flex flex-col gap-lg">
           
           {/* Header */}
