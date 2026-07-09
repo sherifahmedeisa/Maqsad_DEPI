@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
+import ProfileNav from "../components/ProfileNav";
 
-function MainLayout() {
+function ProfileLayout() {
   return (
     <>
+      <ProfileNav />
       <Outlet />
       <Footer />
     </>
   );
 }
 
-export default MainLayout;
+export default ProfileLayout;

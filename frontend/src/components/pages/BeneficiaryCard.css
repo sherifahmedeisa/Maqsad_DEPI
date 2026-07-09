@@ -1,0 +1,18 @@
+.beneficiary-card {
+  border-radius: 12px;
+}
+
+.beneficiary-card small {
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.beneficiary-card h2 {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.beneficiary-card span {
+  color: #64748b;
+}

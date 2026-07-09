@@ -1,0 +1,30 @@
+.beneficiary-dashboard-header h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.beneficiary-dashboard-header p {
+  color: #64748b;
+  margin-top: 8px;
+}
+.assistance-card {
+  background: #eaf4ff;
+  border-radius: 12px;
+}
+
+.assistance-card h5 {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.assistance-card p {
+  color: #64748b;
+  margin: 15px 0;
+}
+
+.assistance-card a {
+  color: #0f766e;
+  text-decoration: none;
+  font-weight: 600;
+}

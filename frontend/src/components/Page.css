@@ -1,4 +1,4 @@
-ul {
+.u {
   border-bottom: 2px solid #ddd;
 }
 .nav-underline .nav-link {
@@ -21,4 +21,21 @@ ul {
 
 .nav-link:focus {
   color: #14b8a6;
+}
+.nbar .nav-link {
+  color: #64748b;
+  font-weight: 400;
+  padding-bottom: 12px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nbar .nav-link:hover {
+  color: #1e293b;
+  border-bottom-color: #14b8a6;
+}
+
+.nbar .active-link {
+  color: #14b8a6;
+  border-bottom-color: #14b8a6;
 }

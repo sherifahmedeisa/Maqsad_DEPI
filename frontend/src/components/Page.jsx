@@ -9,7 +9,7 @@ import "./Page.css";
 function Page() {
   return (
     <>
-      <ul className="nav nav-underline  gap-4 py-2">
+      <ul className="nav nav-underline  gap-4 py-2 u">
         <li className="nav-item ms-5 me-3">
           <NavLink className="nav-link" to="/provider-login">
             Provider Login
