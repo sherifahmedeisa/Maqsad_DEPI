@@ -84,6 +84,13 @@ MessageThread.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 MatchingScore.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 
 const initializeDatabase = async () => {
+  // On serverless environments (Vercel), skip schema sync to avoid cold-start delays and race conditions,
+  // unless explicitly forced via env variable.
+  if (process.env.VERCEL && process.env.DB_FORCE_SYNC !== 'true') {
+    console.log('Skipping database sync on Vercel serverless environment.');
+    return;
+  }
+
   const syncOptions = { alter: true };
   if (process.env.DB_FORCE_SYNC === 'true') {
     syncOptions.force = true;
