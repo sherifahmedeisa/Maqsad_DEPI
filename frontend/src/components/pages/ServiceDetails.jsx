@@ -11,6 +11,12 @@ function ServiceDetails() {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+  const [showRfpModal, setShowRfpModal] = useState(false);
+  const [notes, setNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const isRTL = i18n.language.startsWith('ar');
 
@@ -33,6 +39,45 @@ function ServiceDetails() {
     };
     fetchService();
   }, [id, isRTL]);
+
+  const handleRfpSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitError("");
+    
+    try {
+      const res = await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          providerId: service.provider?.id,
+          title: `Request for: ${service.title}`,
+          description: notes || (isRTL ? `مهتم بخدمتك: ${service.title}` : `Interested in your service: ${service.title}`),
+          category: service.category,
+          status: "open",
+          tags: service.tags || []
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to submit request");
+      }
+
+      setSubmitSuccess(true);
+      setNotes("");
+    } catch (err) {
+      console.error(err);
+      setSubmitError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -161,13 +206,13 @@ function ServiceDetails() {
               </div>
 
               {(!user || user.role === 'beneficiary') ? (
-                <Link
-                  to={`/rfp/new?providerId=${service.provider?.id || ''}`}
-                  className="w-full bg-primary text-on-primary font-label-lg text-label-lg px-xl py-4 rounded-xl hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center gap-2 text-decoration-none"
+                <button
+                  onClick={() => setShowRfpModal(true)}
+                  className="w-full bg-primary text-on-primary font-label-lg text-label-lg px-xl py-4 rounded-xl hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center gap-2"
                 >
                   {isRTL ? "طلب عرض سعر (RFP)" : "Request Proposal (RFP)"}
                   <span className={`material-symbols-outlined ${isRTL ? 'rotate-180' : ''}`}>arrow_forward</span>
-                </Link>
+                </button>
               ) : (
                 <div className="w-full bg-surface-variant text-on-surface-variant font-label-md px-xl py-4 rounded-xl text-center">
                   {isRTL ? "متوفر فقط للعملاء" : "Available only for clients"}
@@ -178,6 +223,84 @@ function ServiceDetails() {
           
         </div>
       </div>
+
+      {/* RFP Modal */}
+      {showRfpModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest rounded-2xl w-full max-w-lg overflow-hidden shadow-lg flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center p-lg border-b border-outline-variant">
+              <h2 className="font-headline-sm text-headline-sm text-on-surface">
+                {isRTL ? "إرسال ملاحظات لطلب الخدمة" : "Send Notes for Request"}
+              </h2>
+              <button onClick={() => { setShowRfpModal(false); setSubmitSuccess(false); setSubmitError(""); }} className="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors flex items-center justify-center">
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            
+            <div className="p-lg overflow-y-auto">
+              {submitSuccess ? (
+                <div className="bg-emerald-50 text-emerald-800 p-lg rounded-xl flex flex-col items-center text-center py-xl">
+                  <span className="material-symbols-outlined text-5xl mb-4 text-emerald-500">check_circle</span>
+                  <h3 className="font-headline-sm text-headline-sm font-semibold mb-2">
+                    {isRTL ? "تم إرسال الطلب بنجاح!" : "Request Sent Successfully!"}
+                  </h3>
+                  <p className="font-body-md">
+                    {isRTL ? "سيتواصل معك مقدم الخدمة قريباً بعرض السعر." : "The provider will contact you shortly with a proposal."}
+                  </p>
+                  <button 
+                    onClick={() => { setShowRfpModal(false); setSubmitSuccess(false); }}
+                    className="mt-lg bg-emerald-600 text-white font-label-md px-lg py-3 rounded-xl hover:bg-emerald-700 transition-colors"
+                  >
+                    {isRTL ? "إغلاق" : "Close"}
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleRfpSubmit} className="flex flex-col gap-lg">
+                  {submitError && (
+                    <div className="bg-error-container text-on-error-container p-md rounded-lg font-body-sm">
+                      {submitError}
+                    </div>
+                  )}
+                  
+                  <div className="flex flex-col gap-2">
+                    <label className="font-label-md text-on-surface font-semibold">
+                      {isRTL ? "ملاحظات إضافية للمشروع (اختياري)" : "Project Notes (Optional)"}
+                    </label>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder={isRTL ? "اشرح بشكل مبسط ما تحتاجه من هذه الخدمة..." : "Briefly describe what you need from this service..."}
+                      className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors min-h-[120px] resize-y"
+                    />
+                  </div>
+
+                  <div className="flex gap-md pt-sm border-t border-outline-variant mt-sm">
+                    <button 
+                      type="button" 
+                      onClick={() => setShowRfpModal(false)}
+                      className="flex-1 py-3 border border-outline-variant text-on-surface font-label-md rounded-xl hover:bg-surface-container-low transition-colors"
+                    >
+                      {isRTL ? "إلغاء" : "Cancel"}
+                    </button>
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="flex-1 py-3 bg-primary text-on-primary font-label-md rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+                      ) : (
+                        <span className="material-symbols-outlined text-[20px]">send</span>
+                      )}
+                      {isRTL ? "إرسال الطلب" : "Submit Request"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
