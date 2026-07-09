@@ -18,6 +18,29 @@ router.get('/mine', ensureAuthenticated, ensureRole(['beneficiary']), async (req
   }
 });
 
+router.get('/received', ensureAuthenticated, ensureRole(['provider']), async (req, res, next) => {
+  try {
+    const proposals = await Proposal.findAll({
+      include: [
+        {
+          model: RFP,
+          as: 'rfp',
+          where: { beneficiaryId: req.user.id }
+        },
+        {
+          model: User,
+          as: 'provider',
+          attributes: ['id', 'email', 'fullName']
+        }
+      ],
+      order: [['updatedAt', 'DESC']]
+    });
+    res.json(proposals);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/:id', ensureAuthenticated, async (req, res, next) => {
   try {
     const proposal = await Proposal.findByPk(req.params.id, {

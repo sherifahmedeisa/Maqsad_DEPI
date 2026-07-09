@@ -33,7 +33,8 @@ const createStrategy = ({ Strategy, clientID, clientSecret, callbackURL, provide
       async (req, accessToken, refreshToken, profile, done) => {
         try {
           const oauthId = profile.id;
-          const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+          const rawEmail = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+          const email = rawEmail ? rawEmail.toLowerCase().trim() : null;
           const provider = profile.provider;
           const displayName = profile.displayName || profile.username || 'Unknown User';
           const avatarUrl = profile.photos && profile.photos[0] ? profile.photos[0].value : null;

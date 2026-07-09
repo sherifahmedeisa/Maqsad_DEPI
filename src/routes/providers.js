@@ -4,7 +4,7 @@ const { ProviderProfile, User } = require('../models');
 const { ensureAuthenticated, ensureRole } = require('../middleware/auth');
 const router = express.Router();
 
-router.get('/', ensureAuthenticated, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const where = {};
     if (req.query.tag) {
@@ -59,7 +59,7 @@ router.put('/me', ensureAuthenticated, ensureRole(['provider']), async (req, res
   }
 });
 
-router.get('/:id', ensureAuthenticated, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const providerProfile = await ProviderProfile.findOne({
       where: { id: req.params.id },

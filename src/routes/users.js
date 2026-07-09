@@ -49,7 +49,55 @@ router.put('/me', ensureAuthenticated, async (req, res, next) => {
     user.subscriptionTier = subscriptionTier ?? user.subscriptionTier;
     await user.save();
 
-    res.json(user);
+    if (user.role === 'beneficiary') {
+      const { organizationName, industry, websiteUrl, bio } = req.body;
+      let beneficiaryProfile = await BeneficiaryProfile.findOne({ where: { userId: user.id } });
+      if (!beneficiaryProfile) {
+        await BeneficiaryProfile.create({
+          userId: user.id,
+          organizationName,
+          industry,
+          websiteUrl,
+          bio,
+        });
+      } else {
+        await beneficiaryProfile.update({
+          organizationName: organizationName ?? beneficiaryProfile.organizationName,
+          industry: industry ?? beneficiaryProfile.industry,
+          websiteUrl: websiteUrl ?? beneficiaryProfile.websiteUrl,
+          bio: bio ?? beneficiaryProfile.bio,
+        });
+      }
+    } else if (user.role === 'provider') {
+      const { companyName, description, serviceTags, websiteUrl } = req.body;
+      let providerProfile = await ProviderProfile.findOne({ where: { userId: user.id } });
+      if (!providerProfile) {
+        await ProviderProfile.create({
+          userId: user.id,
+          companyName,
+          description,
+          serviceTags,
+          websiteUrl,
+        });
+      } else {
+        await providerProfile.update({
+          companyName: companyName ?? providerProfile.companyName,
+          description: description ?? providerProfile.description,
+          serviceTags: serviceTags ?? providerProfile.serviceTags,
+          websiteUrl: websiteUrl ?? providerProfile.websiteUrl,
+        });
+      }
+    }
+
+    const updatedUser = await User.findByPk(user.id, {
+      attributes: ['id', 'email', 'fullName', 'phone', 'country', 'city', 'profilePictureUrl', 'role', 'accountStatus', 'subscriptionTier', 'emailVerifiedAt', 'createdAt', 'updatedAt'],
+      include: [
+        { model: BeneficiaryProfile, as: 'beneficiaryProfile' },
+        { model: ProviderProfile, as: 'providerProfile' },
+      ],
+    });
+
+    res.json(updatedUser);
   } catch (error) {
     next(error);
   }

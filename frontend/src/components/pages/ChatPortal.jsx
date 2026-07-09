@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import ChatWindow from "../ChatWindow";
 
 function ChatPortal() {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const [threads, setThreads] = useState([]);
   const [activeThread, setActiveThread] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const isRTL = i18n.language.startsWith('ar');
 
   useEffect(() => {
     fetchThreads();
@@ -23,7 +27,7 @@ function ChatPortal() {
       setThreads(data);
     } catch (err) {
       console.error(err);
-      setError(err.message || "Could not retrieve conversations list.");
+      setError(err.message || t("chatPortal.error.title"));
     } finally {
       setLoading(false);
     }
@@ -33,7 +37,7 @@ function ChatPortal() {
     return (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-32 flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mb-4"></div>
-        <p className="font-body-md text-body-md text-on-surface-variant">Loading messaging portals...</p>
+        <p className="font-body-md text-body-md text-on-surface-variant">{t("chatPortal.loading")}</p>
       </div>
     );
   }
@@ -42,10 +46,10 @@ function ChatPortal() {
     return (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
         <div className="bg-error-container text-on-error-container p-lg rounded-xl border border-error/20">
-          <h4 className="font-headline-sm text-headline-sm font-semibold mb-2">Connection Error</h4>
+          <h4 className="font-headline-sm text-headline-sm font-semibold mb-2">{t("chatPortal.error.title")}</h4>
           <p className="font-body-md text-body-md mb-4">{error}</p>
           <button className="bg-error text-white font-label-md text-label-md px-lg py-md rounded-lg hover:opacity-90 transition-opacity" onClick={fetchThreads}>
-            Retry Fetch
+            {t("chatPortal.error.retry")}
           </button>
         </div>
       </div>
@@ -53,14 +57,14 @@ function ChatPortal() {
   }
 
   return (
-    <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
+    <div className={`flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl ${isRTL ? "rtl" : "ltr"}`} dir={isRTL ? "rtl" : "ltr"}>
       <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row" style={{ height: "calc(100vh - 160px)", minHeight: "450px" }}>
         
         {/* Left Side: Threads List */}
-        <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-outline-variant flex flex-col h-full bg-surface-bright">
+        <div className={`w-full md:w-1/3 border-b md:border-b-0 ${isRTL ? 'md:border-l' : 'md:border-r'} border-outline-variant flex flex-col h-full bg-surface-bright`}>
           <div className="p-md border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
             <h4 className="font-headline-sm text-sm font-bold flex items-center gap-1.5 text-on-surface">
-              <span className="material-symbols-outlined text-secondary text-[20px]">forum</span> Chat History
+              <span className="material-symbols-outlined text-secondary text-[20px]">forum</span> {t("chatPortal.sidebar.title")}
             </h4>
           </div>
 
@@ -69,7 +73,7 @@ function ChatPortal() {
               <div className="p-lg text-center flex flex-col items-center gap-xs text-on-surface-variant">
                 <span className="material-symbols-outlined text-3xl">forum</span>
                 <p className="font-body-sm text-xs leading-relaxed max-w-[200px]">
-                  No message history yet. Initiate negotiation chats from RFP details pages.
+                  {t("chatPortal.sidebar.empty")}
                 </p>
               </div>
             ) : (
@@ -80,7 +84,7 @@ function ChatPortal() {
                   <button
                     key={t.id}
                     onClick={() => setActiveThread(t)}
-                    className={`w-full p-md text-left transition-colors flex items-center gap-3 border-l-4 ${
+                    className={`w-full p-md ${isRTL ? 'text-right' : 'text-left'} transition-colors flex items-center gap-3 ${isRTL ? 'border-r-4' : 'border-l-4'} ${
                       isActive 
                         ? "bg-surface-container-low/60 border-secondary" 
                         : "bg-transparent border-transparent hover:bg-surface-container-low/20"
@@ -93,11 +97,11 @@ function ChatPortal() {
                       <div className="flex justify-between items-baseline gap-xs">
                         <strong className="font-label-md text-label-md text-on-surface font-semibold truncate">{otherUser?.fullName}</strong>
                         <span className="font-body-sm text-xs text-on-surface-variant shrink-0">
-                          {new Date(t.lastMessageAt || t.createdAt).toLocaleDateString([], { month: "short", day: "numeric" })}
+                          {new Date(t.lastMessageAt || t.createdAt).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', { month: "short", day: "numeric" })}
                         </span>
                       </div>
                       <span className="font-body-sm text-xs text-on-surface-variant truncate">
-                        Project: <span className="font-semibold text-on-surface">{t.rfp?.title}</span>
+                        {t("chatPortal.sidebar.project")} <span className="font-semibold text-on-surface">{t.rfp?.title}</span>
                       </span>
                     </div>
                   </button>
@@ -120,7 +124,7 @@ function ChatPortal() {
                     {(user.role === "beneficiary" ? activeThread.provider : activeThread.beneficiary)?.fullName}
                   </h6>
                   <span className="font-body-sm text-xs text-on-surface-variant truncate block">
-                    Subject RFP: <strong>{activeThread.rfp?.title}</strong>
+                    {t("chatPortal.main.subject")} <strong>{activeThread.rfp?.title}</strong>
                   </span>
                 </div>
               </div>
@@ -136,9 +140,9 @@ function ChatPortal() {
             <div className="flex-grow flex flex-col items-center justify-center text-center p-lg gap-md text-on-surface-variant">
               <span className="material-symbols-outlined text-5xl">chat</span>
               <div className="flex flex-col gap-xs">
-                <h5 className="font-headline-sm text-headline-sm text-on-surface">Negotiation Portal</h5>
+                <h5 className="font-headline-sm text-headline-sm text-on-surface">{t("chatPortal.main.placeholder.title")}</h5>
                 <p className="font-body-sm text-body-sm max-w-xs">
-                  Select a conversation thread from the left menu to view chat history and negotiate bid structures.
+                  {t("chatPortal.main.placeholder.desc")}
                 </p>
               </div>
             </div>

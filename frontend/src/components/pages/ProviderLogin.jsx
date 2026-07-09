@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import illustration1 from "../../assets/illustration1.png";
+import logo from "../../assets/maqsad-logo.png";
 
 function ProviderLogin() {
   const { login } = useAuth();
@@ -52,9 +53,7 @@ function ProviderLogin() {
         
         <div className="relative z-10">
           <Link className="font-headline-md text-headline-md font-bold text-white text-decoration-none flex items-center gap-2" to="/">
-            <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-              <div className="w-3 h-3 bg-[#0f172a] rounded-full"></div>
-            </div>
+            <img src={logo} alt="Maqsad Logo" className="h-8 w-auto" />
             <span className="font-bold font-headline-md text-white">Maqsad</span>
           </Link>
         </div>

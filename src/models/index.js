@@ -88,11 +88,33 @@ const initializeDatabase = async () => {
   if (process.env.DB_FORCE_SYNC === 'true') {
     syncOptions.force = true;
   }
+
+  const modelsInOrder = [
+    User,
+    EmailVerification,
+    PasswordReset,
+    BeneficiaryProfile,
+    ProviderProfile,
+    RFP,
+    Proposal,
+    MessageThread,
+    Message,
+    Notification,
+    ProfileView,
+    MatchingScore
+  ];
+
   try {
-    await sequelize.sync(syncOptions);
+    for (const model of modelsInOrder) {
+      await model.sync(syncOptions);
+    }
+    console.log('Database synced successfully in sequence.');
   } catch (syncError) {
     console.warn('Schema alter failed, retrying with force sync:', syncError.message);
-    await sequelize.sync({ force: true });
+    for (const model of modelsInOrder) {
+      await model.sync({ force: true });
+    }
+    console.log('Database force-synced successfully in sequence.');
   }
 };
 

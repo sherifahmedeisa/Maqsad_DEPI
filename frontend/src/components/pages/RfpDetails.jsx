@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import ChatWindow from "../ChatWindow";
 
 function RfpDetails() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const [rfp, setRfp] = useState(null);
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const isRTL = i18n.language.startsWith('ar');
 
   // Submit Proposal state (Provider)
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -34,8 +38,8 @@ function RfpDetails() {
     try {
       const rfpRes = await fetch(`/api/requests/${id}`);
       if (!rfpRes.ok) {
-        if (rfpRes.status === 404) throw new Error("RFP not found");
-        throw new Error("Failed to load request details");
+        if (rfpRes.status === 404) throw new Error(t("rfpDetails.errors.notFound"));
+        throw new Error(t("rfpDetails.errors.loadFailed"));
       }
       const rfpData = await rfpRes.json();
       setRfp(rfpData);
@@ -56,7 +60,7 @@ function RfpDetails() {
       }
     } catch (err) {
       console.error(err);
-      setError(err.message || "An error occurred fetching RFP data.");
+      setError(err.message || t("rfpDetails.errors.fetchError"));
     } finally {
       setLoading(false);
     }
@@ -71,7 +75,7 @@ function RfpDetails() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to update proposal status");
+        throw new Error(data.error || t("rfpDetails.errors.updateFailed"));
       }
       fetchRfpAndProposals();
     } catch (err) {
@@ -80,22 +84,29 @@ function RfpDetails() {
     }
   };
 
+  const getEstimatedDays = (rfpObj) => {
+    if (!rfpObj || !rfpObj.deadline) return 0;
+    const diffTime = Math.abs(new Date(rfpObj.deadline) - new Date(rfpObj.createdAt || Date.now()));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   const handleProposalSubmit = async (e) => {
     e.preventDefault();
     setSubmitError("");
 
     if (!bidAmount || !proposalDetails) {
-      setSubmitError("Please fill out both the bid amount and proposed timeline details.");
+      setSubmitError(t("rfpDetails.errors.submitMissing"));
       return;
     }
 
     if (Number(bidAmount) <= 0) {
-      setSubmitError("Bid amount must be a positive number.");
+      setSubmitError(t("rfpDetails.errors.submitPositive"));
       return;
     }
 
     if (!confirmCompliance) {
-      setSubmitError("You must confirm compliance with the requirements.");
+      setSubmitError(t("rfpDetails.errors.submitCompliance"));
       return;
     }
 
@@ -112,7 +123,7 @@ function RfpDetails() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to submit proposal");
+        throw new Error(data.error || t("rfpDetails.errors.submitFailed"));
       }
 
       setShowSubmitModal(false);
@@ -122,7 +133,7 @@ function RfpDetails() {
       fetchRfpAndProposals();
     } catch (err) {
       console.error(err);
-      setSubmitError(err.message || "An error occurred submitting the proposal.");
+      setSubmitError(err.message || t("rfpDetails.errors.submissionError"));
     } finally {
       setSubmittingProposal(false);
     }
@@ -136,7 +147,7 @@ function RfpDetails() {
     return (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-32 flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mb-4"></div>
-        <p className="font-body-md text-body-md text-on-surface-variant">Fetching RFP and bidding data...</p>
+        <p className="font-body-md text-body-md text-on-surface-variant">{t("rfpDetails.loadingFetch")}</p>
       </div>
     );
   }
@@ -145,10 +156,10 @@ function RfpDetails() {
     return (
       <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
         <div className="bg-error-container text-on-error-container p-lg rounded-xl border border-error/20">
-          <h4 className="font-headline-sm text-headline-sm font-semibold mb-2">Data Fetch Error</h4>
+          <h4 className="font-headline-sm text-headline-sm font-semibold mb-2">{t("rfpDetails.errors.title")}</h4>
           <p className="font-body-md text-body-md mb-4">{error}</p>
           <button className="bg-error text-white font-label-md text-label-md px-lg py-md rounded-lg hover:opacity-90 transition-opacity" onClick={() => navigate("/dashboard")}>
-            Back to Dashboard
+            {t("rfpDetails.header.back")}
           </button>
         </div>
       </div>
@@ -162,24 +173,24 @@ function RfpDetails() {
     <div className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
         
-        {/* Left Side Details Panel */}
+        {/* Details Panel */}
         <div className={activeChatProviderId ? "lg:col-span-7 flex flex-col gap-lg" : "lg:col-span-8 flex flex-col gap-lg"}>
           
           {/* Header Info */}
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg md:p-xl shadow-sm flex flex-col gap-md">
             <div className="flex justify-between items-center">
               <Link to="/dashboard" className="text-on-surface-variant hover:text-secondary font-label-md text-label-md flex items-center gap-1 text-decoration-none transition-colors">
-                <span className="material-symbols-outlined text-[18px]">arrow_back</span> Back
+                <span className={`material-symbols-outlined text-[18px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span> {t("rfpDetails.header.back")}
               </Link>
               <span className={`inline-flex px-3 py-1 rounded-full font-label-sm text-label-sm font-semibold ${
                 rfp.status === "open" ? "bg-secondary-container text-on-secondary-container" : "bg-error-container text-on-error-container"
               }`}>
-                {rfp.status.toUpperCase()}
+                {t(rfp.status.toUpperCase(), rfp.status.toUpperCase())}
               </span>
             </div>
 
             <div className="flex flex-col gap-xs">
-              <span className="font-label-sm text-label-sm text-secondary bg-secondary-container px-2.5 py-1 rounded align-self-start border border-secondary-fixed">
+              <span className="font-label-sm text-label-sm text-secondary bg-secondary-container px-2.5 py-1 rounded self-start border border-secondary-fixed">
                 {rfp.category || "General Services"}
               </span>
               <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold leading-tight">{rfp.title}</h1>
@@ -188,7 +199,7 @@ function RfpDetails() {
             {/* Scope / requirements details */}
             <div className="border-t border-outline-variant pt-lg mt-md">
               <h3 className="font-headline-sm text-headline-sm text-on-surface mb-sm flex items-center gap-xs">
-                <span className="material-symbols-outlined text-secondary">target</span> Project Scope & Requirements
+                <span className="material-symbols-outlined text-secondary">target</span> {t("rfpDetails.header.projectScope")}
               </h3>
               <p className="font-body-md text-body-md text-on-surface-variant whitespace-pre-line leading-relaxed">
                 {rfp.description}
@@ -199,7 +210,7 @@ function RfpDetails() {
             {isOwner && (
               <div className="border-t border-outline-variant pt-lg mt-md flex gap-sm">
                 <Link to={`/rfp/edit/${rfp.id}`} className="bg-transparent border border-outline text-on-surface hover:bg-surface-container-low font-label-md text-label-md px-lg py-2 rounded-lg text-decoration-none transition-colors">
-                  Edit Specifications
+                  {t("rfpDetails.header.editSpecs")}
                 </Link>
               </div>
             )}
@@ -209,13 +220,13 @@ function RfpDetails() {
           {isOwner && (
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg md:p-xl shadow-sm flex flex-col gap-lg">
               <h2 className="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-md">
-                Proposals Received ({proposals.length})
+                {t("rfpDetails.proposals.received", { count: proposals.length })}
               </h2>
 
               {proposals.length === 0 ? (
                 <div className="py-12 text-center flex flex-col items-center">
                   <span className="material-symbols-outlined text-on-surface-variant text-5xl mb-2">inbox</span>
-                  <p className="font-body-md text-body-md text-on-surface-variant">No proposals received yet. Vendors will appear here once bids are submitted.</p>
+                  <p className="font-body-md text-body-md text-on-surface-variant">{t("rfpDetails.proposals.noProposals")}</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
@@ -231,7 +242,7 @@ function RfpDetails() {
                               {prop.provider?.fullName || "Service Vendor"}
                             </h4>
                             <span className="text-on-surface-variant font-body-sm text-body-sm">
-                              Proposed Bid: <strong className="text-primary font-bold">${Number(prop.bidAmount).toLocaleString()}</strong>
+                              {t("rfpDetails.proposals.proposedBid")} <strong className="text-primary font-bold">${Number(prop.bidAmount).toLocaleString()}</strong>
                             </span>
                           </div>
                         </div>
@@ -241,7 +252,7 @@ function RfpDetails() {
                           prop.status === "rejected" ? "bg-error-container text-on-error-container" :
                           prop.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
                         }`}>
-                          {prop.status.toUpperCase()}
+                          {t(prop.status.toUpperCase(), prop.status.toUpperCase())}
                         </span>
                       </div>
 
@@ -255,7 +266,7 @@ function RfpDetails() {
                           onClick={() => initiateChat(prop.providerId)}
                           className="text-secondary hover:text-on-secondary-container font-label-md text-label-md flex items-center gap-1 transition-colors"
                         >
-                          <span className="material-symbols-outlined text-[18px]">forum</span> Chat with Vendor
+                          <span className="material-symbols-outlined text-[18px]">forum</span> {t("rfpDetails.proposals.chatVendor")}
                         </button>
 
                         <div className="flex gap-2">
@@ -265,19 +276,19 @@ function RfpDetails() {
                                 onClick={() => handleProposalStatusUpdate(prop.id, "shortlisted")}
                                 className="px-3 py-1.5 border border-outline-variant hover:bg-surface-container-low rounded-lg font-label-md text-label-md transition-colors"
                               >
-                                Shortlist
+                                {t("rfpDetails.proposals.shortlist")}
                               </button>
                               <button
                                 onClick={() => handleProposalStatusUpdate(prop.id, "accepted")}
                                 className="px-3 py-1.5 bg-secondary text-white font-semibold rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity"
                               >
-                                Accept
+                                {t("rfpDetails.proposals.accept")}
                               </button>
                               <button
                                 onClick={() => handleProposalStatusUpdate(prop.id, "rejected")}
                                 className="px-3 py-1.5 border border-error text-error hover:bg-error-container/20 rounded-lg font-label-md text-label-md transition-colors"
                               >
-                                Reject
+                                {t("rfpDetails.proposals.reject")}
                               </button>
                             </>
                           )}
@@ -287,13 +298,13 @@ function RfpDetails() {
                                 onClick={() => handleProposalStatusUpdate(prop.id, "accepted")}
                                 className="px-3 py-1.5 bg-secondary text-white font-semibold rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity"
                               >
-                                Accept
+                                {t("rfpDetails.proposals.accept")}
                               </button>
                               <button
                                 onClick={() => handleProposalStatusUpdate(prop.id, "rejected")}
                                 className="px-3 py-1.5 border border-error text-error hover:bg-error-container/20 rounded-lg font-label-md text-label-md transition-colors"
                               >
-                                Reject
+                                {t("rfpDetails.proposals.reject")}
                               </button>
                             </>
                           )}
@@ -307,17 +318,17 @@ function RfpDetails() {
           )}
         </div>
 
-        {/* Right Side Sidebar (Details / Action Cards / Messaging Panel) */}
+        {/* Sidebar */}
         <div className={activeChatProviderId ? "lg:col-span-5 flex flex-col gap-lg" : "lg:col-span-4 flex flex-col gap-lg"}>
           
           {/* Key Details Card */}
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col gap-md">
-            <h3 className="font-headline-sm text-headline-sm text-on-surface">Key Details</h3>
+            <h3 className="font-headline-sm text-headline-sm text-on-surface">{t("rfpDetails.sidebar.keyDetails")}</h3>
             <div className="flex flex-col gap-md">
               <div className="flex items-start gap-sm">
                 <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>payments</span>
                 <div>
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Service Rate / Budget</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant">{t("rfpDetails.sidebar.serviceRate")}</div>
                   <div className="font-body-md text-body-md text-on-surface font-semibold">
                     ${Number(rfp.budgetMin).toLocaleString()} - ${Number(rfp.budgetMax).toLocaleString()}
                   </div>
@@ -325,11 +336,11 @@ function RfpDetails() {
               </div>
 
               <div className="flex items-start gap-sm">
-                <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>calendar_month</span>
+                <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>hourglass_empty</span>
                 <div>
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Estimated Delivery / Target Date</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant">{t("rfpDetails.sidebar.estimatedDuration")}</div>
                   <div className="font-body-md text-body-md text-on-surface font-semibold">
-                    {new Date(rfp.deadline).toLocaleDateString()}
+                    {getEstimatedDays(rfp)} {t("rfpDetails.sidebar.days")}
                   </div>
                 </div>
               </div>
@@ -337,7 +348,7 @@ function RfpDetails() {
               <div className="flex items-start gap-sm">
                 <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>corporate_fare</span>
                 <div>
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Service Provider</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant">{t("rfpDetails.sidebar.serviceProvider")}</div>
                   <div className="font-body-md text-body-md text-on-surface font-semibold">
                     {rfp.beneficiary?.fullName || "Verified Provider"}
                   </div>
@@ -352,25 +363,25 @@ function RfpDetails() {
               {existingProposal ? (
                 <div className="flex flex-col gap-md">
                   <h4 className="font-headline-sm text-headline-sm text-secondary font-bold flex items-center gap-1.5">
-                    <span className="material-symbols-outlined">check_circle</span> Request Submitted
+                    <span className="material-symbols-outlined">check_circle</span> {t("rfpDetails.sidebar.requestSubmitted")}
                   </h4>
                   <div className="bg-surface-container-low p-md rounded-lg border border-outline-variant flex flex-col gap-sm">
                     <div className="flex justify-between items-center text-body-sm">
-                      <span className="text-on-surface-variant">Offered Rate:</span>
+                      <span className="text-on-surface-variant">{t("rfpDetails.sidebar.offeredRate")}</span>
                       <strong className="text-primary">${Number(existingProposal.bidAmount).toLocaleString()}</strong>
                     </div>
                     <div className="flex justify-between items-center text-body-sm">
-                      <span className="text-on-surface-variant">Request Status:</span>
+                      <span className="text-on-surface-variant">{t("rfpDetails.sidebar.requestStatus")}</span>
                       <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs ${
                         existingProposal.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
                         existingProposal.status === "rejected" ? "bg-error-container text-on-error-container" :
                         existingProposal.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
                       }`}>
-                        {existingProposal.status.toUpperCase()}
+                        {t(existingProposal.status.toUpperCase(), existingProposal.status.toUpperCase())}
                       </span>
                     </div>
                     <div className="border-t border-outline-variant/40 pt-sm text-body-sm mt-1 text-on-surface-variant">
-                      <strong>Your Specifications:</strong>
+                      <strong>{t("rfpDetails.sidebar.yourSpecs")}</strong>
                       <p className="mt-1 text-xs line-clamp-3">{existingProposal.proposalDetails}</p>
                     </div>
                   </div>
@@ -378,21 +389,21 @@ function RfpDetails() {
                     onClick={() => initiateChat(rfp.beneficiaryId)}
                     className="bg-primary hover:bg-on-background text-on-primary font-label-md text-label-md py-2.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm text-white text-decoration-none"
                   >
-                    <span className="material-symbols-outlined">forum</span> Open Negotiation Chat
+                    <span className="material-symbols-outlined">forum</span> {t("rfpDetails.sidebar.openChat")}
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-md text-center">
-                  <div className="font-headline-sm text-headline-sm text-on-surface">Interested in this service?</div>
+                  <div className="font-headline-sm text-headline-sm text-on-surface">{t("rfpDetails.sidebar.interested")}</div>
                   <p className="font-body-sm text-body-sm text-on-surface-variant mb-sm">
-                    Request custom scheduling and cost parameters to book this provider.
+                    {t("rfpDetails.sidebar.interestedDesc")}
                   </p>
                   <button
                     onClick={() => setShowSubmitModal(true)}
                     className="bg-primary hover:bg-on-background text-on-primary font-label-md text-label-md py-2.5 rounded-lg hover:opacity-90 transition-opacity font-semibold text-white"
                     disabled={rfp.status !== "open"}
                   >
-                    {rfp.status === "open" ? "Book / Request Service" : "Booking Closed"}
+                    {rfp.status === "open" ? t("rfpDetails.sidebar.bookService") : t("rfpDetails.sidebar.bookingClosed")}
                   </button>
                 </div>
               )}
@@ -404,7 +415,7 @@ function RfpDetails() {
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col sticky top-6" style={{ height: "450px" }}>
               <div className="bg-primary text-white p-3 flex justify-between items-center">
                 <h5 className="m-0 font-bold font-headline-sm text-sm flex items-center gap-1">
-                  <span className="material-symbols-outlined text-secondary text-sm">forum</span> Negotiation Chat
+                  <span className="material-symbols-outlined text-secondary text-sm">forum</span> {t("rfpDetails.sidebar.negotiationChat")}
                 </h5>
                 <button
                   type="button"
@@ -431,7 +442,7 @@ function RfpDetails() {
           <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-lg p-lg md:p-xl shadow-xl flex flex-col gap-lg">
             
             <div className="flex justify-between items-center border-b border-outline-variant pb-sm">
-              <h2 className="font-headline-md text-headline-md text-on-surface">Book / Request Service</h2>
+              <h2 className="font-headline-md text-headline-md text-on-surface">{t("rfpDetails.modal.title")}</h2>
               <button
                 type="button"
                 className="text-on-surface-variant hover:text-error transition-colors"
@@ -450,12 +461,12 @@ function RfpDetails() {
 
               <div>
                 <label className="block font-label-md text-label-md text-on-background mb-xs">
-                  Your Budget Offer (USD) <span className="text-error">*</span>
+                  {t("rfpDetails.modal.budgetOffer")} <span className="text-error">*</span>
                 </label>
                 <input
                   type="number"
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors"
-                  placeholder="e.g. 15000"
+                  placeholder={t("rfpDetails.modal.budgetPlaceholder")}
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
                 />
@@ -463,11 +474,11 @@ function RfpDetails() {
 
               <div>
                 <label className="block font-label-md text-label-md text-on-background mb-xs">
-                  Request Details & Custom Scoping Specifications <span className="text-error">*</span>
+                  {t("rfpDetails.modal.requestDetails")} <span className="text-error">*</span>
                 </label>
                 <textarea
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors resize-y"
-                  placeholder="Specify details, scheduling requirements, or custom variations you need..."
+                  placeholder={t("rfpDetails.modal.detailsPlaceholder")}
                   rows="4"
                   value={proposalDetails}
                   onChange={(e) => setProposalDetails(e.target.value)}
@@ -483,7 +494,7 @@ function RfpDetails() {
                   onChange={(e) => setConfirmCompliance(e.target.checked)}
                 />
                 <label htmlFor="complianceCheck" className="font-body-sm text-body-sm text-on-surface-variant cursor-pointer select-none">
-                  I confirm the accuracy of my requested specifications and timeline parameters.
+                  {t("rfpDetails.modal.compliance")}
                 </label>
               </div>
 
@@ -493,7 +504,7 @@ function RfpDetails() {
                   onClick={() => setShowSubmitModal(false)}
                   className="px-lg py-2 border border-outline-variant hover:bg-surface-container-low rounded-lg font-label-md text-label-md transition-colors"
                 >
-                  Cancel
+                  {t("rfpDetails.modal.cancel")}
                 </button>
                 <button
                   type="submit"
@@ -502,11 +513,11 @@ function RfpDetails() {
                 >
                   {submittingProposal ? (
                     <>
-                      <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-                      Submitting request...
+                      <span className={`animate-spin rounded-full h-4 w-4 border-b-2 border-white ${isRTL ? 'ml-2' : 'mr-2'}`}></span>
+                      {t("rfpDetails.modal.submitting")}
                     </>
                   ) : (
-                    "Send Request"
+                    t("rfpDetails.modal.send")
                   )}
                 </button>
               </div>

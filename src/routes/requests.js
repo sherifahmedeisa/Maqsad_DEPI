@@ -4,7 +4,7 @@ const { RFP, Proposal, User } = require('../models');
 const { ensureAuthenticated, ensureRole, ensureOwnerOrAdmin } = require('../middleware/auth');
 const router = express.Router();
 
-router.get('/', ensureAuthenticated, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const where = {};
     if (req.query.status) where.status = req.query.status;
@@ -83,7 +83,7 @@ router.post('/', ensureAuthenticated, ensureRole(['provider']), async (req, res,
   }
 });
 
-router.get('/:id', ensureAuthenticated, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const rfp = await RFP.findByPk(req.params.id, {
       include: [

@@ -1,0 +1,751 @@
+{
+  "nav": {
+    "profile": "Profile",
+    "maqsad": "Maqsad",
+    "dashboard": "Dashboard",
+    "browseServices": "Browse Services",
+    "messages": "Messages",
+    "admin": "Admin",
+    "login": "Log In",
+    "logout": "Log Out",
+    "notifications": "Notifications",
+    "markAllRead": "Mark all as read",
+    "viewAllNotifs": "View all notifications",
+    "client": "Client",
+    "provider": "Provider",
+    "adminRole": "Admin",
+    "clientPortal": "Client Portal",
+    "language": "Language",
+    "arabic": "العربية",
+    "english": "English"
+  },
+  "sidebar": {
+    "profile": "Profile",
+    "maqsad": "Maqsad",
+    "provider": "Provider",
+    "verifiedProvider": "Verified Provider",
+    "postNewService": "Post New Service",
+    "overview": "Overview",
+    "messages": "Messages",
+    "proposalHistory": "Proposal History",
+    "contractManager": "Contract Manager",
+    "analytics": "Analytics",
+    "helpCenter": "Help Center",
+    "logout": "Log Out",
+    "more": "More",
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "footer": {
+    "maqsad": "Maqsad",
+    "about": "About Us",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "support": "Support",
+    "helpCenter": "Help Center",
+    "adminPortal": "Admin Portal",
+    "copyright": "© {{year}} Maqsad. Reliability, Efficiency, Clarity."
+  },
+  "landing": {
+    "categories": {
+      "software": "Software Development",
+      "security": "Cybersecurity",
+      "marketing": "Marketing",
+      "legal": "Legal Consulting",
+      "finance": "Financial Services",
+      "training": "Training"
+    },
+    "hero": {
+      "title1": "Stop searching.",
+      "title2": "Start booking.",
+      "subtitle": "Maqsad connects enterprises with verified professional service providers. Browse real listings, compare prices, and book directly — no middlemen, no bidding chaos.",
+      "browseServices": "Browse Services",
+      "listServices": "List Your Services",
+      "providersCount": "+200 Registered Providers"
+    },
+    "preview": {
+      "dashboard": "Maqsad Dashboard",
+      "jobTitle": "Cloud Migration Audit",
+      "offersCount": "3 Offers",
+      "budget": "Budget:",
+      "deadline": "Review deadline in 4 days",
+      "shortlisted": "Shortlisted · Bid $14,500",
+      "contractSigned": "Contract Signed",
+      "paymentTerms": "Payment terms agreed · Starts Monday"
+    },
+    "trending": "Trending Categories:",
+    "howItWorks": {
+      "subtitle": "HOW IT WORKS",
+      "title": "Three steps. No complexity.",
+      "step1Title": "Find the right fit",
+      "step1Desc": "Browse real service listings from verified providers. Filter by category, budget range, and expected delivery time. Every listing is an actual offering, not a generic directory.",
+      "step2Title": "Send a booking request",
+      "step2Desc": "Found a suitable service? Send your project scope and budget. Providers receive your request instantly and can start a conversation via built-in messaging.",
+      "step3Title": "Negotiate and confirm",
+      "step3Desc": "Discuss details directly — without procurement bureaucracy. When both parties agree, the contract is activated and you can track milestones from the dashboard."
+    },
+    "testimonials": {
+      "subtitle": "CLIENT FEEDBACK",
+      "title": "Trusted by real teams."
+    },
+    "forClients": {
+      "badge": "FOR CLIENTS",
+      "title": "Find experts effortlessly",
+      "desc": "Post your needs or browse available ones. Every provider on Maqsad is verified, and you can compare actual prices before communicating.",
+      "point1": "Browse live service catalog",
+      "point2": "Send custom booking requests for your project",
+      "point3": "Negotiate scope and budget via live chat",
+      "point4": "Track contracts and milestones in one place",
+      "cta": "Register as Client"
+    },
+    "forProviders": {
+      "badge": "FOR PROVIDERS",
+      "title": "Let the right clients find you",
+      "desc": "List your services and set your prices, and let clients come to you. No cold outreach or bidding wars — just direct conversations leading to real contracts.",
+      "point1": "Create detailed service listings with pricing",
+      "point2": "Receive targeted booking requests from clients",
+      "point3": "Manage proposals, contracts, and analytics",
+      "point4": "Build credibility through verified reviews",
+      "cta": "Start Listing Services"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions"
+    },
+    "finalCta": {
+      "title": "Ready to get started?",
+      "desc": "Whether you are looking for professional services or offering yours — Maqsad is where hard work meets real opportunities.",
+      "createAccount": "Create Free Account",
+      "exploreServices": "Explore Services"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log In to Your Account",
+      "subtitle": "Access your workspace, contracts, and proposals.",
+      "portalTitle": "Enterprise Services Portal",
+      "emailLabel": "Professional Email",
+      "emailPlaceholder": "user@company.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submitButton": "Log In →",
+      "loadingButton": "Logging In...",
+      "noAccount": "Don't have an account?",
+      "registerClient": "Register as Client",
+      "registerProvider": "Register as Provider",
+      "errorMissing": "Please fill out all required fields.",
+      "errorInvalid": "Invalid email or password.",
+      "heroTitle": "Connect with verified B2B service providers",
+      "heroSubtitle": "Streamline scoping, active agreements, negotiation and direct communication in one secure portal.",
+      "heroFeature1": "Review verified listings and cost models",
+      "heroFeature2": "Direct negotiation and active milestones"
+    },
+    "clientSignup": {
+      "title": "Create Client Account",
+      "subtitle": "Register to post requests, view catalog, and book professional services.",
+      "portalTitle": "Enterprise Client Portal",
+      "nameLabel": "Company / Organization Name",
+      "namePlaceholder": "e.g. Acme Corp",
+      "emailLabel": "Professional Business Email",
+      "emailPlaceholder": "client@company.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min 6 characters",
+      "confirmLabel": "Confirm Password",
+      "confirmPlaceholder": "Confirm password",
+      "submitButton": "Register Client Account →",
+      "loadingButton": "Creating Account...",
+      "hasAccount": "Already have a client account?",
+      "signIn": "Sign In",
+      "errorMissing": "Please fill out all required fields.",
+      "errorMismatch": "Passwords do not match.",
+      "errorShort": "Password must be at least 6 characters long.",
+      "errorFailed": "Registration failed. Email might be in use.",
+      "heroTitle": "Accelerate your enterprise<br />B2B procurement",
+      "heroSubtitle": "Browse services, establish custom timelines and budgets, and negotiate contracts directly with top providers.",
+      "heroFeature1": "Browse verified professional catalogs",
+      "heroFeature2": "Consolidated contract and milestones dashboard"
+    },
+    "providerSignup": {
+      "title": "Create Provider Account",
+      "subtitle": "Register to offer services, connect with clients, and grow your business.",
+      "portalTitle": "Service Provider Portal",
+      "nameLabel": "Company / Professional Name",
+      "namePlaceholder": "e.g. Nile Strategy Partners",
+      "emailLabel": "Professional Email",
+      "emailPlaceholder": "provider@company.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min 6 characters",
+      "confirmLabel": "Confirm Password",
+      "confirmPlaceholder": "Confirm password",
+      "submitButton": "Register Provider Account →",
+      "loadingButton": "Creating Account...",
+      "hasAccount": "Already have a provider account?",
+      "signIn": "Sign In",
+      "errorMissing": "Please fill out all required fields.",
+      "errorMismatch": "Passwords do not match.",
+      "errorShort": "Password must be at least 6 characters long.",
+      "errorFailed": "Registration failed. Email might be in use.",
+      "heroTitle": "Grow your B2B services<br />business with Maqsad",
+      "heroSubtitle": "List your services, set your prices, and let enterprise clients come to you. Direct connections, no bidding wars.",
+      "heroFeature1": "Reach verified enterprise clients",
+      "heroFeature2": "Keep 100% control of your pricing"
+    }
+  },
+  "dashboard": {
+    "loading": "Synchronizing workspace data...",
+    "errorTitle": "Dashboard Sync Error",
+    "retrySync": "Retry Sync",
+    "client": {
+      "welcome": "Welcome back, {{name}}",
+      "subtitle": "Here is an overview of your current service bookings and active requests.",
+      "exploreCatalog": "Explore Service Catalog",
+      "activeBookings": "Active Bookings",
+      "confirmedCurrently": "confirmed currently",
+      "pendingBookings": "Pending Bookings",
+      "pendingConfirmation": "pending confirmation",
+      "guideTitle": "Platform Guide",
+      "guideStep": "Step {{step}} of {{total}}",
+      "bookedRequests": "My Booked Requests",
+      "noRequests": "No requests submitted yet",
+      "noRequestsDesc": "Explore available services and submit booking details to get started.",
+      "browseServicesBtn": "Browse Services",
+      "bookedOn": "Booked on {{date}} • Provider:",
+      "offered": "Offered: ${{amount}}",
+      "exploreProviders": "Explore Service Providers",
+      "serviceCatalog": "Service Catalog",
+      "browseTop": "Browse top categories",
+      "catalogDesc": "Review verified listings for software development, IT networks, financial audits, design, and general operations.",
+      "directMessaging": "Direct Messaging",
+      "chatNegotiate": "Chat and negotiate",
+      "messagingDesc": "Connect directly with providers to discuss scopes, schedule, budgets, and request contract definitions.",
+      "workflow": {
+        "step1Title": "1. Discover Services",
+        "step1Desc": "Explore a catalog of verified services posted by professional providers, complete with budget limits.",
+        "step1Btn": "Explore Catalog",
+        "step2Title": "2. Send Booking Request",
+        "step2Desc": "Select a service, specify your custom timeline and budget parameters, and send a booking request.",
+        "step2Btn": "Find Services",
+        "step3Title": "3. Direct Negotiation",
+        "step3Desc": "Coordinate with providers via direct chat to finalize the budget and project details.",
+        "step3Btn": "Open Messages",
+        "step4Title": "4. Confirm & Execute",
+        "step4Desc": "Providers approve the custom request, finalizing the contract. Track active tasks in your overview.",
+        "step4Btn": "Track Requests"
+      }
+    },
+    "provider": {
+      "overview": "Dashboard Overview",
+      "welcome": "Welcome back, {{name}}. Here is your current pipeline.",
+      "searchPlaceholder": "Search RFPs...",
+      "newRfps": "New RFPs Received",
+      "today": "+{{count}} today",
+      "activeProposals": "Active Proposals",
+      "inProgress": "In progress",
+      "upcomingDeadlines": "Upcoming Deadlines (48h)",
+      "actionRequired": "Action required",
+      "incomingRequests": "Incoming Requests",
+      "viewAll": "View All",
+      "noRequests": "No matching requests",
+      "noRequestsDesc": "We'll alert you as soon as new RFPs in your service field launch.",
+      "posted": "Posted {{date}}",
+      "deadline": "Deadline: {{date}}",
+      "reviewRespond": "Review & Respond",
+      "decline": "Decline",
+      "rights": "© {{year}} Maqsad B2B Marketplace. All rights reserved."
+    },
+    "admin": {
+      "welcome": "Welcome to Administrator Portal",
+      "desc": "Manage system directories, flag accounts, toggle user suspensions, and compile database activity report diagnostics.",
+      "openCenter": "Open Governance Center"
+    }
+  },
+  "rfpForm": {
+    "loadingFetch": "Fetching RFP metadata details...",
+    "errors": {
+      "noPermission": "You do not have permission to edit this service request.",
+      "titleCategory": "Please provide a title and service category.",
+      "description": "Please provide a detailed description (minimum 20 characters).",
+      "budgetTimeline": "Please complete the budget parameters and estimated duration.",
+      "budgetPositive": "Budgets must be positive numbers",
+      "budgetOrder": "Minimum budget cannot be larger than maximum budget",
+      "durationPositive": "Estimated duration must be at least 1 day.",
+      "publishFailed": "Failed to publish service request",
+      "submissionError": "An error occurred during submission."
+    },
+    "success": {
+      "updated": "Request successfully updated!",
+      "published": "Request successfully published!"
+    },
+    "header": {
+      "editTitle": "Edit Service Request",
+      "createTitle": "Request Service",
+      "subtitle": "Provide your project details to receive tailored proposals from our certified experts."
+    },
+    "categories": {
+      "software": "Software Development",
+      "infrastructure": "IT Infrastructure",
+      "marketing": "Marketing & Design",
+      "legal": "Legal & Auditing",
+      "general": "General Services"
+    },
+    "categoryDescriptions": {
+      "software": "Custom software applications, API integrations, and enterprise software engineering services.",
+      "infrastructure": "Cloud infrastructure deployment, data networking solutions, and systems architecture consulting.",
+      "marketing": "Creative branding, product design, digital marketing campaigns, and UI/UX design.",
+      "legal": "Professional auditing and consulting services for corporate organizations and operations.",
+      "general": "Operational consulting, organizational coaching, and general business consulting support."
+    },
+    "defaultScope": "Project Scope",
+    "defaultScopeDesc": "Professional corporate auditing and consulting services.",
+    "steps": {
+      "step1": "Project Scope",
+      "step2": "Budget & Timeline",
+      "step3": "Review"
+    },
+    "form": {
+      "titleLabel": "Request Title",
+      "titlePlaceholder": "e.g. Enterprise HR Portal Redesign",
+      "categoryLabel": "Service Category",
+      "descLabel": "Project Description",
+      "descPlaceholder": "Describe the specific goals, deliverables, and any constraints for this project...",
+      "descHint": "Describe the deliverables and target outcomes clearly.",
+      "minBudget": "Min Budget ($)",
+      "maxBudget": "Max Budget ($)",
+      "estimatedDuration": "Estimated Duration (in days)",
+      "durationPlaceholder": "e.g. 30",
+      "statusLabel": "RFP Status",
+      "statusOpen": "Open (Accepting Proposals)",
+      "statusClosed": "Closed"
+    },
+    "review": {
+      "title": "Review Your Request",
+      "category": "Service Category",
+      "projectTitle": "Project Title",
+      "projectScope": "Project Scope",
+      "budget": "Budget",
+      "estimatedDuration": "Estimated Duration",
+      "days": "days"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next Step",
+      "post": "Post Request",
+      "update": "Update Request",
+      "posting": "Posting Request..."
+    }
+  },
+  "rfpDetails": {
+    "loadingFetch": "Fetching RFP and bidding data...",
+    "errors": {
+      "notFound": "RFP not found",
+      "loadFailed": "Failed to load request details",
+      "fetchError": "An error occurred fetching RFP data.",
+      "updateFailed": "Failed to update proposal status",
+      "submitMissing": "Please fill out both the bid amount and proposed timeline details.",
+      "submitPositive": "Bid amount must be a positive number.",
+      "submitCompliance": "You must confirm compliance with the requirements.",
+      "submitFailed": "Failed to submit proposal",
+      "submissionError": "An error occurred submitting the proposal.",
+      "title": "Data Fetch Error"
+    },
+    "header": {
+      "back": "Back",
+      "projectScope": "Project Scope & Requirements",
+      "editSpecs": "Edit Specifications"
+    },
+    "proposals": {
+      "received": "Proposals Received ({{count}})",
+      "noProposals": "No proposals received yet. Vendors will appear here once bids are submitted.",
+      "proposedBid": "Proposed Bid:",
+      "chatVendor": "Chat with Vendor",
+      "shortlist": "Shortlist",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "sidebar": {
+      "keyDetails": "Key Details",
+      "serviceRate": "Service Rate / Budget",
+      "estimatedDuration": "Estimated Duration",
+      "days": "days",
+      "serviceProvider": "Service Provider",
+      "requestSubmitted": "Request Submitted",
+      "offeredRate": "Offered Rate:",
+      "requestStatus": "Request Status:",
+      "yourSpecs": "Your Specifications:",
+      "openChat": "Open Negotiation Chat",
+      "interested": "Interested in this service?",
+      "interestedDesc": "Request custom scheduling and cost parameters to book this provider.",
+      "bookService": "Book / Request Service",
+      "bookingClosed": "Booking Closed",
+      "negotiationChat": "Negotiation Chat"
+    },
+    "modal": {
+      "title": "Book / Request Service",
+      "budgetOffer": "Your Budget Offer (USD)",
+      "budgetPlaceholder": "e.g. 15000",
+      "requestDetails": "Request Details & Custom Scoping Specifications",
+      "detailsPlaceholder": "Specify details, scheduling requirements, or custom variations you need...",
+      "compliance": "I confirm the accuracy of my requested specifications and timeline parameters.",
+      "cancel": "Cancel",
+      "submitting": "Submitting request...",
+      "send": "Send Request"
+    }
+  },
+  "browseCatalog": {
+    "title": "Browse Service Catalog",
+    "subtitle": "Explore our curated marketplace of verified service providers across industries. Find the perfect match for your project needs.",
+    "searchPlaceholder": "Search services, providers, or categories...",
+    "categories": {
+      "title": "Service Categories",
+      "subtitle": "Browse by category to find specialized providers for your project.",
+      "software": "Software Development",
+      "softwareDesc": "Custom applications, APIs, and enterprise systems",
+      "infrastructure": "IT Infrastructure",
+      "infrastructureDesc": "Cloud migration, networking, and systems architecture",
+      "marketing": "Marketing & Design",
+      "marketingDesc": "Branding, digital campaigns, and creative services",
+      "legal": "Legal & Auditing",
+      "legalDesc": "Compliance, financial audits, and legal advisory",
+      "financial": "Financial Services",
+      "financialDesc": "Accounting, tax planning, and financial consulting",
+      "general": "General Services",
+      "generalDesc": "Consulting, training, and operational support"
+    },
+    "providerCount": "{{count}} providers",
+    "providerCount_one": "1 provider",
+    "providerCount_zero": "0 providers",
+    "featured": {
+      "title": "Featured Providers",
+      "subtitle": "Top-rated providers with verified credentials and proven track records.",
+      "noProviders": "No verified service providers listed on the platform yet.",
+      "jobs": "jobs",
+      "verified": "Verified Provider"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Join Maqsad to post your service request and receive proposals from qualified providers within hours.",
+      "signupClient": "Sign Up as Client",
+      "joinProvider": "Join as Provider"
+    },
+    "loading": "Compiling catalog metrics..."
+  },
+  "browseRequests": {
+    "title": "Browse Services",
+    "subtitle": "Discover professional services posted by qualified providers.",
+    "searchPlaceholder": "Search by title or keyword...",
+    "loading": "Loading available requests...",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "all": "All",
+      "sortBy": "Sort By",
+      "newest": "Newest First",
+      "highestBudget": "Highest Budget",
+      "earliestDeadline": "Earliest Deadline"
+    },
+    "empty": {
+      "title": "No requests found",
+      "subtitle": "Try adjusting your filters or search terms."
+    },
+    "results": {
+      "count": "{{count}} services found",
+      "count_one": "1 service found",
+      "count_zero": "0 services found",
+      "open": "Open",
+      "deadline": "Deadline:",
+      "posted": "Posted",
+      "viewDetails": "View Details"
+    }
+  },
+  "proposalHistory": {
+    "title": "Booking Request History",
+    "subtitle": "Manage incoming client bookings, budgets, and project scoping requests.",
+    "refreshList": "Refresh List",
+    "filters": {
+      "all": "All",
+      "submitted": "Submitted",
+      "shortlisted": "Shortlisted",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "loading": "Retrieving request history...",
+    "syncFailed": "Sync Failed",
+    "empty": {
+      "title": "No request records",
+      "descAll": "No client has submitted custom booking requests for your service offerings yet.",
+      "descStatus": "You currently have no booking requests with the status \"{{status}}\"."
+    },
+    "table": {
+      "client": "Client / Sponsor",
+      "listing": "Service Listing",
+      "offerDetails": "Offer Details",
+      "receivedDate": "Received Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "defaults": {
+      "clientUser": "Client User",
+      "customOffer": "Custom Service Offer",
+      "requiredScope": "Required Scope"
+    },
+    "actions": {
+      "chat": "Chat with client",
+      "shortlist": "Shortlist",
+      "accept": "Accept",
+      "reject": "Reject Request"
+    }
+  },
+  "contractManager": {
+    "title": "Contract Manager",
+    "subtitle": "Overview of active service agreements and delivery milestones with corporate clients.",
+    "totalValue": "Total Contracted Value",
+    "loading": "Loading active agreements...",
+    "syncFailed": "Sync Failed",
+    "empty": {
+      "title": "No Active Contracts",
+      "desc": "You have no active agreements. Accept incoming booking requests on your dashboard or Proposal History to establish a contract."
+    },
+    "card": {
+      "activeAgreement": "Active Agreement",
+      "clientUser": "Client User",
+      "sponsor": "Sponsor",
+      "customScope": "Custom Service Scope",
+      "agreementId": "Agreement ID",
+      "milestones": "Delivery Milestones",
+      "scoping": "1. Scoping & Alignment",
+      "execution": "2. Execution & Milestones",
+      "handover": "3. Final Handover & Sign-off",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "pending": "Pending",
+      "finalizedBudget": "Finalized Budget",
+      "clientChat": "Client Chat"
+    }
+  },
+  "analytics": {
+    "title": "Enterprise Performance Analytics",
+    "subtitle": "Business intelligence dashboard, revenue stats, and client request conversion indicators.",
+    "loading": "Compiling platform metrics...",
+    "syncFailed": "Metrics Compilation Failed",
+    "metrics": {
+      "totalRevenue": "Total Revenue Earned",
+      "conversionRate": "Conversion Success Rate",
+      "averageDealSize": "Average Deal Size",
+      "activeContracts": "Active Contracts"
+    },
+    "distribution": {
+      "title": "Revenue Category Distribution",
+      "subtitle": "Breakdown of contract values across professional categories.",
+      "empty": "No active contracts to model distributions."
+    },
+    "funnel": {
+      "title": "Request Funnel",
+      "subtitle": "Trace clients booking request conversion funnel status.",
+      "received": "Bids Received",
+      "shortlisted": "Shortlisted",
+      "accepted": "Accepted Contracts",
+      "pending": "Pending Review"
+    }
+  },
+  "chatPortal": {
+    "loading": "Loading messaging portals...",
+    "error": {
+      "title": "Connection Error",
+      "retry": "Retry Fetch"
+    },
+    "sidebar": {
+      "title": "Chat History",
+      "empty": "No message history yet. Initiate negotiation chats from RFP details pages.",
+      "project": "Project:"
+    },
+    "main": {
+      "placeholder": {
+        "title": "Negotiation Portal",
+        "desc": "Select a conversation thread from the left menu to view chat history and negotiate bid structures."
+      },
+      "subject": "Subject RFP:"
+    }
+  },
+  "adminPanel": {
+    "loading": "Securing administrative stream...",
+    "header": {
+      "title": "Administrator Control Center",
+      "subtitle": "Platform governance, user accounts, service catalog moderation, and platform insights."
+    },
+    "tabs": {
+      "users": "Users",
+      "rfps": "Services Moderation ({{count}})",
+      "proposals": "Bookings Moderation ({{count}})",
+      "reports": "Platform Analytics"
+    },
+    "users": {
+      "title": "Active Platform Profiles",
+      "search": "Search name or email...",
+      "table": {
+        "details": "User Details",
+        "email": "Registered Email",
+        "role": "System Role",
+        "status": "Account Status",
+        "actions": "Actions"
+      },
+      "empty": "No matching user accounts discovered on the platform.",
+      "actions": {
+        "activate": "Activate",
+        "flag": "Flag",
+        "suspend": "Suspend"
+      }
+    },
+    "rfps": {
+      "title": "Moderate Services Catalog",
+      "search": "Search title, category, provider...",
+      "table": {
+        "details": "Service details",
+        "category": "Category",
+        "provider": "Provider",
+        "budget": "Rate Budget",
+        "moderation": "Moderation"
+      },
+      "empty": "No services found matching filters.",
+      "actions": {
+        "delete": "Delete Offer"
+      }
+    },
+    "proposals": {
+      "title": "Moderate Custom Bookings",
+      "search": "Search service, client, notes...",
+      "table": {
+        "service": "Service Requested",
+        "client": "Booking Client",
+        "budget": "Budget Offer",
+        "status": "Status",
+        "moderation": "Moderation"
+      },
+      "empty": "No custom bookings found matching filters.",
+      "actions": {
+        "delete": "Delete Booking"
+      }
+    },
+    "reports": {
+      "accounts": {
+        "title": "Accounts Analytics",
+        "total": "Total Accounts:",
+        "providers": "Service Providers:",
+        "clients": "Enterprise Clients:",
+        "admins": "System Admins:",
+        "suspended": "Suspended Profiles:"
+      },
+      "rfps": {
+        "title": "Service Offerings",
+        "total": "Total Offerings:",
+        "open": "Active Open Services:",
+        "draft": "Draft Offers:",
+        "closed": "Closed Services:"
+      },
+      "proposals": {
+        "title": "Booking Statistics",
+        "total": "Total Bookings Requested:",
+        "accepted": "Approved Bookings:",
+        "shortlisted": "Shortlisted Requests:",
+        "rejected": "Rejected Bookings:"
+      },
+      "messaging": {
+        "title": "Platform Communication Stream",
+        "threads": "Negotiation Threads",
+        "messages": "Messages Exchanged"
+      }
+    }
+  },
+  "faq": {
+    "header": {
+      "title": "Provider Help Center",
+      "subtitle": "Frequently asked questions, platform tutorials, and B2B workflow guides."
+    },
+    "tabs": {
+      "all": "All Questions",
+      "general": "General Questions",
+      "services": "Listing Services",
+      "proposals": "Bids & Proposals",
+      "contracts": "Active Agreements"
+    },
+    "support": {
+      "title": "Still need assistance?",
+      "subtitle": "Our support team is available 24/7 to resolve service listing or contract issues.",
+      "button": "Contact Support"
+    },
+    "questions": {
+      "q1": {
+        "question": "What is Maqsad?",
+        "answer": "Maqsad is a premium, collaborative B2B marketplace matching verified professional service providers with enterprise-grade clients. Our platform streamlines scoping, bidding, messaging, and agreement tracking."
+      },
+      "q2": {
+        "question": "Is there a subscription fee for providers?",
+        "answer": "Maqsad offers both free and premium subscription tiers. The free tier lets you list standard catalog offerings, while premium provides advanced analytics, matching scores, and higher visibility."
+      },
+      "q3": {
+        "question": "How do I list my B2B offerings?",
+        "answer": "Click the 'Post New Service' button in your sidebar. Complete the multi-step form by entering your title, description, budget ranges, and estimated days to deliver."
+      },
+      "q4": {
+        "question": "Can I edit an active service listing?",
+        "answer": "Yes, you can edit your listings at any time. Go to your Dashboard overview, find your service post, and click 'Edit Specifications'."
+      },
+      "q5": {
+        "question": "How do client booking requests work?",
+        "answer": "Clients browse your listed offerings. If they have a project matching your specialty, they submit a custom proposal specifying their maximum budget and requirements. You can review all submissions in 'Proposal History'."
+      },
+      "q6": {
+        "question": "Can I negotiate budget rates with clients?",
+        "answer": "Yes! Use the built-in direct messaging portal. Click the chat icon on any proposal to negotiate terms, schedules, and deliverables in real time before accepting the project."
+      },
+      "q7": {
+        "question": "How do I start a contract?",
+        "answer": "Once terms are finalized, go to your 'Proposal History' and click 'Accept' on the client's request. This automatically establishes an active contract, which you can track in your 'Contract Manager'."
+      },
+      "q8": {
+        "question": "How are project milestones tracked?",
+        "answer": "Inside the Contract Manager, each active agreement displays a multi-phase delivery checklist (Scoping, Execution, Final Delivery) to align work stages with client expectations."
+      }
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your profile details and settings.",
+    "userAvatar": "Avatar",
+    "editBtn": "Edit Profile",
+    "saveBtn": "Save Changes",
+    "cancelBtn": "Cancel",
+    "successUpdate": "Profile updated successfully!",
+    "failedUpdate": "Failed to update profile",
+    "labels": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "country": "Country",
+      "city": "City",
+      "role": "Account Role",
+      "status": "Account Status",
+      "organizationName": "Organization Name",
+      "companyName": "Company Name",
+      "industry": "Industry / Sector",
+      "websiteUrl": "Website URL",
+      "bio": "Bio / About Organization",
+      "description": "About Company",
+      "serviceTags": "Service Tags (comma separated)"
+    },
+    "placeholders": {
+      "fullName": "Enter your full name",
+      "phone": "Enter your phone number",
+      "country": "e.g. Egypt",
+      "city": "e.g. Cairo",
+      "organizationName": "Enter organization name",
+      "companyName": "Enter company name",
+      "industry": "e.g. Finance, Software",
+      "websiteUrl": "https://example.com",
+      "bio": "Describe your organization's mission and goals...",
+      "description": "Describe your B2B offerings and credentials...",
+      "serviceTags": "e.g. Software Development, Marketing"
+    }
+  }
+}

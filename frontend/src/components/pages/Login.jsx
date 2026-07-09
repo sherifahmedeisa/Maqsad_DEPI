@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import illustration2 from "../../assets/illustration2.png";
 import logo from "../../assets/maqsad-logo.png";
 
-function BeneficiaryLogin() {
+function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,12 +16,15 @@ function BeneficiaryLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const isRTL = i18n.language.startsWith("ar");
+  const fontStyle = isRTL ? { fontFamily: "Tajawal, sans-serif" } : { fontFamily: "Inter, sans-serif" };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (!email || !password) {
-      setError("Please fill out both email and password.");
+      setError(t("auth.login.errorMissing"));
       return;
     }
 
@@ -29,16 +34,16 @@ function BeneficiaryLogin() {
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      setError(err.message || "Invalid credentials. Please try again.");
+      setError(err.message || t("auth.login.errorInvalid"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-background">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-background" style={fontStyle}>
       
-      {/* Left Info Column */}
+      {/* Right Info Column (Hero) */}
       <div 
         className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between relative overflow-hidden" 
         style={{ 
@@ -52,57 +57,55 @@ function BeneficiaryLogin() {
         <div className="absolute inset-0 bg-[#0f172a]/55 z-0"></div>
         
         <div className="relative z-10">
-          <Link className="font-headline-md text-headline-md font-bold text-white text-decoration-none flex items-center gap-2" to="/">
+          <Link className="font-headline-md text-headline-md font-bold text-white text-decoration-none flex items-center gap-2 w-fit" to="/">
             <img src={logo} alt="Maqsad Logo" className="h-8 w-auto" />
             <span className="font-bold font-headline-md text-white">Maqsad</span>
           </Link>
         </div>
 
-        <div className="relative z-10 my-auto flex flex-col gap-md max-w-lg">
+        <div className={`relative z-10 my-auto flex flex-col gap-md max-w-lg ${isRTL ? 'text-right' : 'text-left'}`}>
           <h1 className="text-white text-4xl font-bold leading-tight">
-            Book expert B2B services
-            <br />
-            for your enterprise
+            {t("auth.login.heroTitle")}
           </h1>
           <p className="text-slate-300 text-lg">
-            Browse service offerings, request custom scopes, and book verified professionals — all in one place.
+            {t("auth.login.heroSubtitle")}
           </p>
           
           <div className="flex flex-col gap-sm mt-md">
             <div className="flex items-center gap-md">
               <div className="w-10 h-10 bg-[#14b8a6]/20 text-[#14b8a6] rounded-[40%] flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[22px]">apartment</span>
+                <span className="material-symbols-outlined text-[22px]">verified</span>
               </div>
-              <span className="text-white text-lg">Tailored to enterprise procurement</span>
+              <span className="text-white text-lg">{t("auth.login.heroFeature1")}</span>
             </div>
             
             <div className="flex items-center gap-md">
               <div className="w-10 h-10 bg-[#14b8a6]/20 text-[#14b8a6] rounded-[40%] flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[22px]">check</span>
+                <span className="material-symbols-outlined text-[22px]">chat</span>
               </div>
-              <span className="text-white text-lg">100% verified enterprise partners</span>
+              <span className="text-white text-lg">{t("auth.login.heroFeature2")}</span>
             </div>
           </div>
         </div>
 
-        <div className="relative z-10 text-white/60 font-body-sm">
-          © {new Date().getFullYear()} Maqsad. Reliability, Efficiency, Clarity.
+        <div className={`relative z-10 text-white/60 font-body-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+          {t("footer.copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
 
-      {/* Right Form Column */}
+      {/* Left Form Column */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-[#f8fafc]">
         <div className="w-full max-w-[450px] flex flex-col gap-lg">
           
           <div className="flex flex-col gap-xs">
-            <div className="rounded-[20px] w-fit bg-[#e4e9e9] px-4 py-2 border-0">
+            <div className={`rounded-[20px] w-fit bg-[#e4e9e9] px-4 py-2 border-0 ${isRTL ? 'self-start' : 'self-start'}`}>
               <span className="inline-flex items-center gap-2 text-slate-700 font-semibold text-sm">
-                <span className="material-symbols-outlined text-[22px] text-slate-700">apartment</span>
-                Business Client Portal
+                <span className="material-symbols-outlined text-[20px] text-slate-700 font-semibold">login</span>
+                {t("auth.login.portalTitle")}
               </span>
             </div>
-            <h2 className="text-3xl text-on-surface font-bold mt-4">Welcome back</h2>
-            <p className="text-slate-500 font-body-md">Sign in to manage your service requests and projects.</p>
+            <h2 className={`text-3xl text-on-surface font-bold mt-4 ${isRTL ? 'text-right' : 'text-left'}`}>{t("auth.login.title")}</h2>
+            <p className={`text-slate-500 font-body-md ${isRTL ? 'text-right' : 'text-left'}`}>{t("auth.login.subtitle")}</p>
           </div>
 
           {error && (
@@ -113,18 +116,18 @@ function BeneficiaryLogin() {
 
           <form onSubmit={handleSubmit} className="border border-[#e2e8f0] p-6.5 rounded-2xl shadow-sm bg-white flex flex-col gap-4">
             
-            {/* Business Email */}
+            {/* Email */}
             <div className="flex flex-col gap-xs">
-              <label className="font-semibold text-sm text-[#0b1c30]" htmlFor="email-input">
-                Business Email <span className="text-error">*</span>
+              <label className={`font-semibold text-sm text-[#0b1c30] ${isRTL ? 'text-right' : 'text-left'}`} htmlFor="email-input">
+                {t("auth.login.emailLabel")} <span className="text-error">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-xl">mail</span>
+                <span className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-xl`}>mail</span>
                 <input
                   id="email-input"
                   type="email"
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#cbd5e1] rounded-xl focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6] outline-none transition-colors font-body-md text-body-md text-on-surface"
-                  placeholder="Enter your email"
+                  className={`w-full py-3 bg-white border border-[#cbd5e1] rounded-xl focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6] outline-none transition-colors font-body-md text-body-md text-on-surface ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'}`}
+                  placeholder={t("auth.login.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -133,23 +136,23 @@ function BeneficiaryLogin() {
 
             {/* Password */}
             <div className="flex flex-col gap-xs">
-              <label className="font-semibold text-sm text-[#0b1c30]" htmlFor="password-input">
-                Password <span className="text-error">*</span>
+              <label className={`font-semibold text-sm text-[#0b1c30] ${isRTL ? 'text-right' : 'text-left'}`} htmlFor="password-input">
+                {t("auth.login.passwordLabel")} <span className="text-error">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-xl">lock</span>
+                <span className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-xl`}>lock</span>
                 <input
                   id="password-input"
                   type={showPassword ? "text" : "password"}
-                  className="w-full pl-12 pr-12 py-3 bg-white border border-[#cbd5e1] rounded-xl focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6] outline-none transition-colors font-body-md text-body-md text-on-surface"
-                  placeholder="Enter your password"
+                  className={`w-full py-3 bg-white border border-[#cbd5e1] rounded-xl focus:border-[#14b8a6] focus:ring-1 focus:ring-[#14b8a6] outline-none transition-colors font-body-md text-body-md text-on-surface ${isRTL ? 'pr-12 pl-12' : 'pl-12 pr-12'}`}
+                  placeholder={t("auth.login.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors"
+                  className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors`}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>
                     {showPassword ? "visibility_off" : "visibility"}
@@ -162,56 +165,49 @@ function BeneficiaryLogin() {
             <div className="flex justify-between items-center text-sm my-1">
               <label className="flex items-center gap-2 cursor-pointer text-slate-600 select-none">
                 <input type="checkbox" id="remember" className="w-4 h-4 rounded border-slate-300 text-[#14b8a6] focus:ring-[#14b8a6] cursor-pointer" />
-                <span>Remember me</span>
+                <span>{t("auth.login.rememberMe")}</span>
               </label>
               <a href="#" className="text-[#14b8a6] hover:text-[#0ea897] font-semibold text-decoration-none">
-                Forgot password?
+                {t("auth.login.forgotPassword")}
               </a>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 bg-[#14b8a6] hover:bg-[#0ea897] text-white font-semibold rounded-full transition-colors flex items-center justify-center gap-2 border-0"
+              className="w-full py-3 bg-[#14b8a6] hover:bg-[#0ea897] text-white font-semibold rounded-full transition-colors flex items-center justify-center gap-2 border-0 cursor-pointer"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
-                  Signing In...
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>{t("auth.login.loadingButton")}</span>
                 </>
               ) : (
-                "Sign In to Client Portal →"
+                <span>{t("auth.login.submitButton")}</span>
               )}
             </button>
-
-            {/* Divider */}
-            <div className="flex items-center my-2 text-on-surface-variant font-body-sm text-body-sm">
-              <div className="flex-1 h-px bg-outline-variant"></div>
-              <span className="mx-3 text-slate-500">New to Maqsad?</span>
-              <div className="flex-1 h-px bg-outline-variant"></div>
-            </div>
-
-            {/* Signup Link */}
-            <Link
-              to="/beneficiary-signup"
-              className="w-full py-3 border border-outline-variant hover:bg-surface-container-low rounded-full font-semibold text-center text-decoration-none text-slate-700 block transition-colors"
-            >
-              Create a Client Account
-            </Link>
           </form>
 
-          <p className="text-center font-body-sm text-body-sm text-slate-500 mt-2">
-            Are you a service provider?
-            <Link to="/provider-login" className="text-[#14b8a6] hover:text-[#0ea897] font-semibold ml-1 text-decoration-none">
-              Sign in as provider
-            </Link>
-          </p>
+          {/* Registration Links */}
+          <div className="text-center font-body-sm text-on-surface-variant">
+            {t("auth.login.noAccount")}
+            <div className="flex justify-center gap-md mt-sm">
+              <Link to="/beneficiary-signup" className="text-[#14b8a6] hover:text-[#0ea897] font-bold text-decoration-none">
+                {t("auth.login.registerClient")}
+              </Link>
+              <span className="text-[#cbd5e1]">|</span>
+              <Link to="/provider-signup" className="text-[#14b8a6] hover:text-[#0ea897] font-bold text-decoration-none">
+                {t("auth.login.registerProvider")}
+              </Link>
+            </div>
+          </div>
+
         </div>
       </div>
-
+      
     </div>
   );
 }
 
-export default BeneficiaryLogin;
+export default Login;
