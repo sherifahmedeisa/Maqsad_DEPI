@@ -86,10 +86,16 @@ initializeDatabase().then(async () => {
     console.error('Failed to seed default admin:', seedErr.message);
   }
 
-  app.listen(PORT, () => {
-    console.log(`Maqsad backend listening on http://localhost:${PORT}`);
-  });
+  if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+      console.log(`Maqsad backend listening on http://localhost:${PORT}`);
+    });
+  }
 }).catch((error) => {
   console.error('Initialization failed', error);
-  process.exit(1);
+  if (!process.env.VERCEL) {
+    process.exit(1);
+  }
 });
+
+module.exports = app;
