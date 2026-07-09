@@ -127,11 +127,8 @@ const initializeDatabase = async () => {
     }
     console.log('Database synced successfully in sequence.');
   } catch (syncError) {
-    console.warn('Schema alter failed, retrying with force sync:', syncError.message);
-    for (const model of modelsInOrder) {
-      await model.sync({ force: true });
-    }
-    console.log('Database force-synced successfully in sequence.');
+    console.error('Database sync failed:', syncError.message);
+    throw syncError; // Throw instead of force wiping the database
   }
 };
 
