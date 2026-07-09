@@ -6,13 +6,13 @@
 
   position: relative;
 }
-.left-side::before {
+.left-sideb::before {
   content: "";
   position: absolute;
   inset: 0;
   background: rgba(15, 23, 42, 0.5);
 }
-.left-side > * {
+.left-sideb > * {
   position: relative;
   z-index: 1;
 }

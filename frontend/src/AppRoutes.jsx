@@ -11,6 +11,7 @@ import BeneficiaryLogin from "./components/pages/BeneficiaryLogin";
 import BeneficiarySignup from "./components/pages/BeneficiarySignup";
 import ProviderSignup from "./components/pages/ProviderSignup";
 
+import ProviderDashboard from "./components/pages/ProviderDashboard";
 function AppRoutes() {
   return (
     <Routes>
@@ -24,6 +25,7 @@ function AppRoutes() {
           element={<BeneficiaryDashboard />}
         />
       </Route> */}
+      <Route path="/provider-dashboard" element={<ProviderDashboard />} />
       <Route element={<RegistrationLayout />}>
         <Route path="/provider-login" element={<ProviderLogin />} />
         <Route path="/beneficiary-login" element={<BeneficiaryLogin />} />
