@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function Faq() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("all");
   const [expandedFaq, setExpandedFaq] = useState(null);
 
@@ -66,7 +68,15 @@ function Faq() {
       <main className="flex-grow p-lg md:p-xl max-w-container-max w-full mx-auto flex flex-col gap-lg">
           
           {/* Header */}
-          <div className="border-b border-outline-variant pb-md">
+          <div className="border-b border-outline-variant pb-md relative">
+            <button 
+              onClick={() => navigate(-1)} 
+              className="mb-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 bg-transparent border-none cursor-pointer p-0 font-body-md text-body-md w-fit"
+            >
+              <span className={`material-symbols-outlined text-[18px] ${isRTL ? 'rotate-180' : ''}`}>arrow_back</span>
+              {isRTL ? "رجوع" : "Back"}
+            </button>
+
             <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface font-bold leading-tight flex items-center gap-xs">
               <span className="material-symbols-outlined text-secondary text-[36px]">help_center</span>
               {t("faq.header.title")}
