@@ -47,7 +47,7 @@ function RfpDetails() {
         throw new Error(t("rfpDetails.errors.loadFailed"));
       }
       const rfpData = await rfpRes.json();
-      
+
       let tagsObj = {};
       if (rfpData.tags) {
         try {
@@ -217,9 +217,8 @@ function RfpDetails() {
               <span className="font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container border border-secondary">
                 {rfp.category}
               </span>
-              <span className={`inline-flex px-2.5 py-0.5 rounded-full font-label-sm text-label-sm text-xs font-semibold ${
-                rfp.status === "open" ? "bg-emerald-100 text-emerald-800" : "bg-error-container text-on-error-container"
-              }`}>
+              <span className={`inline-flex px-2.5 py-0.5 rounded-full font-label-sm text-label-sm text-xs font-semibold ${rfp.status === "open" ? "bg-emerald-100 text-emerald-800" : "bg-error-container text-on-error-container"
+                }`}>
                 {rfp.status === "open" ? (isRTL ? "نشط" : "Open") : (isRTL ? "مغلق" : "Closed")}
               </span>
             </div>
@@ -241,7 +240,7 @@ function RfpDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
           {/* Left Column: Scope & Requirements */}
           <div className="lg:col-span-8 flex flex-col gap-lg">
-            
+
             {/* Project Scope Card */}
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg md:p-xl shadow-sm">
               <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md flex items-center gap-xs">
@@ -261,52 +260,7 @@ function RfpDetails() {
               )}
             </div>
 
-            {/* Client Requirements Card */}
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg md:p-xl shadow-sm">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md flex items-center gap-xs">
-                <span className="material-symbols-outlined text-secondary">assignment_turned_in</span>
-                {isRTL ? "متطلبات العميل" : "Client Requirements"}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-md mt-md">
-                
-                <div className="bg-surface-container-low p-md border border-outline-variant rounded-xl flex flex-col gap-xxs">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">
-                    {isRTL ? "الشهادات المطلوبة" : "Certifications"}
-                  </span>
-                  <span className="font-body-md text-body-md text-on-surface">
-                    {rfp.parsedTags?.certifications || (isRTL ? "لا توجد شهادات محددة مطلوبة" : "No specific certifications required")}
-                  </span>
-                </div>
 
-                <div className="bg-surface-container-low p-md border border-outline-variant rounded-xl flex flex-col gap-xxs">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">
-                    {isRTL ? "الخبرة المطلوبة" : "Experience"}
-                  </span>
-                  <span className="font-body-md text-body-md text-on-surface">
-                    {rfp.parsedTags?.experience || (isRTL ? "لا توجد خبرة محددة مطلوبة" : "No specific experience required")}
-                  </span>
-                </div>
-
-                <div className="bg-surface-container-low p-md border border-outline-variant rounded-xl flex flex-col gap-xxs">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">
-                    {isRTL ? "التصاريح الأمنية" : "Security Clearance"}
-                  </span>
-                  <span className="font-body-md text-body-md text-on-surface">
-                    {rfp.parsedTags?.securityClearance || (isRTL ? "لا توجد تصاريح محددة مطلوبة" : "No specific clearances required")}
-                  </span>
-                </div>
-
-                <div className="bg-surface-container-low p-md border border-outline-variant rounded-xl flex flex-col gap-xxs">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">
-                    {isRTL ? "الموقع الجغرافي المفضل" : "Location"}
-                  </span>
-                  <span className="font-body-md text-body-md text-on-surface">
-                    {rfp.parsedTags?.location || (isRTL ? "عن بعد / عالمي" : "Remote / Global")}
-                  </span>
-                </div>
-
-              </div>
-            </div>
 
             {/* Received Proposals / Bids (Client Owner Only) */}
             {isOwner && (
@@ -342,11 +296,10 @@ function RfpDetails() {
                             </div>
                           </div>
 
-                          <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs ${
-                            prop.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
-                            prop.status === "rejected" ? "bg-error-container text-on-error-container" :
-                            prop.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
-                          }`}>
+                          <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs ${prop.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
+                              prop.status === "rejected" ? "bg-error-container text-on-error-container" :
+                                prop.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
+                            }`}>
                             {t(prop.status.toUpperCase(), prop.status.toUpperCase())}
                           </span>
                         </div>
@@ -416,14 +369,14 @@ function RfpDetails() {
 
           {/* Right Column: Key Details & Ready to Bid card */}
           <div className="lg:col-span-4 flex flex-col gap-lg">
-            
+
             {/* Key Details Card */}
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg shadow-sm flex flex-col gap-md">
               <h3 className="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant/60 pb-xs">
                 {isRTL ? "تفاصيل هامة" : "Key Details"}
               </h3>
               <div className="flex flex-col gap-md">
-                
+
                 <div className="flex items-start gap-sm">
                   <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>business</span>
                   <div>
@@ -475,7 +428,7 @@ function RfpDetails() {
                 {isRTL ? "الملف الشخصي للعميل" : "Client Profile"}
               </h3>
               <div className="flex flex-col gap-md">
-                
+
                 <div className="flex items-center gap-md">
                   <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">
                     {rfp.beneficiary?.fullName?.charAt(0) || "C"}
@@ -501,7 +454,7 @@ function RfpDetails() {
                     </div>
                   </div>
                 )}
-                
+
                 {rfp.beneficiary?.country && (
                   <div className="flex items-start gap-sm">
                     <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>location_on</span>
@@ -542,11 +495,10 @@ function RfpDetails() {
                       </div>
                       <div className="flex justify-between items-center text-body-sm">
                         <span className="text-on-surface-variant">{isRTL ? "حالة العرض:" : "Proposal Status:"}</span>
-                        <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs ${
-                          existingProposal.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
-                          existingProposal.status === "rejected" ? "bg-error-container text-on-error-container" :
-                          existingProposal.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
-                        }`}>
+                        <span className={`inline-flex px-2 py-0.5 rounded-full font-label-sm text-label-sm text-xs ${existingProposal.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
+                            existingProposal.status === "rejected" ? "bg-error-container text-on-error-container" :
+                              existingProposal.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
+                          }`}>
                           {t(existingProposal.status.toUpperCase(), existingProposal.status.toUpperCase())}
                         </span>
                       </div>
@@ -630,7 +582,7 @@ function RfpDetails() {
                 {submitError}
               </div>
             )}
-            
+
             {saveDraftSuccess && (
               <div className="bg-emerald-50 text-emerald-800 p-md rounded-lg border border-emerald-200 font-body-sm flex items-center gap-sm">
                 <span className="material-symbols-outlined text-[18px]">done</span>
@@ -639,7 +591,7 @@ function RfpDetails() {
             )}
 
             <form onSubmit={handleProposalSubmit} className="flex flex-col gap-lg">
-              
+
               <div>
                 <label className="block font-label-md text-label-md text-[#102a43] font-semibold mb-xs">
                   {isRTL ? "الملخص التنفيذي ومنهجية العمل" : "Executive Summary & Approach"} <span className="text-error">*</span>
@@ -704,7 +656,7 @@ function RfpDetails() {
                 <label className="block font-label-md text-label-md text-[#102a43] font-semibold mb-xs">
                   {isRTL ? "تحميل وثيقة العرض الفني بالتفصيل" : "Upload Detailed Proposal Document"}
                 </label>
-                <div 
+                <div
                   onClick={() => {
                     setUploadedFile("proposal_specification_document.pdf");
                     setAttachmentUrl("/uploads/proposal.pdf");
@@ -730,7 +682,7 @@ function RfpDetails() {
                   onChange={(e) => setConfirmCompliance(e.target.checked)}
                 />
                 <label htmlFor="complianceCheck" className="font-body-sm text-body-sm text-on-surface-variant cursor-pointer select-none leading-relaxed">
-                  {isRTL 
+                  {isRTL
                     ? "أؤكد أن هذا العرض يلبي كافة الشروط والمواصفات الموضحة في طلب العميل، وأن الأسعار المقدمة صالحة لمدة 90 يوماً من تاريخ الإرسال."
                     : "I confirm that this proposal meets all mandatory requirements outlined in the RFP, and the pricing provided is valid for 90 days from submission."}
                 </label>
