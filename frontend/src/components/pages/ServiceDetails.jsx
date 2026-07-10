@@ -335,36 +335,44 @@ function ServiceDetails() {
               )}
               
               <div className="w-full text-left bg-surface-container-low p-md rounded-xl mt-md flex flex-col gap-sm">
-                {service.provider?.providerProfile?.description && (
-                  <div className="flex items-start gap-sm">
-                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>info</span>
-                    <div>
-                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "نبذة" : "About"}</div>
-                      <div className="font-body-sm text-body-sm text-on-surface whitespace-pre-wrap">{service.provider.providerProfile.description}</div>
-                    </div>
+                {!service.provider?.providerProfile?.description && !service.provider?.country && !service.provider?.providerProfile?.websiteUrl ? (
+                  <div className="text-center py-sm text-on-surface-variant font-body-sm italic">
+                    {isRTL ? "لم يقم مقدم الخدمة بإضافة تفاصيل إضافية بعد." : "This provider has not added any additional profile details yet."}
                   </div>
-                )}
-                
-                {service.provider?.country && (
-                  <div className="flex items-start gap-sm">
-                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>location_on</span>
-                    <div>
-                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع" : "Location"}</div>
-                      <div className="font-body-sm text-body-sm text-on-surface">{service.provider.city ? `${service.provider.city}, ` : ''}{service.provider.country}</div>
-                    </div>
-                  </div>
-                )}
+                ) : (
+                  <>
+                    {service.provider?.providerProfile?.description && (
+                      <div className="flex items-start gap-sm">
+                        <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>info</span>
+                        <div>
+                          <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "نبذة" : "About"}</div>
+                          <div className="font-body-sm text-body-sm text-on-surface whitespace-pre-wrap">{service.provider.providerProfile.description}</div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {service.provider?.country && (
+                      <div className="flex items-start gap-sm">
+                        <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>location_on</span>
+                        <div>
+                          <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع" : "Location"}</div>
+                          <div className="font-body-sm text-body-sm text-on-surface">{service.provider.city ? `${service.provider.city}, ` : ''}{service.provider.country}</div>
+                        </div>
+                      </div>
+                    )}
 
-                {service.provider?.providerProfile?.websiteUrl && (
-                  <div className="flex items-start gap-sm">
-                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>language</span>
-                    <div>
-                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع الإلكتروني" : "Website"}</div>
-                      <a href={service.provider.providerProfile.websiteUrl} target="_blank" rel="noopener noreferrer" className="font-body-sm text-body-sm text-secondary hover:underline break-all">
-                        {service.provider.providerProfile.websiteUrl}
-                      </a>
-                    </div>
-                  </div>
+                    {service.provider?.providerProfile?.websiteUrl && (
+                      <div className="flex items-start gap-sm">
+                        <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>language</span>
+                        <div>
+                          <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع الإلكتروني" : "Website"}</div>
+                          <a href={service.provider.providerProfile.websiteUrl} target="_blank" rel="noopener noreferrer" className="font-body-sm text-body-sm text-secondary hover:underline break-all">
+                            {service.provider.providerProfile.websiteUrl}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
