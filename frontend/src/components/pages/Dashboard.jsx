@@ -22,6 +22,47 @@ function Dashboard() {
 
   const isRTL = i18n.language.startsWith('ar');
 
+  const calculateProfileProgress = () => {
+    if (!user) return 0;
+    
+    let fields = [];
+    if (user.role === "provider") {
+      const pp = user.providerProfile || {};
+      fields = [
+        user.fullName,
+        user.phone,
+        user.country,
+        user.city,
+        pp.companyName,
+        pp.websiteUrl,
+        pp.serviceTags,
+        pp.description
+      ];
+    } else {
+      const bp = user.beneficiaryProfile || {};
+      fields = [
+        user.fullName,
+        user.phone,
+        user.country,
+        user.city,
+        bp.organizationName,
+        bp.industry,
+        bp.companySize,
+        bp.bio
+      ];
+    }
+    
+    const filledFields = fields.filter(field => {
+      if (Array.isArray(field)) return field.length > 0;
+      if (typeof field === 'string') return field.trim().length > 0;
+      return !!field;
+    });
+    
+    return Math.round((filledFields.length / fields.length) * 100);
+  };
+
+  const profileProgress = calculateProfileProgress();
+
   const workflowCards = [
     {
       icon: "explore",
@@ -180,6 +221,35 @@ function Dashboard() {
             </button>
           </div>
         )}
+        
+        {/* Profile Setup Progress Bar */}
+        {profileProgress < 100 && (
+          <div 
+            className="p-lg bg-surface-container-low rounded-2xl border border-outline-variant w-full cursor-pointer hover:border-secondary transition-colors group shadow-sm animate-fade-in"
+            onClick={() => navigate('/profile?edit=true')}
+            title={t("sidebar.finishSetup")}
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-title-md text-title-md text-on-surface-variant font-bold group-hover:text-secondary transition-colors flex items-center gap-xs">
+                <span className="material-symbols-outlined text-[20px]">account_circle</span>
+                {t("sidebar.finishSetup")}
+              </span>
+              <span className="font-title-md text-title-md text-secondary font-bold">
+                {profileProgress}%
+              </span>
+            </div>
+            <div className="w-full bg-surface-variant rounded-full h-2 overflow-hidden mb-2">
+              <div 
+                className="bg-secondary h-2 rounded-full transition-all duration-500 ease-in-out" 
+                style={{ width: `${profileProgress}%` }}
+              ></div>
+            </div>
+            <p className="text-body-sm text-on-surface-variant mb-0">
+              {isRTL ? "قم بإكمال ملفك الشخصي للحصول على تجربة أفضل" : "Complete your profile to get the best experience"}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
           <div>
