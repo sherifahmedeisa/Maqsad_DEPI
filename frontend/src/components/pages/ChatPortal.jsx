@@ -86,15 +86,15 @@ function ChatPortal() {
       <header className="mb-lg flex items-center justify-between">
         <div>
           <h1 className="font-headline-xl text-headline-xl text-on-surface mb-xs">
-            {t("chatPortal.title")}
+            {t("chatPortal")}
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            {t("chatPortal.subtitle")}
+            {t("chatPortal")}
           </p>
         </div>
       </header>
       <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row" style={{ height: "calc(100vh - 160px)", minHeight: "450px" }}>
-        
+
         {/* Left Side: Threads List */}
         <div className={`w-full md:w-1/3 border-b md:border-b-0 ${isRTL ? 'md:border-l' : 'md:border-r'} border-outline-variant flex flex-col h-full bg-surface-bright`}>
           <div className="p-md border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
@@ -119,11 +119,10 @@ function ChatPortal() {
                   <button
                     key={thread.id}
                     onClick={() => setActiveThread(thread)}
-                    className={`w-full p-md ${isRTL ? 'text-right' : 'text-left'} transition-colors flex items-center gap-3 ${isRTL ? 'border-r-4' : 'border-l-4'} ${
-                      isActive 
-                        ? "bg-surface-container-low/60 border-secondary" 
+                    className={`w-full p-md ${isRTL ? 'text-right' : 'text-left'} transition-colors flex items-center gap-3 ${isRTL ? 'border-r-4' : 'border-l-4'} ${isActive
+                        ? "bg-surface-container-low/60 border-secondary"
                         : "bg-transparent border-transparent hover:bg-surface-container-low/20"
-                    }`}
+                      }`}
                   >
                     <div className="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-sm shrink-0">
                       {otherUser?.fullName?.charAt(0) || "U"}
