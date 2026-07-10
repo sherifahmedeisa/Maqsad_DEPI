@@ -40,7 +40,10 @@ router.get('/me', ensureAuthenticated, async (req, res, next) => {
   try {
     const rfps = await RFP.findAll({
       where: { beneficiaryId: req.user.id },
-      include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }],
+      include: [
+        { model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] },
+        { model: require('../models').Proposal, as: 'proposals', attributes: ['id', 'status', 'proposedBudget'] }
+      ],
       order: [['createdAt', 'DESC']],
     });
     res.json(rfps);
