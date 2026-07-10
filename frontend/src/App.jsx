@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -49,6 +49,7 @@ function PublicRoute({ children }) {
 function App() {
   const { user, loading } = useAuth();
   const { i18n } = useTranslation();
+  const location = useLocation();
 
   useEffect(() => {
     document.documentElement.dir = i18n.language.startsWith('ar') ? 'rtl' : 'ltr';
@@ -68,8 +69,9 @@ function App() {
     );
   }
 
-  // Provider gets sidebar layout (no top nav, no shared footer)
-  const showSidebar = user?.role === "provider";
+  // Provider gets sidebar layout on specific routes
+  const dashboardRoutes = ["/dashboard", "/proposal-history", "/contract-manager", "/analytics", "/provider-services", "/profile", "/chat"];
+  const showSidebar = user?.role === "provider" && dashboardRoutes.some(route => location.pathname.startsWith(route));
 
   return (
     <div className={`${showSidebar ? "" : "flex flex-col min-h-screen"} bg-background`}>
@@ -115,7 +117,7 @@ function App() {
           <Route path="/contract-manager" element={<RoleRoute allowedRoles={["provider"]}><ContractManager /></RoleRoute>} />
           <Route path="/analytics" element={<RoleRoute allowedRoles={["provider"]}><Analytics /></RoleRoute>} />
           <Route path="/provider-services" element={<RoleRoute allowedRoles={["provider"]}><ProviderServices /></RoleRoute>} />
-          <Route path="/faq" element={<PrivateRoute><Faq /></PrivateRoute>} />
+          <Route path="/faq" element={<Faq />} />
 
           {/* Admin Routes */}
           <Route path="/admin" element={<RoleRoute allowedRoles={["admin"]}><AdminPanel /></RoleRoute>} />

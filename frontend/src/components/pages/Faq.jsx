@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ProviderSidebar from "../ProviderSidebar";
 
 function Faq() {
   const { t, i18n } = useTranslation();
@@ -62,13 +61,9 @@ function Faq() {
   });
 
   return (
-    <div className={`flex bg-[#f8fafc] min-h-screen ${isRTL ? "rtl" : "ltr"}`} dir={isRTL ? "rtl" : "ltr"}>
-      {/* Sidebar Navigation */}
-      <ProviderSidebar />
-
+    <div className={`flex flex-col min-h-screen bg-[#f8fafc] ${isRTL ? "rtl" : "ltr"}`} dir={isRTL ? "rtl" : "ltr"}>
       {/* Main Content Area */}
-      <div className="flex-grow flex flex-col min-h-screen overflow-hidden pl-0 lg:pl-0">
-        <main className="flex-grow p-lg md:p-xl max-w-container-max w-full mx-auto flex flex-col gap-lg">
+      <main className="flex-grow p-lg md:p-xl max-w-container-max w-full mx-auto flex flex-col gap-lg">
           
           {/* Header */}
           <div className="border-b border-outline-variant pb-md">
@@ -163,7 +158,6 @@ function Faq() {
           </div>
 
         </main>
-      </div>
     </div>
   );
 }
