@@ -68,15 +68,19 @@ function Nav() {
           <nav className="hidden md:flex items-center gap-md font-body-md text-body-md">
             {user ? (
               <>
-                <NavLink className={navLinkClass} to="/dashboard">
-                  {t("nav.dashboard")}
-                </NavLink>
+                {user.role !== "admin" && (
+                  <NavLink className={navLinkClass} to="/dashboard">
+                    {t("nav.dashboard")}
+                  </NavLink>
+                )}
                 <NavLink className={navLinkClass} to="/browse-services">
                   {t("nav.browseServices")}
                 </NavLink>
-                <NavLink className={navLinkClass} to="/chat">
-                  {t("nav.messages")}
-                </NavLink>
+                {user.role !== "admin" && (
+                  <NavLink className={navLinkClass} to="/chat">
+                    {t("nav.messages")}
+                  </NavLink>
+                )}
                 {user.role === "admin" && (
                   <NavLink className={navLinkClass} to="/admin">
                     {t("nav.admin")}
@@ -244,13 +248,17 @@ function Nav() {
           
           {user ? (
             <>
-              <NavLink
-                className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
-                to="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t("nav.dashboard")}
-              </NavLink>
+              {user.role !== "admin" && (
+                <>
+                  <NavLink
+                    className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t("nav.dashboard")}
+                  </NavLink>
+                </>
+              )}
               <NavLink
                 className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
                 to="/browse-services"
@@ -258,13 +266,24 @@ function Nav() {
               >
                 {t("nav.browseServices")}
               </NavLink>
-              <NavLink
-                className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
-                to="/chat"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t("nav.messages")}
-              </NavLink>
+              {user.role !== "admin" && (
+                <NavLink
+                  className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
+                  to="/chat"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("nav.messages")}
+                </NavLink>
+              )}
+              {user.role === "admin" && (
+                <NavLink
+                  className="font-body-md text-body-md text-on-surface-variant hover:text-secondary py-sm text-decoration-none"
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("nav.admin")}
+                </NavLink>
+              )}
               <button
                 className={`font-body-md text-body-md text-error hover:opacity-80 py-sm ${isRTL ? 'text-right' : 'text-left'}`}
                 onClick={() => {
