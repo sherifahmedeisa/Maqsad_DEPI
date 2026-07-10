@@ -185,23 +185,26 @@ function ServiceDetails() {
 
           {/* Right Column: Actions & Provider Info */}
           <div className="space-y-lg">
-            <div 
-              className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-xl shadow-sm flex flex-col items-center text-center cursor-pointer hover:bg-surface-container-low transition-colors"
-              onClick={() => setShowProviderModal(true)}
-              title={isRTL ? "عرض الملف الشخصي" : "View Provider Profile"}
-            >
-              <div className="w-20 h-20 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md text-3xl mb-4 border-4 border-surface-container-lowest shadow-sm">
-                {service.provider?.fullName?.charAt(0) || "P"}
-              </div>
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-xl shadow-sm flex flex-col items-center text-center">
               
-              <h4 className="font-headline-sm text-headline-sm text-on-surface mb-1">
-                {service.provider?.fullName || "Verified Provider"}
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-6">
-                {isRTL ? "مقدم خدمة معتمد" : "Verified Provider"}
-              </p>
+              <div 
+                className="flex flex-col items-center cursor-pointer hover:bg-surface-container-low p-sm rounded-xl transition-colors w-full"
+                onClick={() => setShowProviderModal(true)}
+                title={isRTL ? "عرض الملف الشخصي" : "View Provider Profile"}
+              >
+                <div className="w-20 h-20 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md text-3xl mb-4 border-4 border-surface-container-lowest shadow-sm">
+                  {service.provider?.fullName?.charAt(0) || "P"}
+                </div>
+                
+                <h4 className="font-headline-sm text-headline-sm text-on-surface mb-1">
+                  {service.provider?.fullName || "Verified Provider"}
+                </h4>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-2">
+                  {isRTL ? "مقدم خدمة معتمد" : "Verified Provider"}
+                </p>
+              </div>
 
-              <div className="w-full border-t border-outline-variant pt-lg mb-lg">
+              <div className="w-full border-t border-outline-variant pt-lg mb-lg mt-md">
                 <div className="flex justify-between items-center mb-sm">
                   <span className="font-body-md text-on-surface-variant">{isRTL ? "سعر الخدمة" : "Service Price"}:</span>
                   <span className="font-title-lg text-title-lg text-primary font-bold">
@@ -212,7 +215,7 @@ function ServiceDetails() {
 
               {(!user || user.role === 'beneficiary') ? (
                 <button
-                  onClick={() => setShowRfpModal(true)}
+                  onClick={(e) => { e.stopPropagation(); setShowRfpModal(true); }}
                   className="w-full bg-primary text-on-primary font-label-lg text-label-lg px-xl py-4 rounded-xl hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center gap-2"
                 >
                   {isRTL ? "طلب عرض سعر (RFP)" : "Request Proposal (RFP)"}
