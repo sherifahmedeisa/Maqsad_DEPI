@@ -501,18 +501,6 @@ function RfpDetails() {
                       >
                         <span className="material-symbols-outlined">forum</span> {t("rfpDetails.sidebar.openChat")}
                       </button>
-                      <button
-                        onClick={() => {
-                          setShowSubmitForm(true);
-                          setTimeout(() => {
-                            const form = document.getElementById("submit-proposal-section");
-                            if (form) form.scrollIntoView({ behavior: "smooth" });
-                          }, 100);
-                        }}
-                        className="bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant font-label-md text-label-md py-2.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm"
-                      >
-                        <span className="material-symbols-outlined">add</span> {isRTL ? "تقديم عرض إضافي" : "Submit Another Proposal"}
-                      </button>
                     </div>
                   </div>
                 ) : (

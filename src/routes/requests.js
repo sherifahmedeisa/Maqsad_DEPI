@@ -78,6 +78,13 @@ router.post('/', ensureAuthenticated, ensureRole(['beneficiary']), async (req, r
       attachmentUrl,
     } = req.body;
 
+    const existingRfp = await RFP.findOne({
+      where: { beneficiaryId: req.user.id, providerId, title }
+    });
+    if (existingRfp) {
+      return res.status(400).json({ error: 'You have already requested this service from this provider' });
+    }
+
     const rfp = await RFP.create({
       beneficiaryId: req.user.id,
       providerId,
@@ -168,6 +175,11 @@ router.post('/:id/proposals', ensureAuthenticated, ensureRole(['provider']), asy
     const rfp = await RFP.findByPk(req.params.id);
     if (!rfp) {
       return res.status(404).json({ error: 'RFP not found' });
+    }
+
+    const existingProposal = await Proposal.findOne({ where: { rfpId: rfp.id, providerId: req.user.id } });
+    if (existingProposal) {
+      return res.status(400).json({ error: 'You have already submitted a proposal for this request' });
     }
 
     const {

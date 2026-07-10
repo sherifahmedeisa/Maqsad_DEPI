@@ -247,20 +247,12 @@ function ServiceDetails() {
                   <p className="font-body-md">
                     {isRTL ? "سيتواصل معك مقدم الخدمة قريباً بعرض السعر." : "The provider will contact you shortly with a proposal."}
                   </p>
-                  <div className="flex gap-md mt-lg">
-                    <button 
-                      onClick={() => { setShowRfpModal(false); setSubmitSuccess(false); }}
-                      className="bg-surface text-on-surface border border-outline-variant font-label-md px-lg py-3 rounded-xl hover:bg-surface-container-low transition-colors"
-                    >
-                      {isRTL ? "إغلاق" : "Close"}
-                    </button>
-                    <button 
-                      onClick={() => { setSubmitSuccess(false); setNotes(""); }}
-                      className="bg-primary text-on-primary font-label-md px-lg py-3 rounded-xl hover:opacity-90 transition-colors"
-                    >
-                      {isRTL ? "إرسال طلب آخر" : "Submit Another Request"}
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => { setShowRfpModal(false); setSubmitSuccess(false); }}
+                    className="mt-lg bg-emerald-600 text-white font-label-md px-lg py-3 rounded-xl hover:bg-emerald-700 transition-colors"
+                  >
+                    {isRTL ? "إغلاق" : "Close"}
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleRfpSubmit} className="flex flex-col gap-lg">
