@@ -43,6 +43,45 @@ function ProviderSidebar() {
 
   const isRTL = i18n.language.startsWith("ar");
 
+  const calculateProfileProgress = () => {
+    if (!user) return 0;
+    
+    let fields = [];
+    if (user.role === "provider") {
+      fields = [
+        user.fullName,
+        user.phone,
+        user.country,
+        user.city,
+        user.companyName,
+        user.websiteUrl,
+        user.serviceTags,
+        user.aboutCompany
+      ];
+    } else {
+      fields = [
+        user.fullName,
+        user.phone,
+        user.country,
+        user.city,
+        user.organizationName,
+        user.industry,
+        user.companySize,
+        user.aboutOrganization
+      ];
+    }
+    
+    const filledFields = fields.filter(field => {
+      if (Array.isArray(field)) return field.length > 0;
+      if (typeof field === 'string') return field.trim().length > 0;
+      return !!field;
+    });
+    
+    return Math.round((filledFields.length / fields.length) * 100);
+  };
+
+  const profileProgress = calculateProfileProgress();
+
   const sideNavLink = ({ isActive }) =>
     `flex items-center gap-md px-md py-sm rounded-lg transition-all cursor-pointer ${
       isActive
@@ -111,6 +150,30 @@ function ProviderSidebar() {
               </div>
             )}
           </div>
+          
+          {/* Profile Setup Progress Bar */}
+          {!isCollapsed && profileProgress < 100 && (
+            <div 
+              className="mt-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant w-full cursor-pointer hover:border-secondary transition-colors group"
+              onClick={() => navigate('/profile')}
+              title={t("sidebar.finishSetup")}
+            >
+              <div className="flex justify-between items-center mb-1">
+                <span className="font-label-sm text-label-sm text-on-surface-variant font-medium group-hover:text-secondary transition-colors">
+                  {t("sidebar.finishSetup")}
+                </span>
+                <span className="font-label-sm text-label-sm text-secondary font-bold">
+                  {profileProgress}%
+                </span>
+              </div>
+              <div className="w-full bg-surface-variant rounded-full h-1.5 overflow-hidden">
+                <div 
+                  className="bg-secondary h-1.5 rounded-full transition-all duration-500 ease-in-out" 
+                  style={{ width: `${profileProgress}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Post New Service CTA */}
