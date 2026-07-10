@@ -18,6 +18,10 @@ function ServiceDetails() {
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [showProviderModal, setShowProviderModal] = useState(false);
+  
+  const [budgetMin, setBudgetMin] = useState("");
+  const [budgetMax, setBudgetMax] = useState("");
+  const [deadline, setDeadline] = useState("");
 
   const isRTL = i18n.language.startsWith('ar');
 
@@ -61,7 +65,10 @@ function ServiceDetails() {
           description: notes || (isRTL ? `مهتم بخدمتك: ${service.title}` : `Interested in your service: ${service.title}`),
           category: service.category,
           status: "open",
-          tags: service.tags || []
+          tags: service.tags || [],
+          budgetMin: budgetMin ? parseFloat(budgetMin) : null,
+          budgetMax: budgetMax ? parseFloat(budgetMax) : null,
+          deadline: deadline || null,
         }),
       });
 
@@ -72,6 +79,9 @@ function ServiceDetails() {
 
       setSubmitSuccess(true);
       setNotes("");
+      setBudgetMin("");
+      setBudgetMax("");
+      setDeadline("");
     } catch (err) {
       console.error(err);
       setSubmitError(err.message);
@@ -279,6 +289,47 @@ function ServiceDetails() {
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder={isRTL ? "اشرح بشكل مبسط ما تحتاجه من هذه الخدمة..." : "Briefly describe what you need from this service..."}
                       className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors min-h-[120px] resize-y"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-label-md text-on-surface font-semibold">
+                        {isRTL ? "الحد الأدنى للميزانية ($)" : "Min Budget ($)"}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={budgetMin}
+                        onChange={(e) => setBudgetMin(e.target.value)}
+                        className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors"
+                        placeholder="e.g. 500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-label-md text-on-surface font-semibold">
+                        {isRTL ? "الحد الأقصى للميزانية ($)" : "Max Budget ($)"}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={budgetMax}
+                        onChange={(e) => setBudgetMax(e.target.value)}
+                        className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors"
+                        placeholder="e.g. 1000"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="font-label-md text-on-surface font-semibold">
+                      {isRTL ? "الموعد النهائي للتسليم" : "Deadline"}
+                    </label>
+                    <input
+                      type="date"
+                      value={deadline}
+                      onChange={(e) => setDeadline(e.target.value)}
+                      className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors"
                     />
                   </div>
 
