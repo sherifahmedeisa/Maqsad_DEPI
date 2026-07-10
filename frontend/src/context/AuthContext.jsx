@@ -19,7 +19,17 @@ export function AuthProvider({ children }) {
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated) {
-          setUser(data.user);
+          try {
+            const profileRes = await fetch("/api/users/me");
+            if (profileRes.ok) {
+              const profileData = await profileRes.json();
+              setUser(profileData);
+            } else {
+              setUser(data.user);
+            }
+          } catch (e) {
+            setUser(data.user);
+          }
         } else {
           setUser(null);
         }
@@ -46,6 +56,16 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Login failed");
+      }
+      try {
+        const profileRes = await fetch("/api/users/me");
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          setUser(profileData);
+          return profileData;
+        }
+      } catch (e) {
+        // fallback
       }
       setUser(data.user);
       return data.user;
@@ -93,7 +113,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, setUser, loading, login, register, logout, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

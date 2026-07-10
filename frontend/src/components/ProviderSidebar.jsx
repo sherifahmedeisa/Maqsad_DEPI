@@ -48,26 +48,28 @@ function ProviderSidebar() {
     
     let fields = [];
     if (user.role === "provider") {
+      const pp = user.providerProfile || {};
       fields = [
         user.fullName,
         user.phone,
         user.country,
         user.city,
-        user.companyName,
-        user.websiteUrl,
-        user.serviceTags,
-        user.aboutCompany
+        pp.companyName,
+        pp.websiteUrl,
+        pp.serviceTags,
+        pp.description
       ];
     } else {
+      const bp = user.beneficiaryProfile || {};
       fields = [
         user.fullName,
         user.phone,
         user.country,
         user.city,
-        user.organizationName,
-        user.industry,
-        user.companySize,
-        user.aboutOrganization
+        bp.organizationName,
+        bp.industry,
+        bp.companySize,
+        bp.bio
       ];
     }
     
@@ -155,7 +157,7 @@ function ProviderSidebar() {
           {!isCollapsed && profileProgress < 100 && (
             <div 
               className="mt-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant w-full cursor-pointer hover:border-secondary transition-colors group"
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/profile?edit=true')}
               title={t("sidebar.finishSetup")}
             >
               <div className="flex justify-between items-center mb-1">

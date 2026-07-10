@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import ProviderSidebar from "../ProviderSidebar";
 import "./Profile.css";
 
 function Profile() {
-  const { user: authUser } = useAuth();
+  const { user: authUser, setUser: setAuthUser } = useAuth();
   const { t, i18n } = useTranslation();
+  const location = useLocation();
+  
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,7 +20,13 @@ function Profile() {
 
   useEffect(() => {
     fetchUserProfile();
-  }, []);
+    
+    // Check if URL has ?edit=true
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams.get('edit') === 'true') {
+      setIsEditing(true);
+    }
+  }, [location.search]);
 
   const fetchUserProfile = async () => {
     try {
@@ -110,6 +119,7 @@ function Profile() {
 
       const updatedUser = await response.json();
       setUser(updatedUser);
+      setAuthUser(updatedUser); // Update global AuthContext to instantly reflect in sidebar!
       setIsEditing(false);
       alert(t("profile.successUpdate"));
     } catch (err) {
