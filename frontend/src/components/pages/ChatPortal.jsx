@@ -86,10 +86,10 @@ function ChatPortal() {
       <header className="mb-lg flex items-center justify-between">
         <div>
           <h1 className="font-headline-xl text-headline-xl text-on-surface mb-xs">
-            {t("chatPortal")}
+            {t("chatPortal.title")}
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            {t("chatPortal")}
+            {t("chatPortal.subtitle")}
           </p>
         </div>
       </header>
