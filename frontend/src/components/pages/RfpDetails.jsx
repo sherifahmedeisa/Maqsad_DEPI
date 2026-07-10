@@ -469,6 +469,63 @@ function RfpDetails() {
               </div>
             </div>
 
+            {/* Client Profile Card */}
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg shadow-sm flex flex-col gap-md">
+              <h3 className="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant/60 pb-xs">
+                {isRTL ? "الملف الشخصي للعميل" : "Client Profile"}
+              </h3>
+              <div className="flex flex-col gap-md">
+                
+                <div className="flex items-center gap-md">
+                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">
+                    {rfp.beneficiary?.fullName?.charAt(0) || "C"}
+                  </div>
+                  <div>
+                    <div className="font-body-md text-body-md text-on-surface font-semibold">
+                      {rfp.beneficiary?.fullName}
+                    </div>
+                    {rfp.beneficiary?.beneficiaryProfile?.organizationName && (
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">
+                        {rfp.beneficiary.beneficiaryProfile.organizationName}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {rfp.beneficiary?.beneficiaryProfile?.industry && (
+                  <div className="flex items-start gap-sm mt-xs">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>domain</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الصناعة / المجال" : "Industry"}</div>
+                      <div className="font-body-sm text-body-sm text-on-surface">{rfp.beneficiary.beneficiaryProfile.industry}</div>
+                    </div>
+                  </div>
+                )}
+                
+                {rfp.beneficiary?.country && (
+                  <div className="flex items-start gap-sm">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>location_on</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع" : "Location"}</div>
+                      <div className="font-body-sm text-body-sm text-on-surface">{rfp.beneficiary.city ? `${rfp.beneficiary.city}, ` : ''}{rfp.beneficiary.country}</div>
+                    </div>
+                  </div>
+                )}
+
+                {rfp.beneficiary?.beneficiaryProfile?.websiteUrl && (
+                  <div className="flex items-start gap-sm">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>language</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع الإلكتروني" : "Website"}</div>
+                      <a href={rfp.beneficiary.beneficiaryProfile.websiteUrl} target="_blank" rel="noopener noreferrer" className="font-body-sm text-body-sm text-secondary hover:underline break-all">
+                        {rfp.beneficiary.beneficiaryProfile.websiteUrl}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Ready to Bid card (Provider Mode) */}
             {user.role === "provider" && (
               <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg shadow-sm sticky top-20 flex flex-col gap-md">

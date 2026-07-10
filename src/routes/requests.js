@@ -110,7 +110,12 @@ router.get('/:id', async (req, res, next) => {
   try {
     const rfp = await RFP.findByPk(req.params.id, {
       include: [
-        { model: User, as: 'beneficiary', attributes: ['id', 'email', 'fullName'] },
+        { 
+          model: User, 
+          as: 'beneficiary', 
+          attributes: ['id', 'email', 'fullName', 'profilePictureUrl', 'phone', 'country', 'city'],
+          include: [{ model: require('../models').BeneficiaryProfile, as: 'beneficiaryProfile' }]
+        },
         { model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] },
         {
           model: Proposal,
