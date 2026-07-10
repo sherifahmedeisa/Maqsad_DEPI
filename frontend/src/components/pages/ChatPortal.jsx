@@ -112,13 +112,13 @@ function ChatPortal() {
                 </p>
               </div>
             ) : (
-              threads.map((t) => {
-                const otherUser = user.role === "beneficiary" ? t.provider : t.beneficiary;
-                const isActive = activeThread?.id === t.id;
+              threads.map((thread) => {
+                const otherUser = user.role === "beneficiary" ? thread.provider : thread.beneficiary;
+                const isActive = activeThread?.id === thread.id;
                 return (
                   <button
-                    key={t.id}
-                    onClick={() => setActiveThread(t)}
+                    key={thread.id}
+                    onClick={() => setActiveThread(thread)}
                     className={`w-full p-md ${isRTL ? 'text-right' : 'text-left'} transition-colors flex items-center gap-3 ${isRTL ? 'border-r-4' : 'border-l-4'} ${
                       isActive 
                         ? "bg-surface-container-low/60 border-secondary" 
@@ -132,11 +132,11 @@ function ChatPortal() {
                       <div className="flex justify-between items-baseline gap-xs">
                         <strong className="font-label-md text-label-md text-on-surface font-semibold truncate">{otherUser?.fullName}</strong>
                         <span className="font-body-sm text-xs text-on-surface-variant shrink-0">
-                          {new Date(t.lastMessageAt || t.createdAt).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', { month: "short", day: "numeric" })}
+                          {new Date(thread.lastMessageAt || thread.createdAt).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', { month: "short", day: "numeric" })}
                         </span>
                       </div>
                       <span className="font-body-sm text-xs text-on-surface-variant truncate">
-                        {t("chatPortal.sidebar.project")} <span className="font-semibold text-on-surface">{t.rfp?.title}</span>
+                        {t("chatPortal.sidebar.project")} <span className="font-semibold text-on-surface">{thread.rfp?.title}</span>
                       </span>
                     </div>
                   </button>
