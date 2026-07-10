@@ -144,7 +144,12 @@ router.delete('/:id', ensureOwnerOrAdmin(async (req) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const service = await Service.findByPk(req.params.id, {
-      include: [{ model: User, as: 'provider', attributes: ['id', 'email', 'fullName'] }]
+      include: [{ 
+        model: User, 
+        as: 'provider', 
+        attributes: ['id', 'email', 'fullName', 'phone', 'country', 'city', 'profilePictureUrl'],
+        include: [{ model: require('../models').ProviderProfile, as: 'providerProfile' }]
+      }]
     });
     if (!service) {
       return res.status(404).json({ error: 'Service not found' });

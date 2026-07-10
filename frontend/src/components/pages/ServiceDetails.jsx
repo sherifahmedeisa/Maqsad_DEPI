@@ -17,6 +17,7 @@ function ServiceDetails() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showProviderModal, setShowProviderModal] = useState(false);
 
   const isRTL = i18n.language.startsWith('ar');
 
@@ -184,7 +185,11 @@ function ServiceDetails() {
 
           {/* Right Column: Actions & Provider Info */}
           <div className="space-y-lg">
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-xl shadow-sm flex flex-col items-center text-center">
+            <div 
+              className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-xl shadow-sm flex flex-col items-center text-center cursor-pointer hover:bg-surface-container-low transition-colors"
+              onClick={() => setShowProviderModal(true)}
+              title={isRTL ? "عرض الملف الشخصي" : "View Provider Profile"}
+            >
               <div className="w-20 h-20 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md text-3xl mb-4 border-4 border-surface-container-lowest shadow-sm">
                 {service.provider?.fullName?.charAt(0) || "P"}
               </div>
@@ -297,6 +302,81 @@ function ServiceDetails() {
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Provider Profile Modal */}
+      {showProviderModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest rounded-2xl w-full max-w-md overflow-hidden shadow-lg flex flex-col">
+            <div className="flex justify-between items-center p-lg border-b border-outline-variant">
+              <h2 className="font-headline-sm text-headline-sm text-on-surface">
+                {isRTL ? "الملف الشخصي لمقدم الخدمة" : "Provider Profile"}
+              </h2>
+              <button onClick={() => setShowProviderModal(false)} className="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors flex items-center justify-center">
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            
+            <div className="p-lg flex flex-col items-center text-center">
+              <div className="w-24 h-24 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md text-4xl mb-4">
+                {service.provider?.fullName?.charAt(0) || "P"}
+              </div>
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-1">
+                {service.provider?.fullName}
+              </h3>
+              
+              {service.provider?.providerProfile?.companyName && (
+                <p className="font-body-md text-body-md text-on-surface-variant font-semibold mb-2">
+                  {service.provider.providerProfile.companyName}
+                </p>
+              )}
+              
+              <div className="w-full text-left bg-surface-container-low p-md rounded-xl mt-md flex flex-col gap-sm">
+                {service.provider?.providerProfile?.description && (
+                  <div className="flex items-start gap-sm">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>info</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "نبذة" : "About"}</div>
+                      <div className="font-body-sm text-body-sm text-on-surface whitespace-pre-wrap">{service.provider.providerProfile.description}</div>
+                    </div>
+                  </div>
+                )}
+                
+                {service.provider?.country && (
+                  <div className="flex items-start gap-sm">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>location_on</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع" : "Location"}</div>
+                      <div className="font-body-sm text-body-sm text-on-surface">{service.provider.city ? `${service.provider.city}, ` : ''}{service.provider.country}</div>
+                    </div>
+                  </div>
+                )}
+
+                {service.provider?.providerProfile?.websiteUrl && (
+                  <div className="flex items-start gap-sm">
+                    <span className="material-symbols-outlined text-on-surface-variant mt-[2px]" style={{ fontSize: "20px" }}>language</span>
+                    <div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">{isRTL ? "الموقع الإلكتروني" : "Website"}</div>
+                      <a href={service.provider.providerProfile.websiteUrl} target="_blank" rel="noopener noreferrer" className="font-body-sm text-body-sm text-secondary hover:underline break-all">
+                        {service.provider.providerProfile.websiteUrl}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="p-md border-t border-outline-variant bg-surface flex justify-end">
+              <button 
+                type="button" 
+                onClick={() => setShowProviderModal(false)}
+                className="px-lg py-sm font-label-md text-label-md rounded-lg hover:bg-surface-container-low transition-colors"
+              >
+                {isRTL ? "إغلاق" : "Close"}
+              </button>
             </div>
           </div>
         </div>
