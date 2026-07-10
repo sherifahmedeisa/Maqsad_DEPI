@@ -37,12 +37,12 @@ function AdminPanel() {
         const data = await res.json();
         setUsers(data);
       } else if (activeTab === "rfps") {
-        const res = await fetch("/api/requests");
+        const res = await fetch("/api/services");
         if (!res.ok) throw new Error("Failed to retrieve platform services catalog");
         const data = await res.json();
         setRfps(data);
       } else if (activeTab === "proposals") {
-        const res = await fetch("/api/proposals");
+        const res = await fetch("/api/requests");
         if (!res.ok) throw new Error("Failed to retrieve platform bookings list");
         const data = await res.json();
         setProposals(data);
@@ -81,38 +81,38 @@ function AdminPanel() {
     }
   };
 
-  const handleDeleteRfp = async (rfpId) => {
-    if (!window.confirm("Are you sure you want to delete this service post? This will also delete any associated booking requests!")) {
+  const handleDeleteService = async (serviceId) => {
+    if (!window.confirm("Are you sure you want to delete this service post?")) {
       return;
     }
     try {
-      const res = await fetch(`/api/requests/${rfpId}`, {
+      const res = await fetch(`/api/services/${serviceId}`, {
         method: "DELETE",
       });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to delete service post");
       }
-      setRfps((prev) => prev.filter((r) => r.id !== rfpId));
+      setRfps((prev) => prev.filter((s) => s.id !== serviceId));
     } catch (err) {
       console.error(err);
       alert(err.message);
     }
   };
 
-  const handleDeleteProposal = async (propId) => {
+  const handleDeleteRequest = async (requestId) => {
     if (!window.confirm("Are you sure you want to delete this booking request?")) {
       return;
     }
     try {
-      const res = await fetch(`/api/proposals/${propId}`, {
+      const res = await fetch(`/api/requests/${requestId}`, {
         method: "DELETE",
       });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to delete booking request");
       }
-      setProposals((prev) => prev.filter((p) => p.id !== propId));
+      setProposals((prev) => prev.filter((r) => r.id !== requestId));
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -126,17 +126,19 @@ function AdminPanel() {
   );
 
   const filteredRfps = rfps.filter(
-    (r) =>
-      r.title?.toLowerCase().includes(search.toLowerCase()) ||
-      r.category?.toLowerCase().includes(search.toLowerCase()) ||
-      r.beneficiary?.fullName?.toLowerCase().includes(search.toLowerCase())
+    (s) =>
+      s.title?.toLowerCase().includes(search.toLowerCase()) ||
+      s.category?.toLowerCase().includes(search.toLowerCase()) ||
+      s.provider?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+      s.provider?.companyName?.toLowerCase().includes(search.toLowerCase())
   );
 
   const filteredProposals = proposals.filter(
-    (p) =>
-      p.rfp?.title?.toLowerCase().includes(search.toLowerCase()) ||
-      p.provider?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
-      p.coverLetter?.toLowerCase().includes(search.toLowerCase())
+    (r) =>
+      r.title?.toLowerCase().includes(search.toLowerCase()) ||
+      r.beneficiary?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+      r.beneficiary?.companyName?.toLowerCase().includes(search.toLowerCase()) ||
+      r.description?.toLowerCase().includes(search.toLowerCase())
   );
 
   if (loading) {
@@ -331,28 +333,28 @@ function AdminPanel() {
                     </td>
                   </tr>
                 ) : (
-                  filteredRfps.map((rfp) => (
-                    <tr key={rfp.id} className="hover:bg-surface-container-low/20 transition-colors">
+                  filteredRfps.map((service) => (
+                    <tr key={service.id} className="hover:bg-surface-container-low/20 transition-colors">
                       <td className={`p-md ${isRTL ? 'pr-lg' : 'pl-lg'}`}>
-                        <Link to={`/rfp/${rfp.id}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
-                          {rfp.title}
+                        <Link to={`/service/${service.id}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
+                          {service.title}
                         </Link>
-                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{rfp.description}</div>
+                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{service.description}</div>
                       </td>
                       <td className="p-md">
                         <span className="font-label-sm text-label-sm text-secondary bg-secondary-container px-2 py-0.5 rounded border border-secondary-fixed">
-                          {rfp.category}
+                          {service.category}
                         </span>
                       </td>
                       <td className="p-md font-semibold text-on-surface">
-                        {rfp.beneficiary?.fullName || "Verified Provider"}
+                        {service.provider?.companyName || service.provider?.fullName || "Verified Provider"}
                       </td>
                       <td className="p-md font-bold text-primary">
-                        ${Number(rfp.budgetMin).toLocaleString()} - ${Number(rfp.budgetMax).toLocaleString()}
+                        ${Number(service.price || 0).toLocaleString()}
                       </td>
                       <td className={`p-md ${isRTL ? 'pl-lg text-left' : 'pr-lg text-right'}`}>
                         <button
-                          onClick={() => handleDeleteRfp(rfp.id)}
+                          onClick={() => handleDeleteService(service.id)}
                           className="px-3 py-1.5 bg-error-container hover:bg-error text-on-error-container hover:text-white rounded font-label-md text-body-sm transition-all"
                         >
                           {t("adminPanel.rfps.actions.delete")}
@@ -403,32 +405,32 @@ function AdminPanel() {
                     </td>
                   </tr>
                 ) : (
-                  filteredProposals.map((prop) => (
-                    <tr key={prop.id} className="hover:bg-surface-container-low/20 transition-colors">
+                  filteredProposals.map((request) => (
+                    <tr key={request.id} className="hover:bg-surface-container-low/20 transition-colors">
                       <td className={`p-md ${isRTL ? 'pr-lg' : 'pl-lg'}`}>
-                        <Link to={`/rfp/${prop.rfpId}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
-                          {prop.rfp?.title || "Deleted Service"}
+                        <Link to={`/rfp/${request.id}`} className="font-semibold text-on-surface text-body-md hover:text-primary transition-colors text-decoration-none">
+                          {request.title || "Deleted Service"}
                         </Link>
-                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{prop.coverLetter}</div>
+                        <div className="text-xs max-w-sm truncate mt-xs text-on-surface-variant">{request.description}</div>
                       </td>
                       <td className="p-md font-semibold text-on-surface">
-                        {prop.provider?.fullName || "Enterprise Client"}
+                        {request.beneficiary?.fullName || request.beneficiary?.companyName || "Enterprise Client"}
                       </td>
                       <td className="p-md font-bold text-primary">
-                        ${Number(prop.proposedBudget).toLocaleString()}
+                        ${Number(request.budgetMin || 0).toLocaleString()} - ${Number(request.budgetMax || 0).toLocaleString()}
                       </td>
                       <td className="p-md">
                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                          prop.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
-                          prop.status === "rejected" ? "bg-error-container text-on-error-container" :
-                          prop.status === "shortlisted" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
+                          request.status === "accepted" ? "bg-secondary-container text-on-secondary-container" :
+                          request.status === "rejected" ? "bg-error-container text-on-error-container" :
+                          request.status === "open" ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-on-surface"
                         }`}>
-                          {prop.status.toUpperCase()}
+                          {request.status.toUpperCase()}
                         </span>
                       </td>
                       <td className={`p-md ${isRTL ? 'pl-lg text-left' : 'pr-lg text-right'}`}>
                         <button
-                          onClick={() => handleDeleteProposal(prop.id)}
+                          onClick={() => handleDeleteRequest(request.id)}
                           className="px-3 py-1.5 bg-error-container hover:bg-error text-on-error-container hover:text-white rounded font-label-md text-body-sm transition-all"
                         >
                           {t("adminPanel.proposals.actions.delete")}
